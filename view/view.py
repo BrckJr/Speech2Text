@@ -1,35 +1,56 @@
+import tkinter as tk
+from tkinter import messagebox
+
 class AudioView:
     """
-    The AudioView class handles displaying the transcribed text, error messages,
-    and any exit messages to the user.
+    A GUI-based application for simulating audio recording functionality.
 
-    Methods:
-        display_text(text): Displays the transcribed text to the user.
-        display_error(message): Displays an error message to the user.
-        show_exit_message(): Displays a message when the program is exiting.
+    This class provides a simple interface with buttons to start and stop the
+    audio recording process. It is responsible for displaying the user interface
+    elements in the Tkinter window.
     """
 
-
-    def display_text(self, text):
+    def __init__(self, root):
         """
-        Displays the transcribed text to the user.
+        Initializes the AudioView class.
 
-        Args:
-            text (str): The transcribed text that was returned by the model.
-        """
-        print("Transcribed text:", text)
-
-    def display_error(self, message):
-        """
-        Displays an error message to the user.
+        This method sets up the main Tkinter window, initializes the interface components,
+        and arranges them using Tkinter's packing geometry.
 
         Args:
-            message (str): The error message to display.
+            root (tk.Tk): The root Tkinter window, passed from the controller.
         """
-        print(f"Error: {message}")
+        self.root = root
+        self.root.title("Transcriber Interface")
+        self.root.geometry("400x300")
+        self.is_recording = False
 
-    def show_exit_message(self):
+        # Create and pack header label
+        self.header = tk.Label(root, text="Transcriber Interface", font=("Helvetica", 24, "bold"))
+        self.header.pack(pady=20)
+
+        # Create and pack the 'Start Recording' button
+        self.start_button = tk.Button(root, text="Start Recording")
+        self.start_button.pack(pady=10)
+
+        # Create and pack the 'Stop Recording' button (disabled by default)
+        self.stop_button = tk.Button(root, text="Stop Recording", state="disabled")
+        self.stop_button.pack(pady=10)
+
+    def show_transcription_prompt(self):
         """
-        Displays a message to the user when the program is exiting.
+        Displays a prompt asking the user whether they want to transcribe the saved recording.
+
+        This method shows a message box with options to confirm (Yes) or cancel (No) transcription.
+
+        Returns:
+            bool: `True` if the user selects "Yes" to transcribe, `False` if "No" is selected.
         """
-        print("Program interrupted. Exiting...")
+
+        self.root.withdraw()  # Hide the main tkinter window
+        response = messagebox.askyesno(
+            "Transcription Confirmation",
+            "Recording has been saved. Would you like to transcribe it?"
+        )
+        self.root.deiconify() # Show the main tkinter window again
+        return response
