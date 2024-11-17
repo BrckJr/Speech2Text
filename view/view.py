@@ -37,7 +37,8 @@ class AudioView:
         self.stop_button = tk.Button(root, text="Stop Recording", state="disabled")
         self.stop_button.pack(pady=10)
 
-    def show_transcription_prompt(self):
+    @staticmethod
+    def show_transcription_prompt():
         """
         Displays a prompt asking the user whether they want to transcribe the saved recording.
 
@@ -47,10 +48,8 @@ class AudioView:
             bool: `True` if the user selects "Yes" to transcribe, `False` if "No" is selected.
         """
 
-        self.root.withdraw()  # Hide the main tkinter window
         response = messagebox.askyesno(
             "Transcription Confirmation",
             "Recording has been saved. Would you like to transcribe it?"
         )
-        self.root.deiconify() # Show the main tkinter window again
         return response

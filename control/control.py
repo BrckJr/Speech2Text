@@ -1,7 +1,7 @@
 import tkinter as tk
 from model.model import AudioModel
 from view.view import AudioView
-
+import threading
 
 class AudioController:
     """
@@ -63,6 +63,14 @@ class AudioController:
         transcription_required = self.view.show_transcription_prompt()
         if transcription_required:
             print(f"Transcribing audio: {filepath}")
-            self.model.transcribe_raw_audio(filepath)
+
+            # Create and start a thread for transcription to avoid blocking the UI unnecessarily long
+            transcription_thread = threading.Thread(
+                target=self.model.transcribe_raw_audio,
+                args=(filepath,),
+                daemon=True  # Set daemon=True if the thread should terminate with the program
+            )
+            transcription_thread.start()
         else:
             print("Recording discarded. No transcription will be done.")
+
