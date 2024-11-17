@@ -25,6 +25,7 @@ class AudioController:
         # Connect buttons to actions
         self.view.start_button.config(command=self.start_recording)
         self.view.stop_button.config(command=self.stop_recording)
+        self.view.pause_button.config(command=self.pause_recording)
 
     def run(self):
         """
@@ -45,7 +46,23 @@ class AudioController:
         self.model.start_recording_audio()
         self.view.start_button.config(state="disabled")
         self.view.stop_button.config(state="normal")
+        self.view.pause_button.config(state="normal")
         print("Recording started.")
+
+    def pause_recording(self):
+        """
+         Handles the 'Pause Recording' button action.
+
+         This method calls the model to pause the recording process and updates
+         the GUI to reflect the recording state by enabling the 'Start' button
+         and enabling the 'Stop' button.
+         """
+        self.model.pause_recording_audio()
+        self.view.start_button.config(state="normal")
+        self.view.stop_button.config(state="normal")
+        self.view.pause_button.config(state="disabled")
+
+        print("Recording paused.")
 
     def stop_recording(self):
         """
@@ -58,6 +75,7 @@ class AudioController:
         filepath = self.model.stop_recording_audio()
         self.view.start_button.config(state="normal")
         self.view.stop_button.config(state="disabled")
+        self.view.pause_button.config(state="disabled")
 
         # Triggering prompt if user wants to transcribe audio input
         transcription_required = self.view.show_transcription_prompt()

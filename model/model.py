@@ -48,7 +48,6 @@ class AudioModel:
 
         """
         self.is_recording = True
-        self.temp_audio_data = []  # Reset previous recordings
 
         def record():
             """
@@ -60,6 +59,19 @@ class AudioModel:
 
         # Start the recording thread
         threading.Thread(target=record, daemon=True).start()
+
+    def pause_recording_audio(self):
+        """
+        Pauses the audio recording process.
+
+        This method temporarily stops adding new audio data to the recording buffer
+        by setting `is_recording` to False but keeps the audio stream alive for potential resumption.
+        """
+        if self.is_recording:
+            self.is_recording = False
+            print("Recording paused.")
+        else:
+            print("Recording is not active. Cannot pause.")
 
     def stop_recording_audio(self):
         """
@@ -75,6 +87,7 @@ class AudioModel:
 
         # Save the recorded audio data to a file
         filepath = self.save_raw_audio_to_file(self.temp_audio_data)
+        self.temp_audio_data = []  # Reset recordings after storing the raw audio file
         return filepath
 
     def callback(self, indata, frames, time, status):

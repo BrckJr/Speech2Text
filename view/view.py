@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+import customtkinter
 
 class AudioView:
     """
@@ -41,7 +42,9 @@ class AudioView:
         self.header.pack(pady=20)
 
         # Create a label with instructions or any other text
-        self.instruction_label = tk.Label(self.root, text="Press the start button to begin recording. \n Finish the recording by pressing the stop button.", font=("Helvetica", 12), bg="white", fg="black")
+        self.instruction_label = tk.Label(self.root, text="Press the start button to begin recording. "
+                                                          "\n Press the pause button to pause the recording"
+                                                          "\n Finish the recording by pressing the stop button.", font=("Helvetica", 12), bg="white", fg="black")
         self.instruction_label.pack(pady=20)
 
         # Optional: Create a footer or other information label
@@ -51,10 +54,15 @@ class AudioView:
         # Use symbols for the buttons
         start_symbol = "\u25B6"  # Unicode for play symbol (▶)
         stop_symbol = "\u23F9"  # Unicode for stop symbol (⏹)
+        pause_symbol = "\u23F8" # Unicode for pause symbol (⏸︎)
 
         # Create and pack the 'Start Recording' button
         self.start_button = tk.Button(root, text=start_symbol, font=("Helvetica", 24, "bold"), fg="red", width=15, height=2, bd=0, highlightthickness=0)
         self.start_button.pack(pady=10)
+
+        # Create and pack the 'Pause Recording' button
+        self.pause_button = tk.Button(root, text=pause_symbol, state="disabled", font=("Helvetica", 24, "bold"), width=15, height=2, bd=0, highlightthickness=0)
+        self.pause_button.pack(pady=10)
 
         # Create and pack the 'Stop Recording' button (disabled by default)
         self.stop_button = tk.Button(root, text=stop_symbol, state="disabled", font=("Helvetica", 24, "bold"), fg="red", width=15, height=2, bd=0, highlightthickness=0)
