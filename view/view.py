@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 import customtkinter
+from PIL import Image, ImageTk
 
-class AudioView:
+class AudioView(customtkinter.CTk):
     """
     A GUI-based application for simulating audio recording functionality.
 
@@ -11,62 +12,127 @@ class AudioView:
     elements in the Tkinter window.
     """
 
-    def __init__(self, root):
-        """
-        Initializes the AudioView class.
+    def __init__(self):
+        super().__init__()
 
-        This method sets up the main Tkinter window, initializes the interface components,
-        and arranges them using Tkinter's packing geometry.
+        # Configure the window
+        self.title("Transcriber Interface")
 
-        Args:
-            root (tk.Tk): The root Tkinter window, passed from the controller.
-        """
-        self.root = root
-        self.root.title("Transcriber Interface")
         # Get the screen width and height to make the window full screen
-        screen_width = self.root.winfo_screenwidth()
-        screen_height = self.root.winfo_screenheight()
-        self.root.geometry(f"{screen_width}x{screen_height}")
-
-        # Set the minimum size of the window
-        # self.root.minsize(400, 400)  # Minimum width and height
-        # self.root.resizable(True, True)  # Allow resizing horizontally and vertically
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
+        self.geometry(f"{screen_width}x{screen_height}")
 
         # Load the background image
-        self.bg_image = tk.PhotoImage(file="view/figures/realistic-polygonal-background/realistic-polygonal-background.png", master=self.root)
-        img_label = tk.Label(self.root, image=self.bg_image)
-        img_label.place(x=0, y=0, relwidth=1, relheight=1)
+        self.bg_image = tk.PhotoImage(
+            file="view/figures/realistic-polygonal-background/realistic-polygonal-background.png")
 
-        # Create and pack header label
-        self.header = tk.Label(root, text="Transcriber Interface", font=("Helvetica", 24, "bold"), bg="white", fg="black")
-        self.header.pack(pady=20)
+        # Create a canvas to display the background (using grid instead of pack)
+        self.canvas = tk.Canvas(self, width=screen_width, height=screen_height)
+        self.canvas.grid(row=0, column=0, columnspan=4, rowspan=4, sticky="nsew")
 
-        # Create a label with instructions or any other text
-        self.instruction_label = tk.Label(self.root, text="Press the start button to begin recording. "
-                                                          "\n Press the pause button to pause the recording"
-                                                          "\n Finish the recording by pressing the stop button.", font=("Helvetica", 12), bg="white", fg="black")
-        self.instruction_label.pack(pady=20)
+        # Display the image on the canvas
+        self.canvas.create_image(0, 0, image=self.bg_image, anchor="nw")
+        # Create left sidebar frame with widgets
+        self.sidebar_frame_left = customtkinter.CTkFrame(self, width=40, corner_radius=10)
+        self.sidebar_frame_left.grid(row=0, column=0, rowspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
 
-        # Optional: Create a footer or other information label
-        self.footer_label = tk.Label(self.root, text="Developed by Kilian Brickl © 2024", font=("Helvetica", 10, "italic"), bg="white", fg="black")
-        self.footer_label.pack(side="bottom", pady=20)
+        # Add the header label for the left sidebar
+        self.header_left_sidebar = customtkinter.CTkLabel(self.sidebar_frame_left, text="Recorded Audio Files",
+                                                          font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.header_left_sidebar.grid(row=0, column=0, padx=20, pady=(20, 10))
+
+        # Create appearance mode selection in the left corner
+        self.corner_frame_left = customtkinter.CTkFrame(self, width=40, corner_radius=10)
+        self.corner_frame_left.grid(row=3, column=0, sticky="nsew", padx=(20, 20), pady=(20, 20))
+
+        # Add the appearance mode label to the corner frame
+        self.header_left_corner = customtkinter.CTkLabel(self.corner_frame_left, text="Appearance Mode",
+                                                         font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.header_left_corner.grid(row=0, column=0, padx=20, pady=(20, 10))
+
+        # Create model selection in the right corner
+        self.corner_frame_right = customtkinter.CTkFrame(self, width=40, corner_radius=10)
+        self.corner_frame_right.grid(row=3, column=3, sticky="nsew", padx=(20, 20), pady=(20, 20))
+
+        # Add the model selection label to the right corner frame
+        self.header_right_corner = customtkinter.CTkLabel(self.corner_frame_right, text="Mode Selection",
+                                                          font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.header_right_corner.grid(row=0, column=0, padx=20, pady=(20, 10))
+
+        # Create the right sidebar frame with widgets
+        self.sidebar_frame_right = customtkinter.CTkFrame(self, width=40, corner_radius=10)
+        self.sidebar_frame_right.grid(row=0, column=3, rowspan=3, padx=(20, 20), pady=(20, 20), sticky="nsew")
+
+        # Add the header label for the right sidebar
+        self.header_right_sidebar = customtkinter.CTkLabel(self.sidebar_frame_right, text="Transcription Files",
+                                                           font=customtkinter.CTkFont(size=20, weight="bold"))
+        self.header_right_sidebar.grid(row=0, column=0, padx=20, pady=(20, 10))
+
+        # Create textbox with main header (bold and centered)
+        self.header_main = customtkinter.CTkTextbox(self, font=("Roboto", 20, "bold"))
+        self.header_main.grid(row=0, column=1, columnspan=2, sticky="nsew")
+        self.header_main.insert("0.0", "Transcriber Interface")
+        self.header_main.tag_add("center", "1.0", "end")
+        self.header_main.configure(state="disabled")  # Make it non-editable
+
+        # Create textbox with instructions
+        self.instruction_label = customtkinter.CTkTextbox(self)
+        self.instruction_label.grid(row=1, column=1, columnspan=2, sticky="nsew")
+        self.instruction_label.insert("0.0", "Press the start button to begin recording. \n"
+                                             "Press the pause button to pause the recording.\n"
+                                             "Finish the recording by pressing the stop button.")
+
+        # Create textbox with footer
+        self.footer_label = customtkinter.CTkTextbox(self)
+        self.footer_label.grid(row=3, column=1, columnspan=2, sticky="nsew")
+        self.footer_label.insert("0.0", "Developed by Kilian Brickl © 2024")
 
         # Use symbols for the buttons
-        start_symbol = "\u25B6"  # Unicode for play symbol (▶)
-        stop_symbol = "\u23F9"  # Unicode for stop symbol (⏹)
-        pause_symbol = "\u23F8" # Unicode for pause symbol (⏸︎)
+        start_symbol = "\u23FA"  # Start symbol ("⏺︎"︎)
+        continue_symbol = "\u23F5"  # Continue symbol ("⏵︎︎)
+        stop_symbol = "\u23F9"  # Stop symbol ("⏹︎"︎)
+        pause_symbol = "\u23F8"  # Pause symbol ("⏸"︎)
 
-        # Create and pack the 'Start Recording' button
-        self.start_button = tk.Button(root, text=start_symbol, font=("Helvetica", 24, "bold"), fg="red", width=15, height=2, bd=0, highlightthickness=0)
-        self.start_button.pack(pady=10)
+        self.button_frame = customtkinter.CTkFrame(self)
+        self.button_frame.grid(row=2, column=1, columnspan=2, sticky="nsew")
+        self.button_frame.grid_rowconfigure(0, weight=1) # vertical centering
+        self.button_frame.grid_columnconfigure((0, 1, 2), weight=1) # horizontal centering
 
-        # Create and pack the 'Pause Recording' button
-        self.pause_button = tk.Button(root, text=pause_symbol, state="disabled", font=("Helvetica", 24, "bold"), width=15, height=2, bd=0, highlightthickness=0)
-        self.pause_button.pack(pady=10)
+        # Create the 'Start Recording' button
+        self.start_button = customtkinter.CTkButton(
+            self.button_frame,
+            text=f"Start\n{start_symbol}",
+            font=("Roboto", 20),
+            fg_color="green",
+            width=150,
+            height=50
+        )
+        self.start_button.grid(row=0, column=0, padx=(10, 10), pady=(20, 20))
 
-        # Create and pack the 'Stop Recording' button (disabled by default)
-        self.stop_button = tk.Button(root, text=stop_symbol, state="disabled", font=("Helvetica", 24, "bold"), fg="red", width=15, height=2, bd=0, highlightthickness=0)
-        self.stop_button.pack(pady=10)
+        # Create the 'Pause Recording' button
+        self.pause_button = customtkinter.CTkButton(
+            self.button_frame,
+            text=f"Pause\n{pause_symbol}",
+            font=("Roboto", 20),
+            state="disabled",
+            fg_color="lightgrey",
+            width=150,
+            height=50
+        )
+        self.pause_button.grid(row=0, column=1, padx=(10, 10), pady=(20, 20))
+
+        # Create the 'Stop Recording' button
+        self.stop_button = customtkinter.CTkButton(
+            self.button_frame,
+            text=f"Stop\n{stop_symbol}",
+            font=("Roboto", 20),
+            fg_color="lightgrey",
+            state="disabled",
+            width=150,
+            height=50
+        )
+        self.stop_button.grid(row=0, column=2, padx=(10, 10), pady=(20, 20))
 
         self.is_recording = False
 

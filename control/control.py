@@ -19,13 +19,12 @@ class AudioController:
         the start and stop button actions.
         """
         self.model = AudioModel()
-        self.root = tk.Tk()
-        self.view = AudioView(self.root)
+        self.view = AudioView()
 
         # Connect buttons to actions
-        self.view.start_button.config(command=self.start_recording)
-        self.view.stop_button.config(command=self.stop_recording)
-        self.view.pause_button.config(command=self.pause_recording)
+        self.view.start_button.configure(command=self.start_recording)
+        self.view.stop_button.configure(command=self.stop_recording)
+        self.view.pause_button.configure(command=self.pause_recording)
 
     def run(self):
         """
@@ -33,7 +32,7 @@ class AudioController:
 
         This method keeps the application running and responsive.
         """
-        self.root.mainloop()
+        self.view.mainloop()
 
     def start_recording(self):
         """
@@ -44,9 +43,16 @@ class AudioController:
         and enabling the 'Stop' button.
         """
         self.model.start_recording_audio()
-        self.view.start_button.config(state="disabled")
-        self.view.stop_button.config(state="normal")
-        self.view.pause_button.config(state="normal")
+        self.view.start_button.configure(state="disabled")
+        self.view.stop_button.configure(state="normal")
+        self.view.pause_button.configure(state="normal")
+
+        # Update button colors
+        self.view.start_button.configure(fg_color="lightgrey")  # Start button in dark grey
+        self.view.stop_button.configure(fg_color="red")  # Stop button in red
+        self.view.pause_button.configure(fg_color="darkgrey")  # Pause button in dark grey
+
+
         print("Recording started.")
 
     def pause_recording(self):
@@ -57,10 +63,18 @@ class AudioController:
          the GUI to reflect the recording state by enabling the 'Start' button
          and enabling the 'Stop' button.
          """
+        continue_symbol = "\u23F5"  # Pause symbol
+
         self.model.pause_recording_audio()
-        self.view.start_button.config(state="normal")
-        self.view.stop_button.config(state="normal")
-        self.view.pause_button.config(state="disabled")
+        self.view.start_button.configure(state="normal")
+        self.view.stop_button.configure(state="normal")
+        self.view.pause_button.configure(state="disabled")
+
+        # Update button colors and symbols
+        self.view.start_button.configure(text=f"Continue\n{continue_symbol}")
+        self.view.start_button.configure(fg_color="green")  # Continue button in light green
+        self.view.stop_button.configure(fg_color="red")  # Stop button in red
+        self.view.pause_button.configure(fg_color="lightgrey")  # Pause button in light grey
 
         print("Recording paused.")
 
@@ -72,10 +86,18 @@ class AudioController:
         the view to prompt a window which allows the user to select if recorded
         audio should be transcribed or not.
         """
+        start_symbol = "\u23FA" # Start symbol ("⏺︎"︎)
+
         filepath = self.model.stop_recording_audio()
-        self.view.start_button.config(state="normal")
-        self.view.stop_button.config(state="disabled")
-        self.view.pause_button.config(state="disabled")
+        self.view.start_button.configure(state="normal")
+        self.view.stop_button.configure(state="disabled")
+        self.view.pause_button.configure(state="disabled")
+
+        # Update button colors
+        self.view.start_button.configure(text=f"Start\n{start_symbol}")
+        self.view.start_button.configure(fg_color="green")  # Start button in green
+        self.view.stop_button.configure(fg_color="lightgrey")  # Stop button in light grey
+        self.view.pause_button.configure(fg_color="lightgrey")  # Pause button in light grey
 
         # Triggering prompt if user wants to transcribe audio input
         transcription_required = self.view.show_transcription_prompt()
