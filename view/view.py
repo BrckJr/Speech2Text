@@ -4,9 +4,6 @@ import subprocess
 import tkinter as tk
 from tkinter import messagebox
 import utils.utils as utils
-# The Tkinter library is not well suited for Mac, hence it may be worth
-# using the tkmacosx library and improve the look of the UI
-# import tkmacosx
 
 class AudioView:
     """
@@ -23,27 +20,32 @@ class AudioView:
         """
 
         # Initialize all objects on the window
-        self.delete_all_files = None
         self.stop_button = None
         self.pause_button = None
         self.start_button = None
+        self.delete_all_files_button = None
         self.bg_image = None
         self.footer_label = None
         self.instruction_label = None
         self.header = None
-        self.file_label = None
-        self.file_frame = None
         self.transcriptions_box_label = None
         self.transcriptions_listbox = None
         self.raw_audios_box_label = None
         self.raw_audios_listbox = None
+        self.transcription_model_dropdown = None
+        self.selected_transcription_model = None
+        self.transcription_model_dropdown_label = None
+        self.file_frame_model_dropdown = None
+        self.file_frame_raw_audio = None
+        self.file_frame_transcription = None
 
         self.root = root
         self.root.title("Transcriber Interface")
         # Get the screen width and height to make the window full screen
         screen_width, screen_height = self.root.winfo_screenwidth(), self.root.winfo_screenheight()
-        self.root.geometry(f"{screen_width}x{screen_height}")  # Set original size of window
-        self.root.minsize(1000, 560)  # Minimum size when scaling, may need improvement ...
+        self.root.geometry("1080x720")  # Set original size of window
+        # self.root.geometry(f"{screen_width}x{screen_height}")  # Set original size of window
+        # self.root.minsize(1000, 650)  # Minimum size when scaling, may need improvement ...
         self.root.resizable(True, True)  # Allow resizing horizontally and vertically
 
         # Configure grid layout
@@ -60,6 +62,7 @@ class AudioView:
         self.create_buttons()
         self.create_transcriptions_file_list()
         self.create_raw_audio_file_list()
+        self.create_dropdown_menus()
 
     def create_background(self):
         # Load the background image
@@ -82,7 +85,7 @@ class AudioView:
             bg="white",
             fg="black"
         )
-        self.header.grid(row=0, column=1, pady=(20, 10))
+        self.header.grid(row=0, column=1)
 
         self.instruction_label = tk.Label(
             self.root,
@@ -93,7 +96,7 @@ class AudioView:
             bg="white",
             fg="black"
         )
-        self.instruction_label.grid(row=1, column=1, pady=(10, 20), sticky="n")
+        self.instruction_label.grid(row=1, column=1, pady=(50, 100), sticky="n")
 
         self.footer_label = tk.Label(
             self.root,
@@ -151,26 +154,54 @@ class AudioView:
         self.stop_button.grid(row=1, column=1, sticky="e")
 
         # Create the 'Reload Files' button
-        self.delete_all_files = tk.Button(
+        self.delete_all_files_button = tk.Button(
             self.root,
             text=f"Delete all Files \n{bin_symbol}",
             font=("Roboto", 20),
-            fg="red",
-            state="disabled",  # Initially disabled
             width=30,
             height=3,
             borderwidth=0
         )
-        self.delete_all_files.grid(row=2, column=1, sticky="n")
+        self.delete_all_files_button.grid(row=2, column=1, padx=(10, 20), pady=10, sticky="n")
+
+    # noinspection DuplicatedCode
+    def create_dropdown_menus(self):
+        self.file_frame_model_dropdown = tk.Frame(self.root, bg="white", bd=2, relief="solid")
+        self.file_frame_model_dropdown.grid(row=2, column=2, padx=(10, 20), pady=10, sticky="nsew")
+
+        self.transcription_model_dropdown_label = tk.Label(
+            self.file_frame_model_dropdown,
+            text="Model Settings",
+            font=("Helvetica", 18, "bold"),
+            bg="white",
+            fg="black"
+        )
+        self.transcription_model_dropdown_label.pack(pady=10)
+
+        # Create a list of options for the dropdown
+        options = ["Whisper (OpenAI)"]
+
+        # Create a Tkinter variable for the dropdown (StringVar)
+        self.selected_transcription_model = tk.StringVar()
+        self.selected_transcription_model.set(options[0])  # Default selected option
+
+        # Create the OptionMenu widget
+        self.transcription_model_dropdown = tk.OptionMenu(
+            self.file_frame_model_dropdown,
+            self.selected_transcription_model,
+            *options,
+        )
+        self.transcription_model_dropdown.configure(bg="lightgrey")
+        self.transcription_model_dropdown.pack(padx=10, pady=10, fill="both", expand=True)
 
     # noinspection DuplicatedCode
     def create_transcriptions_file_list(self):
         """Create a file list widget in the rightmost column."""
-        self.file_frame = tk.Frame(self.root, bg="white", bd=2, relief="solid")
-        self.file_frame.grid(row=0, column=2, rowspan=2, padx=(10, 20), pady=10, sticky="nsew")
+        self.file_frame_raw_audio = tk.Frame(self.root, bg="white", bd=2, relief="solid")
+        self.file_frame_raw_audio.grid(row=0, column=2, rowspan=2, padx=(10, 20), pady=10, sticky="nsew")
 
         self.transcriptions_box_label = tk.Label(
-            self.file_frame,
+            self.file_frame_raw_audio,
             text="Transcribed Files",
             font=("Helvetica", 18, "bold"),
             bg="white",
@@ -179,7 +210,7 @@ class AudioView:
         self.transcriptions_box_label.pack(pady=10)
 
         self.transcriptions_listbox = tk.Listbox(
-            self.file_frame,
+            self.file_frame_raw_audio,
             font=("Helvetica", 14),
             width=30,
             height=20,
@@ -197,11 +228,11 @@ class AudioView:
     # noinspection DuplicatedCode
     def create_raw_audio_file_list(self):
         """Create a file list widget in the leftmost column."""
-        self.file_frame = tk.Frame(self.root, bg="white", bd=2, relief="solid")
-        self.file_frame.grid(row=0, column=0, rowspan=2, padx=(10, 20), pady=10, sticky="nsew")
+        self.file_frame_transcription = tk.Frame(self.root, bg="white", bd=2, relief="solid")
+        self.file_frame_transcription.grid(row=0, column=0, rowspan=2, padx=(10, 20), pady=10, sticky="nsew")
 
         self.raw_audios_box_label = tk.Label(
-            self.file_frame,
+            self.file_frame_transcription,
             text="Raw Audio Files",
             font=("Helvetica", 18, "bold"),
             bg="white",
@@ -210,7 +241,7 @@ class AudioView:
         self.raw_audios_box_label.pack(pady=10)
 
         self.raw_audios_listbox = tk.Listbox(
-            self.file_frame,
+            self.file_frame_transcription,
             font=("Helvetica", 14),
             width=30,
             height=20,
@@ -224,6 +255,7 @@ class AudioView:
         self.update_listbox(listbox_label)
 
         self.raw_audios_listbox.bind("<<ListboxSelect>>", self.open_selected_file)
+
 
     def update_listbox(self, listbox_label):
         """
@@ -313,3 +345,23 @@ class AudioView:
             "Recording Error",
             "Recording failed or cannot be stored, please try again."
         )
+
+    @staticmethod
+    def show_deletion_prompt():
+        """
+        Displays a prompt asking the user whether they want to delete all files.
+
+        This method shows a message box warning the user that all files
+        from the raw audio recordings and transcriptions will be deleted,
+        and prompts for confirmation.
+
+        Returns:
+            bool: `True` if the user selects "Yes" to confirm deletion,
+                  `False` if "No" is selected.
+        """
+
+        response = messagebox.askyesno(
+            "Delete all Files",
+            "All files from the raw audio recordings as well as the transcriptions will be deleted. Do you want to proceed?"
+        )
+        return response

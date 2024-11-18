@@ -2,6 +2,7 @@ import tkinter as tk
 from model.model import AudioModel
 from view.view import AudioView
 import threading
+import subprocess
 
 class AudioController:
     """
@@ -26,6 +27,7 @@ class AudioController:
         self.view.start_button.config(command=self.start_recording)
         self.view.stop_button.config(command=self.stop_recording)
         self.view.pause_button.config(command=self.pause_recording)
+        self.view.delete_all_files_button.config(command=self.delete_all_files)
 
     def run(self):
         """
@@ -110,7 +112,6 @@ class AudioController:
         else:
             print("Recording discarded. No transcription will be done.")
 
-
     def transcribe_and_update(self, filepath):
         """
         Transcribes the audio and then updates the listbox once transcription is done.
@@ -123,4 +124,21 @@ class AudioController:
         """
         self.model.transcribe_raw_audio(filepath)
         self.view.update_listbox("transcription")
+
+    def delete_all_files(self):
+        """ Clears all files from the two subdirectories in the output directory."""
+
+        # Triggering deletion prompt and ask if user really wants to delete all files
+        transcription_required = self.view.show_deletion_prompt()
+        if transcription_required:
+            script_path = "clear_output.sh"
+            subprocess.run(["bash", script_path])
+
+            # Update the list boxes after deletion
+            self.view.update_listbox("transcription")
+            self.view.update_listbox("raw_audio")
+        else:
+            print("Deletion of all files aborted.")
+
+
 
