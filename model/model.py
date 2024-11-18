@@ -1,4 +1,3 @@
-import os
 import whisper
 import sounddevice as sd
 import soundfile as sf
@@ -82,13 +81,14 @@ class AudioModel:
 
         Returns:
             str: The file path where the recorded audio was saved.
+            bool: True if the saving was successful, False otherwise.
         """
         self.is_recording = False
 
         # Save the recorded audio data to a file
-        filepath = self.save_raw_audio_to_file(self.temp_audio_data)
+        filepath, save_successful = self.save_raw_audio_to_file(self.temp_audio_data)
         self.temp_audio_data = []  # Reset recordings after storing the raw audio file
-        return filepath
+        return filepath, save_successful
 
     def callback(self, indata, frames, time, status):
         """
@@ -120,23 +120,29 @@ class AudioModel:
 
         Returns:
             str: The full file path where the audio file is saved.
+            bool: True if the saving was successful, False otherwise.
 
         Raises:
             Exception: If there is an error during file saving, an exception message is printed.
         """
         file_path = utils.generate_file_path("raw_audio")
+        save_successful = False
 
-        # Combine the chunks of raw audio data into a single numpy array
-        audio_data = np.concatenate(raw_audio, axis=0)
+        try:
+            # Combine the chunks of raw audio data into a single numpy array
+            audio_data = np.concatenate(raw_audio, axis=0)
+        except ValueError as err:
+            return None, save_successful
 
         # Save the audio data to the specified .wav file
         try:
             sf.write(file_path, audio_data, self.sample_rate)  # Assuming a sample rate of 16kHz
+            save_successful = True
             print(f"Audio saved to {file_path}")
         except Exception as e:
             print(f"Failed to save audio: {e}")
 
-        return file_path
+        return file_path, save_successful
 
     def transcribe_raw_audio(self, filepath):
         """

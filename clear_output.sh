@@ -5,3 +5,6 @@
 
 rm -rf output/raw_audio/*
 rm -rf output/transcription/*
+
+
+echo "Output directories cleaned up."
