@@ -6,19 +6,25 @@ import subprocess
 
 class AudioController:
     """
-    Controller class that coordinates the interaction between the model and view.
+    The AudioController class coordinates interaction between the GUI (view) and the audio recording model.
 
-    The `AudioController` manages user interactions through the GUI and
-    communicates with the `AudioModel` to handle recording logic.
+    It manages user inputs via the view (such as starting, pausing, and stopping recordings) and
+    handles communication with the AudioModel to control the recording process and trigger transcription.
     """
 
     def __init__(self):
         """
-        Initializes the AudioController.
+        Initializes the AudioController, setting up the model, the GUI window, and the view components.
 
-        This sets up the model, the root Tkinter window, the view, and connects
-        the start and stop button actions.
+        This method connects the start, stop, pause, and delete buttons to their corresponding actions
+        in the controller.
+
+        Attributes:
+            model (AudioModel): The AudioModel instance to handle recording logic.
+            root (tk.Tk): The root Tkinter window for the GUI.
+            view (AudioView): The view instance managing the GUI elements.
         """
+
         self.model = AudioModel()
         self.root = tk.Tk()
         self.view = AudioView(self.root)
@@ -33,18 +39,21 @@ class AudioController:
         """
         Starts the Tkinter main event loop.
 
-        This method keeps the application running and responsive.
+        This method enters the Tkinter event loop, making the application responsive to user interactions
+        through the GUI.
         """
+
         self.root.mainloop()
 
     def start_recording(self):
         """
         Handles the 'Start Recording' button action.
 
-        This method calls the model to begin the recording process and updates
-        the GUI to reflect the recording state by disabling the 'Start' button
-        and enabling the 'Stop' button.
+        This method triggers the start of the audio recording process in the model and updates
+        the GUI to reflect the active recording state. The 'Start' button is disabled, while
+        the 'Stop' and 'Pause' buttons are enabled.
         """
+
         self.model.start_recording_audio()
         self.view.start_button.config(state="disabled")
         self.view.stop_button.config(state="normal")
@@ -54,12 +63,13 @@ class AudioController:
 
     def pause_recording(self):
         """
-         Handles the 'Pause Recording' button action.
+        Handles the 'Pause Recording' button action.
 
-         This method calls the model to pause the recording process and updates
-         the GUI to reflect the recording state by enabling the 'Start' button
-         and enabling the 'Stop' button.
-         """
+        This method pauses the audio recording process in the model and updates the GUI to reflect
+        the paused state. The 'Start' button is re-enabled with a 'Continue' label, and the 'Pause'
+        button is disabled.
+        """
+
         continue_symbol = "\u23F5"  # Pause symbol
 
         self.model.pause_recording_audio()
@@ -75,10 +85,10 @@ class AudioController:
         """
         Handles the 'Stop Recording' button action.
 
-        This method calls the model to stop the recording process and issues
-        the view to prompt a window which allows the user to select if recorded
-        audio should be transcribed or not.
+        This method stops the audio recording process and updates the GUI to reflect the stopped state.
+        It triggers a prompt asking the user whether the recorded audio should be transcribed or discarded.
         """
+
         start_symbol = "\u23FA" # Start symbol ("⏺︎"︎)
 
         filepath, save_successful = self.model.stop_recording_audio()
@@ -114,19 +124,25 @@ class AudioController:
 
     def transcribe_and_update(self, filepath):
         """
-        Transcribes the audio and then updates the listbox once transcription is done.
+        Transcribes the audio file and updates the listbox once transcription is complete.
 
-        This method will be called by a thread which allows the UI to be responsive during the transcription.
-        This might be necessary as for long recordings the transcription takes some time.
+        This method runs in a separate thread to avoid blocking the UI during transcription. After the
+        transcription is finished, it updates the view to reflect the new transcription.
 
         Args:
-            filepath (str): The path to the audio file which should be transcribed.
+            filepath (str): The path to the audio file that should be transcribed.
         """
+
         self.model.transcribe_raw_audio(filepath)
         self.view.update_listbox("transcription")
 
     def delete_all_files(self):
-        """ Clears all files from the two subdirectories in the output directory."""
+        """
+        Clears all files from the "raw_audio" and "transcription" subdirectories in the output directory.
+
+        This method triggers a deletion prompt, and if confirmed, runs a shell script to clear the files
+        and updates the listboxes to reflect the deleted files.
+        """
 
         # Triggering deletion prompt and ask if user really wants to delete all files
         transcription_required = self.view.show_deletion_prompt()

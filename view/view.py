@@ -7,16 +7,19 @@ import utils.utils as utils
 
 class AudioView:
     """
-    A GUI-based application for simulating audio recording functionality.
+    The graphical user interface for the audio transcription application.
 
-    This class provides a simple interface with buttons to start and stop the
-    audio recording process. It is responsible for displaying the user interface
-    elements in the Tkinter window.
+    This class handles the layout, creation, and management of the GUI elements
+    using the Tkinter library. It provides user interactions such as starting,
+    pausing, stopping recordings, and managing file displays.
     """
 
     def __init__(self, root):
         """
-        Initializes the AudioView class with a grid layout.
+        Initializes the AudioView instance and sets up the layout and widgets.
+
+        Args:
+            root (tk.Tk): The root Tkinter window for the application.
         """
 
         # Initialize all objects on the window
@@ -65,7 +68,10 @@ class AudioView:
         self.create_dropdown_menus()
 
     def create_background(self):
-        # Load the background image
+        """
+        Sets the background image for the application window.
+        """
+
         self.bg_image = tk.PhotoImage(
             file="view/figures/realistic-polygonal-background/realistic-polygonal-background.png",
             master=self.root
@@ -77,7 +83,10 @@ class AudioView:
         img_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     def create_labels(self):
-        """Create labels in the middle column."""
+        """
+        Creates labels for the header, instructions, and footer in the main application window.
+        """
+
         self.header = tk.Label(
             self.root,
             text="Transcriber Interface",
@@ -108,7 +117,11 @@ class AudioView:
         self.footer_label.grid(row=2, column=1, pady=(10, 20), sticky="s")
 
     def create_buttons(self):
-        """Create buttons in the middle column, placed side-by-side in a single row with the same size."""
+        """
+        Creates and configures buttons for recording controls (start, pause, stop)
+        and file management (delete all files).
+        """
+
         # Unicode symbols for the buttons
         start_symbol = "\u25B6"  # Unicode for play symbol (▶)
         stop_symbol = "\u23F9"  # Unicode for stop symbol (⏹)
@@ -166,6 +179,10 @@ class AudioView:
 
     # noinspection DuplicatedCode
     def create_dropdown_menus(self):
+        """
+        Creates a dropdown menu for selecting the transcription model.
+        """
+
         self.file_frame_model_dropdown = tk.Frame(self.root, bg="white", bd=2, relief="solid")
         self.file_frame_model_dropdown.grid(row=2, column=2, padx=(10, 20), pady=10, sticky="nsew")
 
@@ -196,7 +213,10 @@ class AudioView:
 
     # noinspection DuplicatedCode
     def create_transcriptions_file_list(self):
-        """Create a file list widget in the rightmost column."""
+        """
+        Creates a Listbox widget to display transcribed files in the rightmost column.
+        """
+
         self.file_frame_raw_audio = tk.Frame(self.root, bg="white", bd=2, relief="solid")
         self.file_frame_raw_audio.grid(row=0, column=2, rowspan=2, padx=(10, 20), pady=10, sticky="nsew")
 
@@ -227,7 +247,10 @@ class AudioView:
 
     # noinspection DuplicatedCode
     def create_raw_audio_file_list(self):
-        """Create a file list widget in the leftmost column."""
+        """
+        Creates a Listbox widget to display raw audio files in the leftmost column.
+        """
+
         self.file_frame_transcription = tk.Frame(self.root, bg="white", bd=2, relief="solid")
         self.file_frame_transcription.grid(row=0, column=0, rowspan=2, padx=(10, 20), pady=10, sticky="nsew")
 
@@ -259,17 +282,13 @@ class AudioView:
 
     def update_listbox(self, listbox_label):
         """
-        Updates the appropriate listbox with files based on the provided label.
-
-        This method updates either the 'raw_audio' or 'transcription' listbox with files
-        from the corresponding directory. It first fetches the files using
-        `get_files_in_directory()` method, clears the existing listbox entries, and
-        populates it with the new files.
+        Updates the specified Listbox with files from the corresponding directory.
 
         Args:
-            listbox_label (str): A string indicating which listbox to update.
-                                  It can be either "raw_audio" or "transcription".
+            listbox_label (str): The identifier for the listbox to update
+                                 ("raw_audio" or "transcription").
         """
+
         # Get the files for the respective directory
         if listbox_label == "raw_audio":
             dir_path = "output/raw_audio"
@@ -291,11 +310,12 @@ class AudioView:
     @staticmethod
     def open_selected_file(event):
         """
-        Opens the file selected in the Listbox using the system's default application.
+        Opens the file selected in the Listbox using the default application on the system.
 
         Args:
-            event: The Tkinter event triggered by selecting an item in the Listbox.
+            event: The Tkinter event triggered by selecting a file.
         """
+
         # Get the widget that triggered the event
         widget = event.widget
 
@@ -322,12 +342,10 @@ class AudioView:
     @staticmethod
     def show_transcription_prompt():
         """
-        Displays a prompt asking the user whether they want to transcribe the saved recording.
-
-        This method shows a message box with options to confirm (Yes) or cancel (No) transcription.
+        Displays a confirmation dialog asking if the user wants to transcribe the saved recording.
 
         Returns:
-            bool: `True` if the user selects "Yes" to transcribe, `False` if "No" is selected.
+            bool: True if the user confirms transcription, False otherwise.
         """
 
         response = messagebox.askyesno(
@@ -339,8 +357,9 @@ class AudioView:
     @staticmethod
     def show_recording_error_prompt():
         """
-        Displays a prompt showing an error when the recorded audio file is empty
+        Displays an error message if the recording could not be saved.
         """
+
         messagebox.showerror(
             "Recording Error",
             "Recording failed or cannot be stored, please try again."

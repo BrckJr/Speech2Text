@@ -8,24 +8,30 @@ import utils.utils as utils
 
 class AudioModel:
     """
-    The AudioModel class handles the audio recording process and integrates with
-    the Whisper model for speech-to-text functionality.
+    The AudioModel class handles real-time audio recording, processing, and transcription.
 
-    This class manages recording audio in real-time, storing the audio data in
-    memory, and providing callbacks for audio processing.
+    This class integrates with the Whisper model for speech-to-text functionality, enabling
+    users to record audio, save it to files, and transcribe it using pre-trained models.
     """
 
     def __init__(self, whisper_model="base", sample_rate=16000):
         """
-        Initializes the AudioModel with the specified Whisper model and sample rate.
+        Initializes the AudioModel with a Whisper model and a specified sample rate.
 
-        This sets up the Whisper model for speech-to-text processing and initializes attributes
-        for managing audio recording, including the sample rate for recording.
+        This method loads the selected Whisper model for transcription and initializes
+        attributes to manage audio recording and processing.
 
         Args:
-            whisper_model (str): The name of the Whisper model to use (e.g., "base", "large").
-            sample_rate (int): The sample rate for audio recording (default is 16000 Hz).
+            whisper_model (str): The name of the Whisper model to use (e.g., "base", "large"). Defaults to "base".
+            sample_rate (int): The audio sample rate in Hz. Defaults to 16000.
+
+        Attributes:
+            transcription_model (whisper.Whisper): The loaded Whisper model for transcription.
+            is_recording (bool): Indicates whether audio recording is active.
+            temp_audio_data (list): Buffer for temporarily storing recorded audio data.
+            sample_rate (int): The sample rate for audio recording.
         """
+
         # The model is running on CPU as Whisper shows problems with running on MPS,
         # and apparently, it is not much faster on MPS.
         self.transcription_model = whisper.load_model(whisper_model)  # Load Whisper model (base size)
@@ -39,13 +45,17 @@ class AudioModel:
         """
         Starts the audio recording process in a separate thread.
 
-        This method opens an audio input stream, continuously records audio data while `is_recording`
-        is set to True, and processes audio in real-time through the callback function. The recording
-        occurs in a separate thread to prevent blocking the main program.
+        This method initializes an audio input stream, continuously recording audio
+        data while `is_recording` is True. Audio processing is managed in real-time
+        via the `callback` function. Recording occurs in a separate thread to avoid
+        blocking the main program.
 
-        This method will reset any previous audio data before starting the recording.
+        This method resets any previously stored audio data before starting a new recording.
 
+        Raises:
+            RuntimeError: If the audio input device is unavailable or improperly configured.
         """
+
         self.is_recording = True
 
         def record():
@@ -63,9 +73,13 @@ class AudioModel:
         """
         Pauses the audio recording process.
 
-        This method temporarily stops adding new audio data to the recording buffer
-        by setting `is_recording` to False but keeps the audio stream alive for potential resumption.
+        This method stops adding new audio data to the recording buffer by setting
+        `is_recording` to False. If recording is not active, a warning is printed.
+
+        Raises:
+            RuntimeError: If `pause_recording_audio` is called when no recording session is active.
         """
+
         if self.is_recording:
             self.is_recording = False
             print("Recording paused.")
@@ -76,13 +90,19 @@ class AudioModel:
         """
         Stops the audio recording process and saves the recorded audio to a file.
 
-        This method sets `is_recording` to False, terminating the recording loop, and saves the
-        recorded audio data to a .wav file. The file path of the saved audio is returned.
+        This method terminates the recording loop by setting `is_recording` to False.
+        It then saves the buffered audio data to a .wav file. If the save operation fails,
+        the audio data is cleared without being stored.
 
         Returns:
-            str: The file path where the recorded audio was saved.
-            bool: True if the saving was successful, False otherwise.
+            tuple:
+                str: The file path of the saved audio file, or None if saving failed.
+                bool: True if the file was saved successfully, False otherwise.
+
+        Raises:
+            IOError: If there is an issue saving the file to disk.
         """
+
         self.is_recording = False
 
         # Save the recorded audio data to a file
@@ -108,23 +128,26 @@ class AudioModel:
 
     def save_raw_audio_to_file(self, raw_audio):
         """
-        Save raw audio data to a .wav file with a timestamped filename.
+        Saves raw audio data to a .wav file with a timestamped filename.
 
-        This method concatenates raw audio chunks into a single audio array and saves it to a .wav
-        file in the "output/raw_audio" directory. The filename includes a timestamp for uniqueness.
-        If saving fails, an error message is printed.
+        This method concatenates chunks of raw audio data into a single array and writes
+        it to a .wav file in the "output/raw_audio" directory. The filename includes a
+        timestamp to ensure uniqueness. If saving fails, an error message is printed.
 
         Args:
-            raw_audio (list of numpy.ndarray): A list of raw audio data chunks, each represented as
-                a numpy array. These chunks are concatenated before saving.
+            raw_audio (list of numpy.ndarray): List of raw audio data chunks, where each
+                chunk is a NumPy array.
 
         Returns:
-            str: The full file path where the audio file is saved.
-            bool: True if the saving was successful, False otherwise.
+            tuple:
+                str: The file path of the saved .wav file, or None if saving failed.
+                bool: True if the file was saved successfully, False otherwise.
 
         Raises:
-            Exception: If there is an error during file saving, an exception message is printed.
+            ValueError: If the input `raw_audio` list is empty or invalid.
+            IOError: If there is an issue writing the file to disk.
         """
+
         file_path = utils.generate_file_path("raw_audio")
         save_successful = False
 
@@ -146,15 +169,19 @@ class AudioModel:
 
     def transcribe_raw_audio(self, filepath):
         """
-        Transcribes the raw audio file using the selected model.
+        Transcribes the raw audio file using the Whisper model.
 
-        This transcribes the audio from the given file path.
-        After transcription, it saves the transcribed text to a file.
+        This method processes the audio file at the given file path through the Whisper
+        model to generate a transcription. The resulting text is saved to a file.
 
         Args:
-            filepath (str): The path to the audio file to be transcribed.
+            filepath (str): The path to the audio file to transcribe.
 
+        Raises:
+            FileNotFoundError: If the specified audio file is not found.
+            RuntimeError: If the transcription process encounters an error.
         """
+
         result = self.transcription_model.transcribe(audio=filepath)
         transcription = result["text"].strip()  # Clean up any leading/trailing whitespace
         self.save_transcription_to_file(transcription)
