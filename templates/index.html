@@ -4,30 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transcriber Interface</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
-    </style>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>Transcriber Interface</h1>
-    <button id="start-btn" onclick="startRecording()" {% if is_recording %}disabled{% endif %}>Start Recording</button>
-    <button id="stop-btn" onclick="stopRecording()" {% if not is_recording %}disabled{% endif %}>Stop Recording</button>
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="panel" id="raw-audio-files">
+            <h2>Raw Audio Files</h2>
+            <div class="file-list"></div>
+        </div>
 
-    <script>
-        async function startRecording() {
-            const response = await fetch('/start-recording', { method: 'POST' });
-            const data = await response.json();
-            alert(data.message);
-            location.reload();
-        }
+        <!-- Center Section -->
+        <div class="center">
+            <h1>Transcriber Interface</h1>
+            <p>Press the start button to begin recording.<br>
+                Press the pause button to pause the recording.<br>
+                Finish the recording by pressing the stop button.
+            </p>
+            <div class="button-group">
+                <button class="control-btn" id="start">Start</button>
+                <button class="control-btn" id="pause" disabled>Pause</button>
+                <button class="control-btn" id="stop" disabled>Stop</button>
+            </div>
+            <button class="delete-btn">Delete all Files</button>
+        </div>
 
-        async function stopRecording() {
-            const response = await fetch('/stop-recording', { method: 'POST' });
-            const data = await response.json();
-            alert(data.message);
-            location.reload();
-        }
-    </script>
+        <!-- Right Panel -->
+        <div class="panel" id="transcribed-files">
+            <h2>Transcribed Files</h2>
+            <div class="file-list"></div>
+        </div>
+
+        <!-- Model Settings -->
+        <div class="model-settings">
+            <h2>Model Settings</h2>
+            <select>
+                <option value="whisper">Whisper (OpenAI)</option>
+                <option value="other-model">Other Model</option>
+            </select>
+        </div>
+    </div>
+    <footer>
+        <p>Developed by Kilian Brickl © 2024</p>
+    </footer>
 </body>
 </html>
