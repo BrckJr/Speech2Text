@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcriber Interface</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        button { padding: 10px 20px; font-size: 16px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Transcriber Interface</h1>
+    <button id="start-btn" onclick="startRecording()" {% if is_recording %}disabled{% endif %}>Start Recording</button>
+    <button id="stop-btn" onclick="stopRecording()" {% if not is_recording %}disabled{% endif %}>Stop Recording</button>
+
+    <script>
+        async function startRecording() {
+            const response = await fetch('/start-recording', { method: 'POST' });
+            const data = await response.json();
+            alert(data.message);
+            location.reload();
+        }
+
+        async function stopRecording() {
+            const response = await fetch('/stop-recording', { method: 'POST' });
+            const data = await response.json();
+            alert(data.message);
+            location.reload();
+        }
+    </script>
+</body>
+</html>
