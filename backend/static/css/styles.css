@@ -9,7 +9,7 @@
 body {
     font-family: Arial, sans-serif;
     color: #333;
-    background: url('/static/figures/realistic-polygonal-background/realistic-polygonal-background.png') no-repeat center center fixed;
+    background: url('../figures/realistic-polygonal-background.png') no-repeat center center fixed;
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -143,6 +143,7 @@ select {
 footer {
     text-align: center;
     margin-top: 20px;
-    font-size: 12px;
+    font-size: 6px;
+    font-style: italic;
     color: #666;
 }

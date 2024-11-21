@@ -26,7 +26,7 @@ def generate_file_path(dir_name):
     }
 
     filename = valid_filetypes.get(dir_name, f"corrupted_{timestamp}.txt")
-    directory_path = f"output/{dir_name if dir_name in valid_filetypes else 'corrupted'}"
+    directory_path = f"backend/static/output/{dir_name if dir_name in valid_filetypes else 'corrupted'}"
 
     generate_output_directory(directory_path)
 

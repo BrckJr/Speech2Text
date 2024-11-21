@@ -1,12 +1,12 @@
+import os
 import whisper
 import sounddevice as sd
 import soundfile as sf
 import threading
 import numpy as np
-import utils.utils as utils
+import backend.utils.utils as utils
 
-
-class AudioModel:
+class Model:
     """
     The AudioModel class handles real-time audio recording, processing, and transcription.
 
@@ -213,3 +213,35 @@ class AudioModel:
             return None
 
         return file_path
+
+    @staticmethod
+    def delete_all_files():
+        """
+        Cleans up the output directory by removing all existing files,
+        including all raw audio files and transcriptions.
+        """
+        try:
+            # Define the paths to the directories
+            raw_audio_dir = 'backend/static/output/raw_audio'
+            transcription_dir = 'backend/static/output/transcription'
+
+            # Check if raw_audio directory exists and remove all its contents
+            if os.path.exists(raw_audio_dir) and os.path.isdir(raw_audio_dir):
+                for filename in os.listdir(raw_audio_dir):
+                    file_path = os.path.join(raw_audio_dir, filename)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                print("Raw audio files cleared.")
+
+            # Check if transcription directory exists and remove all its contents
+            if os.path.exists(transcription_dir) and os.path.isdir(transcription_dir):
+                for filename in os.listdir(transcription_dir):
+                    file_path = os.path.join(transcription_dir, filename)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
+                print("Transcription files cleared.")
+
+        except Exception as e:
+            print(f"Error during cleanup: {e}")
+        else:
+            print("All contents from the output directories are cleared.")

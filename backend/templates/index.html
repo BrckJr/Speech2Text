@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transcriber Interface</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
     <div class="container">
@@ -22,11 +22,11 @@
                 Finish the recording by pressing the stop button.
             </p>
             <div class="button-group">
-                <button class="control-btn" id="start">Start</button>
-                <button class="control-btn" id="pause" disabled>Pause</button>
-                <button class="control-btn" id="stop" disabled>Stop</button>
+                <button class="control-btn" id="start">Start ▶️</button>
+                <button class="control-btn" id="pause" disabled>Pause ⏸️</button>
+                <button class="control-btn" id="stop" disabled>Stop ⏹️</button>
             </div>
-            <button class="delete-btn">Delete all Files</button>
+            <button class="delete-btn">Delete all Files 🗑️</button>
         </div>
 
         <!-- Right Panel -->
@@ -35,7 +35,7 @@
             <div class="file-list"></div>
         </div>
 
-        <!-- Model Settings -->
+         <!-- Model Settings -->
         <div class="model-settings">
             <h2>Model Settings</h2>
             <select>
@@ -43,9 +43,14 @@
                 <option value="other-model">Other Model</option>
             </select>
         </div>
+
     </div>
     <footer>
-        <p>Developed by Kilian Brickl © 2024</p>
+        <p>
+            Developed by Kilian Brickl © 2024 <br>
+            Background image designed by <a href="https://www.freepik.com" target="_blank">Freepik</a>
+        </p>
     </footer>
+    <script src="/static/js/script.js"></script>
 </body>
 </html>
