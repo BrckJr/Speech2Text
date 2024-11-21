@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transcriber Interface</title>
     <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -26,7 +27,7 @@
                 <button class="control-btn" id="pause" disabled>Pause ⏸️</button>
                 <button class="control-btn" id="stop" disabled>Stop ⏹️</button>
             </div>
-            <button class="delete-btn">Delete all Files 🗑️</button>
+            <button class="delete-btn" id="delete_all">Delete all Files 🗑️</button>
         </div>
 
         <!-- Right Panel -->
@@ -40,16 +41,15 @@
             <h2>Model Settings</h2>
             <select>
                 <option value="whisper">Whisper (OpenAI)</option>
-                <option value="other-model">Other Model</option>
             </select>
         </div>
 
     </div>
     <footer>
-        <p>
+        <p_footer>
             Developed by Kilian Brickl © 2024 <br>
             Background image designed by <a href="https://www.freepik.com" target="_blank">Freepik</a>
-        </p>
+        </p_footer>
     </footer>
     <script src="/static/js/script.js"></script>
 </body>

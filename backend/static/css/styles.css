@@ -49,10 +49,11 @@ body {
 }
 
 .file-list {
-    height: 200px;
+    height: 90%;
     border: 1px solid #ccc;
     border-radius: 4px;
     background: #f9f9f9;
+    font-size: 12px;
 }
 
 /* Center Section */
@@ -62,12 +63,18 @@ body {
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 48px;
     margin-bottom: 10px;
 }
 
 p {
-    font-size: 14px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+p_footer {
+    font-size: 9px;
+    font-style: italic;
     margin-bottom: 20px;
 }
 
@@ -107,9 +114,9 @@ p {
     color: white;
 }
 
-.delete-btn {
+#delete_all {
     padding: 10px 40px;
-    background: #607d8b;
+    background: #A9A9A9;
     color: white;
     font-size: 16px;
     border: none;
@@ -143,7 +150,5 @@ select {
 footer {
     text-align: center;
     margin-top: 20px;
-    font-size: 6px;
-    font-style: italic;
     color: #666;
 }

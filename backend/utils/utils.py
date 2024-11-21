@@ -10,13 +10,13 @@ def generate_output_directory(directory_path):
 
 def generate_file_path(dir_name):
     """
-    Returns the relative path where the respective file shall be stored.
+    Returns a relative path and name under which a file shall be stored including the time stamp.
 
     Args:
         dir_name (str): The type of file to store, either "raw_audio" or "transcription".
 
     Returns:
-        _ (str): The relative storage path of the file.
+        _ (str): The relative storage path and name of the file including the time stamp.
     """
 
     timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
