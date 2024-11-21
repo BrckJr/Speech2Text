@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcriber Interface</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="panel" id="raw-audio-files">
+            <h2>Raw Audio Files</h2>
+            <div class="file-list"></div>
+        </div>
+
+        <!-- Center Section -->
+        <div class="center">
+            <h1>Transcriber Interface</h1>
+            <p>Press the start button to begin recording.<br>
+                Press the pause button to pause the recording.<br>
+                Finish the recording by pressing the stop button.
+            </p>
+            <div class="button-group">
+                <button class="control-btn" id="start">Start ▶️</button>
+                <button class="control-btn" id="pause" disabled>Pause ⏸️</button>
+                <button class="control-btn" id="stop" disabled>Stop ⏹️</button>
+            </div>
+            <button class="delete-btn" id="delete_all">Delete all Files 🗑️</button>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="panel" id="transcribed-files">
+            <h2>Transcribed Files</h2>
+            <div class="file-list"></div>
+        </div>
+
+         <!-- Model Settings -->
+        <div class="model-settings">
+            <h2>Model Settings</h2>
+            <select>
+                <option value="whisper">Whisper (OpenAI)</option>
+            </select>
+        </div>
+
+    </div>
+    <footer>
+        <p_footer>
+            Developed by Kilian Brickl © 2024 <br>
+            Background image designed by <a href="https://www.freepik.com" target="_blank">Freepik</a>
+        </p_footer>
+    </footer>
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
