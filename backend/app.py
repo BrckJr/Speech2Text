@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from backend.control.transcription_control import transcription_bp
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
 # Register the transcription blueprint
 app.register_blueprint(transcription_bp)
