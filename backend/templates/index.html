@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Canvas for dynamic wave background -->
+    <canvas id="backgroundCanvas"></canvas>
+
     <div class="container">
         <!-- Left Panel -->
         <div class="panel" id="raw-audio-files">
@@ -36,21 +39,23 @@
             <div class="file-list"></div>
         </div>
 
-         <!-- Model Settings -->
+        <!-- Model Settings -->
         <div class="model-settings">
             <h2>Model Settings</h2>
             <select>
                 <option value="whisper">Whisper (OpenAI)</option>
             </select>
         </div>
-
     </div>
+
     <footer>
         <p_footer>
             Developed by Kilian Brickl © 2024 <br>
             Background image designed by <a href="https://www.freepik.com" target="_blank">Freepik</a>
         </p_footer>
     </footer>
+
     <script src="/static/js/script.js"></script>
+    <script src="/static/js/background.js"></script> <!-- Add this for wave background -->
 </body>
 </html>
