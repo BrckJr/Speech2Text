@@ -44,7 +44,7 @@ body {
 
 /* Panels */
 .panel {
-    background: rgba(255, 255, 255, 0.1); /* Dark transparent background for panels */
+    background: rgba(51, 51, 51, 0.7); /* Dark grey with 70% opacity */
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -63,9 +63,8 @@ body {
     height: 90%;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background: rgba(255, 255, 255, 0.05); /* Slightly darker file list background */
+    background: rgba(255, 255, 255, 0.8);
     font-size: 12px;
-    color: #ddd; /* Light text color for file names */
 }
 
 /* Center Section */
@@ -77,20 +76,17 @@ body {
 h1 {
     font-size: 48px;
     margin-bottom: 10px;
-    color: #f1f1f1; /* Light color for title */
 }
 
 p {
     font-size: 16px;
     margin-bottom: 20px;
-    color: #ddd; /* Light color for text */
 }
 
 p_footer {
     font-size: 9px;
     font-style: italic;
-    margin-bottom: 20px;
-    color: #aaa; /* Lighter color for footer text */
+    margin: 20px;
 }
 
 /* Buttons */
@@ -107,24 +103,26 @@ p_footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    color: white; /* Ensure button text is readable */
 }
 
 .control-btn:disabled {
-    background: #555; /* Darker gray for disabled state */
+    background: #ddd;
     cursor: not-allowed;
 }
 
 #start {
-    background: #4caf50; /* Green button */
+    background: #4caf50;
+    color: white;
 }
 
 #pause {
-    background: #f9a825; /* Yellow button */
+    background: #f9a825;
+    color: white;
 }
 
 #stop {
-    background: #f44336; /* Red button */
+    background: #f44336;
+    color: white;
 }
 
 #delete_all {
@@ -144,7 +142,7 @@ p_footer {
 /* Model Settings */
 .model-settings {
     grid-area: settings;
-    background: rgba(255, 255, 255, 0.1); /* Dark transparent background */
+    background: rgba(51, 51, 51, 0.7); /* Dark grey with 70% opacity */)
     border-radius: 8px;
     padding: 20px;
     text-align: center;
@@ -157,13 +155,12 @@ select {
     width: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background: #333; /* Dark background for dropdown */
-    color: #f1f1f1; /* Light text color for dropdown */
 }
 
 /* Footer */
 footer {
     text-align: center;
     margin-top: 20px;
-    color: #aaa; /* Lighter footer text */
+    color: #f1f1f1;
 }
+
