@@ -6,86 +6,91 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// Particle class to represent each grain on the sine wave
-class Particle {
-    constructor(startX, baseY, amplitude, frequency, phaseOffset, speed, direction, color) {
+// SineWave class to handle each complex sine wave
+class SineWave {
+    constructor(baseY, amplitudeRange, frequencyRange, speed, color, harmonics) {
         this.baseY = baseY; // Base Y-coordinate (center of oscillation)
-        this.amplitude = amplitude; // Amplitude of the wave (vertical range)
-        this.frequency = frequency; // Frequency of the wave
-        this.phaseOffset = phaseOffset; // Phase offset for uniqueness
-        this.speed = Math.random() * speed; // Speed of horizontal movement
-        this.color = color; // Color of the particle
-        this.size = Math.random() * 1.5 + 0.5; // Size of the particle
-        this.alpha = Math.random() * 0.5 + 0.5; // Transparency
-        this.x = startX; // Initial X-coordinate
-        this.startX = startX; // Used to reset position when wrapping
-        this.direction = direction; // Direction of the wave (+1 or -1)
+        this.amplitudeRange = amplitudeRange; // Range for amplitude variation
+        this.frequencyRange = frequencyRange; // Range for frequency variation
+        this.speed = speed; // Speed of wave motion
+        this.color = color; // Color of the sine wave
+        this.harmonics = harmonics; // Number of sine components in the wave
+        this.components = this.generateComponents(); // Create harmonic components
     }
 
-    draw() {
+    // Generate harmonic components with random amplitudes, frequencies, and phases
+    generateComponents() {
+        const components = [];
+        for (let i = 0; i < this.harmonics; i++) {
+            const amplitude = Math.random() * (this.amplitudeRange.max - this.amplitudeRange.min) + this.amplitudeRange.min;
+            const frequency = Math.random() * (this.frequencyRange.max - this.frequencyRange.min) + this.frequencyRange.min;
+            const phase = Math.random() * Math.PI * 2; // Random phase offset
+            components.push({ amplitude, frequency, phase });
+        }
+        return components;
+    }
+
+    draw(time) {
         ctx.beginPath();
-        ctx.fillStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${this.alpha})`;
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-        ctx.fill();
-    }
+        ctx.strokeStyle = `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0.8)`; // Wave color
+        ctx.lineWidth = 1; // Thickness of the sine wave
 
-    update(time) {
-        // Update the horizontal position (constant speed)
-        this.x += this.speed;
+        for (let x = 0; x <= canvas.width; x += 1) {
+            let yOffset = 0;
 
-        // Wrap around the canvas when the particle moves off-screen
-        if (this.x > canvas.width) this.x = 0;
-        if (this.x < 0) this.x = canvas.width;
+            // Sum the contributions of all harmonic components
+            this.components.forEach(component => {
+                yOffset += component.amplitude * Math.sin(component.frequency * (x + time * this.speed) + component.phase);
+            });
 
-        // Calculate oscillating Y position based on sine wave
-        const oscillationY = Math.sin(this.frequency * (this.x + time) + this.phaseOffset) * this.amplitude;
-        this.y = this.baseY + this.direction * oscillationY; // Apply the vertical oscillation
-        this.draw();
+            const y = this.baseY + yOffset; // Combine base Y and offset
+            if (x === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+
+        ctx.stroke();
     }
 }
 
-// Generate sine waves
-const particles = [];
-const numWaves = 5; // Number of sine waves per group
-const particlesPerWave = 400; // Particles per sine wave
-const waveAmplitude = 30; // Amplitude of each wave (vertical extent)
-const waveFrequency = 0.01; // Frequency of oscillation
-const waveGap = 20; // Vertical gap between waves
-const waveSpeed = 0.1; // Speed of particles moving along the sine wave
+// Generate complex sine waves
+const sineWaves = [];
+const numWaves = 10; // Number of sine waves per group (bottom / top)
+const waveGap = 50; // Vertical gap between waves
+const speed = 0.3; // Speed of wave motion
+const harmonics = 50; // Number of harmonic components per wave
 
-function createWaveParticles() {
+function createComplexWaves() {
+    /*
     const colors = [
         { r: 255, g: 200, b: 200 }, // Soft red
         { r: 200, g: 255, b: 200 }, // Soft green
         { r: 200, g: 200, b: 255 }, // Soft blue
     ];
+    */
 
-    // Create top waves
+    // Top waves
     for (let w = 0; w < numWaves; w++) {
-        const waveY = waveGap * w + 50; // Top group starts near the top of the screen
+        const waveY = 70; // Top group starts near the top of the screen
+        const amplitudeRange = { min: 1, max: 5 }; // Amplitude range for complexity
+        const frequencyRange = { min: 0.05, max: 0.1 }; // Frequency range for complexity
+        // const color = colors[w % colors.length]; // Cycle through colors
+        const color = { r: 255, g: 255, b: 255 } // make all waves in white
         const direction = Math.random() > 0.5 ? 1 : -1; // Randomize wave direction
-        const color = colors[w % colors.length]; // Cycle through colors
-
-        for (let i = 0; i < particlesPerWave; i++) {
-            const startX = (canvas.width / particlesPerWave) * i; // Distribute particles horizontally
-            const phaseOffset = Math.random() * Math.PI * 2; // Randomize phase offset
-            const speed = waveSpeed * (Math.random() * 0.5 + 0.5); // Slight variation in speed
-            particles.push(new Particle(startX, waveY, waveAmplitude, waveFrequency, phaseOffset, speed, direction, color));
-        }
+        sineWaves.push(new SineWave(waveY, amplitudeRange, frequencyRange, direction * speed * Math.random(), color, harmonics));
     }
 
-    // Create bottom waves
+    // Bottom waves
     for (let w = 0; w < numWaves; w++) {
-        const waveY = canvas.height - waveGap * w - 50; // Bottom group starts near the bottom of the screen
+        const waveY = canvas.height - 70; // Bottom group starts near the bottom of the screen
+        const amplitudeRange = { min: 1, max: 5 }; // Amplitude range for complexity
+        const frequencyRange = { min: 0.05, max: 0.1 }; // Frequency range for complexity
+        // const color = colors[w % colors.length]; // Cycle through colors
+        const color = { r: 255, g: 255, b: 255 } // make all waves in white
         const direction = Math.random() > 0.5 ? 1 : -1; // Randomize wave direction
-        const color = colors[w % colors.length]; // Cycle through colors
-
-        for (let i = 0; i < particlesPerWave; i++) {
-            const startX = (canvas.width / particlesPerWave) * i; // Distribute particles horizontally
-            const phaseOffset = Math.random() * Math.PI * 2; // Randomize phase offset
-            const speed = waveSpeed * (Math.random() * 0.5 + 0.5); // Slight variation in speed
-            particles.push(new Particle(startX, waveY, waveAmplitude, waveFrequency, phaseOffset, speed, direction, color));
-        }
+        sineWaves.push(new SineWave(waveY, amplitudeRange, frequencyRange, direction * speed * Math.random(), color, harmonics));
     }
 }
 
@@ -94,13 +99,13 @@ function animate(time) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // Subtle trail effect
     ctx.fillRect(0, 0, canvas.width, canvas.height); // Clear canvas with transparency
 
-    particles.forEach(particle => {
-        particle.update(time * 0.01); // Update particle position
+    sineWaves.forEach(wave => {
+        wave.draw(time * 0.01); // Update wave position
     });
 
     requestAnimationFrame(animate);
 }
 
-// Initialize particles and start animation
-createWaveParticles();
+// Initialize sine waves and start animation
+createComplexWaves();
 animate(0);
