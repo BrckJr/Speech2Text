@@ -4,7 +4,8 @@ const pauseButton = document.getElementById('pause');
 const stopButton = document.getElementById('stop');
 const deleteButton = document.querySelector('.delete-btn');
 
-// Function to load audio files from the server and filter by .wav extension
+// Function to load audio file paths from the database
+// Function to load audio files from the server
 async function loadAudioFiles() {
     try {
         const response = await fetch('/list-audio-files');
@@ -18,29 +19,29 @@ async function loadAudioFiles() {
         const fileList = document.querySelector('#raw-audio-files .file-list');
         fileList.innerHTML = ''; // Clear existing content
 
-        // Filter files to only include those that end with .wav
-        data.files.filter(file => file.toLowerCase().endsWith('.wav'))
-            .forEach(file => {
-                const listItem = document.createElement('div');
-                listItem.className = 'file-item';
+        // Loop through the list of audio file paths and create links
+        data.files.forEach(filePath => {
+            const listItem = document.createElement('div');
+            listItem.className = 'file-item';
 
-                // Create a clickable link for each file
-                const fileLink = document.createElement('a');
-                fileLink.href = `/static/output/raw_audio/${file}`;  // Assuming files are served from this path
-                fileLink.textContent = file;
-                fileLink.target = '_blank';  // Open in a new tab or default action
+            // Create a clickable link for each audio file
+            const fileLink = document.createElement('a');
+            fileLink.href = `/static/${filePath}`;  // Use relative path to static folder
+            fileLink.textContent = filePath.split('/').pop();  // Display only the file name
+            fileLink.target = '_blank';  // Open in a new tab
 
-                // Append the link to the list item
-                listItem.appendChild(fileLink);
-                fileList.appendChild(listItem);
-            });
-
+            // Append the link to the list item
+            listItem.appendChild(fileLink);
+            fileList.appendChild(listItem);
+        });
     } catch (err) {
         console.error('Error loading audio files:', err);
     }
 }
 
-// Function to load audio files from the server
+
+// Function to load transcription files from the server
+// Function to load transcription files from the server
 async function loadTranscriptionFiles() {
     try {
         const response = await fetch('/list-transcription-files');
@@ -54,25 +55,23 @@ async function loadTranscriptionFiles() {
         const fileList = document.querySelector('#transcribed-files .file-list');
         fileList.innerHTML = ''; // Clear existing content
 
-        // Filter files to only include those that end with .wav
-        data.files.filter(file => file.toLowerCase().endsWith('.txt'))
-            .forEach(file => {
-                const listItem = document.createElement('div');
-                listItem.className = 'file-item';
+        // Loop through the list of transcription file paths and create links
+        data.files.forEach(filePath => {
+            const listItem = document.createElement('div');
+            listItem.className = 'file-item';
 
-                // Create a clickable link for each file
-                const fileLink = document.createElement('a');
-                fileLink.href = `/static/output/transcription/${file}`;  // Assuming files are served from this path
-                fileLink.textContent = file;
-                fileLink.target = '_blank';  // Open in a new tab or default action
+            // Create a clickable link for each transcription file
+            const fileLink = document.createElement('a');
+            fileLink.href = `/static/${filePath}`;  // Use relative path to static folder
+            fileLink.textContent = filePath.split('/').pop();  // Display only the file name
+            fileLink.target = '_blank';  // Open in a new tab
 
-                // Append the link to the list item
-                listItem.appendChild(fileLink);
-                fileList.appendChild(listItem);
-            });
-
+            // Append the link to the list item
+            listItem.appendChild(fileLink);
+            fileList.appendChild(listItem);
+        });
     } catch (err) {
-        console.error('Error loading audio files:', err);
+        console.error('Error loading transcription files:', err);
     }
 }
 

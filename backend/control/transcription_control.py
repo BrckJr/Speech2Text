@@ -1,8 +1,8 @@
 import os
 from flask import Blueprint, jsonify, send_from_directory, request
-from sympy.parsing.sympy_parser import TRANS
-
 from backend.model.transcriber import Model
+from backend.database.models import AudioTranscription
+from backend.database import db
 
 # Create a Blueprint for transcription routes
 transcription_bp = Blueprint('transcription', __name__)
@@ -31,41 +31,78 @@ def stop_recording():
     transcribe = data.get('transcribe', False)
 
     # Stop recording
-    filepath, save_successful = transcriber.stop_recording_audio()
+    audio_filepath, audio_save_successful = transcriber.stop_recording_audio()
 
-    # Conditionally perform transcription
-    if save_successful and transcribe:
-        transcriber.transcribe_raw_audio(filepath)
+    # Prepare transcription and save paths to the database
+    if audio_save_successful:
+        transcription_filepath = None
+        if transcribe:
+            transcription_filepath, transcription_save_successful = transcriber.transcribe_raw_audio(audio_filepath)
 
-    return jsonify({"message": "Recording stopped"})
+        # Remove '/backend/static/' part of the path for both audio and transcription to be compliant with Flask
+        # path conventions in the static folder
+        stripped_audio_path = audio_filepath.replace('backend/static/', '')
+        stripped_transcription_path = transcription_filepath.replace('backend/static/', '')
+
+        # Save to the database
+        audio_recording = AudioTranscription(
+            audio_path=stripped_audio_path,
+            transcription_path=stripped_transcription_path
+        )
+        db.session.add(audio_recording)
+        db.session.commit()
+
+        return jsonify({"message": "Recording stopped and saved"})
+
+    return jsonify({"message": "Failed to save recording"}), 500
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
 def delete_files():
     try:
-        transcriber.delete_all_files()
+        # Query all records from the database
+        recordings = AudioTranscription.query.all()
+
+        # Delete files from the local filesystem
+        for recording in recordings:
+            if os.path.exists(recording.audio_path):
+                os.remove(recording.audio_path)
+            if recording.transcription_path and os.path.exists(recording.transcription_path):
+                os.remove(recording.transcription_path)
+
+        # Clear database records
+        db.session.query(AudioTranscription).delete()
+        db.session.commit()
+
         return jsonify({"success": True, "message": "All files deleted"})
     except Exception as e:
         print(f"Error during file deletion: {e}")
         return jsonify({"success": False, "message": "Failed to delete files"}), 500
 
-
 @transcription_bp.route('/list-audio-files', methods=['GET'])
 def list_audio_files():
     try:
-        # List all files in the audio folder
-        files = os.listdir(AUDIO_FOLDER)
-        files = [file for file in files if os.path.isfile(os.path.join(AUDIO_FOLDER, file))]
-        return jsonify({'files': files})
+        # Query the database for all audio recordings
+        audio_recordings = AudioTranscription.query.all()
+
+        # Create a list of audio file paths (audio_path)
+        audio_files = [recording.audio_path for recording in audio_recordings]
+
+        return jsonify({'files': audio_files})
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
 @transcription_bp.route('/list-transcription-files', methods=['GET'])
 def list_transcription_files():
     try:
-        # List all files in the audio folder
-        files = os.listdir(TRANSCRIPTION_FOLDER)
-        files = [file for file in files if os.path.isfile(os.path.join(TRANSCRIPTION_FOLDER, file))]
-        return jsonify({'files': files})
+        # Query the database for all transcription records
+        audio_recordings = AudioTranscription.query.all()
+
+        # Create a list of transcription file paths (transcription_path)
+        transcription_files = [recording.transcription_path for recording in audio_recordings if recording.transcription_path]
+
+        return jsonify({'files': transcription_files})
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
