@@ -113,24 +113,43 @@ p_footer {
     cursor: pointer;
 }
 
-.control-btn:disabled {
-    background: #ddd;
-    cursor: not-allowed;
-}
-
 #start {
-    background: #4caf50;
+    background: #008000;
     color: white;
 }
 
 #pause {
-    background: #f9a825;
+    background: #FFA500;
     color: white;
 }
 
 #stop {
-    background: #f44336;
+    background: #B22222;
     color: white;
+}
+
+/* Specific disabled style for the Start button */
+#start:disabled {
+    background: rgba(0, 128, 0, 0.6) !important; /* Light green for Stop button */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
+    cursor: not-allowed !important; /* Visual indicator for disabled state */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+}
+
+/* Specific disabled style for the Pause button */
+#pause:disabled {
+    background: rgba(255, 165, 0, 0.6) !important; /* Light orange for Stop button */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
+    cursor: not-allowed !important; /* Visual indicator for disabled state */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+}
+
+/* Specific disabled style for the Stop button */
+#stop:disabled {
+    background: rgba(178, 34, 34, 0.6) !important; /* Light red for Stop button */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
+    cursor: not-allowed !important; /* Visual indicator for disabled state */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
 }
 
 #delete_all {
@@ -177,5 +196,3 @@ footer {
     color: #f1f1f1;
     margin-top: 20px; /* Add space between the footer and the previous section */
 }
-
-
