@@ -177,6 +177,11 @@ class Model:
         Args:
             filepath (str): The path to the audio file to transcribe.
 
+        Returns:
+            tuple:
+                str: The file path of the saved .txt file, or None if saving failed.
+                bool: True if the file was saved successfully, False otherwise.
+
         Raises:
             FileNotFoundError: If the specified audio file is not found.
             RuntimeError: If the transcription process encounters an error.
@@ -184,7 +189,8 @@ class Model:
 
         result = self.transcription_model.transcribe(audio=filepath)
         transcription = result["text"].strip()  # Clean up any leading/trailing whitespace
-        self.save_transcription_to_file(transcription)
+        filepath, save_successful = self.save_transcription_to_file(transcription)
+        return filepath, save_successful
 
     @staticmethod
     def save_transcription_to_file(transcription):
@@ -198,7 +204,9 @@ class Model:
             transcription (str): The transcribed text to save to the file.
 
         Returns:
-            str: The file path where the transcription was saved.
+            tuple:
+                str: The file path of the saved .txt file, or None if saving failed.
+                bool: True if the file was saved successfully, False otherwise.
         """
         # Generate the file path for the transcription file
         file_path = utils.generate_file_path("transcription")
@@ -207,12 +215,14 @@ class Model:
         try:
             with open(file_path, 'w') as file:
                 file.write(transcription)
+            save_successful = True
+
             print(f"Transcription saved to {file_path}")
         except Exception as e:
             print(f"Failed to save transcription: {e}")
             return None
 
-        return file_path
+        return file_path, save_successful
 
     @staticmethod
     def delete_all_files():

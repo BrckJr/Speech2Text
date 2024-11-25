@@ -13,12 +13,14 @@ Currently, the projects includes following components:
   - The user can open the raw audio file as well as the transcription by simply clicking on the files. 
   The name of the files include the timestamp of when they were created.
   - A button to delete all audio recordings and transcriptions.
-- The recordings and the transcriptions are saved locally in the 'backend/static/output' directory.
+- The recordings and the transcriptions are saved locally in the 'backend/static/output' directory. A link to the 
+stored files is contained in a SQLite database. This can be extended to have online storage of the ressources and changing
+the stored links to the URLs to the remote data.
 
 
 Future developments might include but are certainly not limited to:
-- storing the audio recordings and transcriptions with a persistent database storage system like 
-PostgreSQL, MongoDB, ... instead of storing them locally
+- having individual users to register  
+- allowing a users to have access only to their respective files on the database.
 - improving the system visually with a nicer WEB UI e.g. by including some animations, ...
 - including a text analysis tool which can analyse the speaking speed, vocabulary, length of pauses, usage of fillers, ...
 
