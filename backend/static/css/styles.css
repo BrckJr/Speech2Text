@@ -44,7 +44,7 @@ body {
 
 /* Panels */
 .panel {
-    background: rgba(51, 51, 51, 0.7); /* Dark grey with 70% opacity */
+    background: rgba(51, 51, 51, 0.85); /* Dark grey with 85% opacity */
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -62,8 +62,8 @@ body {
 .file-list {
     height: 90%;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    background: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9); /* Light grey with 90% opacity */
     font-size: 12px;
 }
 
@@ -71,11 +71,18 @@ body {
 .center {
     grid-area: center;
     text-align: center;
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
 }
 
 h1 {
     font-size: 48px;
-    margin-bottom: 10px;
+    margin: 15px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
 }
 
 p {
@@ -86,7 +93,8 @@ p {
 p_footer {
     font-size: 9px;
     font-style: italic;
-    margin: 20px;
+    text-align: center;
+    padding: 5px 5px;
 }
 
 /* Buttons */
@@ -133,6 +141,7 @@ p_footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .delete-btn:hover {
@@ -142,8 +151,8 @@ p_footer {
 /* Model Settings */
 .model-settings {
     grid-area: settings;
-    background: rgba(51, 51, 51, 0.7); /* Dark grey with 70% opacity */)
-    border-radius: 8px;
+    background: rgba(51, 51, 51, 0.90); /* Dark grey with 90% opacity */
+    border-radius: 5px;
     padding: 20px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -159,8 +168,14 @@ select {
 
 /* Footer */
 footer {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
     text-align: center;
-    margin-top: 20px;
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
     color: #f1f1f1;
+    margin-top: 20px; /* Add space between the footer and the previous section */
 }
+
 
