@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Transcriber Interface{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    <!-- Canvas for dynamic wave background -->
+    <canvas id="backgroundCanvas"></canvas>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p_footer>
+            Developed by Kilian Brickl © 2024
+        </p_footer>
+    </footer>
+
+    <script type="module" src="static/js/app.js"></script>
+</body>
+</html>

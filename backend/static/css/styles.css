@@ -9,7 +9,7 @@
 body {
     font-family: Arial, sans-serif;
     color: #f1f1f1; /* Light text color for readability on dark background */
-    background: none; /* Remove the fixed background image */
+    background: grey; /* Remove the fixed background image */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -20,13 +20,14 @@ body {
 
 /* Set the canvas to cover the whole screen and be positioned behind content */
 #backgroundCanvas {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     z-index: -1;  /* Make sure the canvas stays behind the other content */
     pointer-events: none; /* Prevent interactions with the background */
+    background: none;
 }
 
 /* Container Layout */

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block body_class %}
+    login-page
+{% endblock %}
+
+{% block content %}
+
+    <div class="center">
+        <h1>Login</h1>
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+
+        <!-- Button to navigate to the registration page -->
+        <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+    </div>
+{% endblock %}
