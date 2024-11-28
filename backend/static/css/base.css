@@ -32,6 +32,41 @@ body {
     background: none;
 }
 
+/* User Info Container */
+.user-info {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between email and logout button */
+    z-index: 1000;
+}
+
+/* User Email Styling */
+.user-email {
+    font-size: 14px;
+    color: #f1f1f1; /* Light color for visibility */
+    background: rgba(51, 51, 51, 0.8); /* Slightly opaque background */
+    padding: 8px 16px;
+    border-radius: 5px;
+}
+
+/* Logout Button Styling */
+.btn-logout {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background-color: #B22222; /* Red for logout */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #c9302c; /* Darker red on hover */
+}
 h1, h2, p {
     margin: 0;
 }

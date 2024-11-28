@@ -17,6 +17,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body class="{% block body_class %}{% endblock %}">
+    <!-- User Info and Logout Button -->
+    {% if page_name != "login" and page_name != "register" %}
+        <div class="user-info">
+            <span class="user-email">User: {{ current_user.email }}</span>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <button type="submit" class="btn btn-logout">Logout</button>
+            </form>
+        </div>
+    {% endif %}
+
     <!-- Canvas for dynamic wave background -->
     <canvas id="backgroundCanvas"></canvas>
 
