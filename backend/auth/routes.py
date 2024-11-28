@@ -28,7 +28,7 @@ def register():
         flash('Your account has been created! You can now log in.', 'success')
         return redirect(url_for('auth.login'))  # Redirect to login after successful registration
 
-    return render_template('register.html', form=form)
+    return render_template('register.html', form=form, page_name='register')
 
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
@@ -45,7 +45,7 @@ def login():
         else:
             flash('Login unsuccessful. Please check your email and password.', 'danger')
 
-    return render_template('login.html', form=form)  # Render the login template
+    return render_template('login.html', form=form, page_name='login')  # Render the login template
 
 @auth_blueprint.route('/logout')
 @login_required

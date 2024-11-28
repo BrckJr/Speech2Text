@@ -4,7 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Transcriber Interface{% endblock %}</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    {% block styles %}
+        {% if page_name == "dashboard" %}
+            <link rel="stylesheet" href="/static/css/dashboard.css">
+        {% elif page_name == "login" %}
+            <link rel="stylesheet" href="/static/css/login.css">
+        {% elif page_name == "register" %}
+            <link rel="stylesheet" href="/static/css/register.css">
+        {% endif %}
+    {% endblock %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body class="{% block body_class %}{% endblock %}">
@@ -16,9 +25,9 @@
     </div>
 
     <footer>
-        <p_footer>
+        <p1>
             Developed by Kilian Brickl © 2024
-        </p_footer>
+        </p1>
     </footer>
 
     <script type="module" src="static/js/app.js"></script>

@@ -1,0 +1,96 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    color: #f1f1f1; /* Light text color for readability on dark background */
+    background: grey; /* Matches the dashboard and other pages */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative; /* For potential background layering */
+}
+
+/* Center Section for Register Form */
+.center {
+    text-align: center;
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
+    padding: 40px 20px;
+    width: 90%;
+    max-width: 400px; /* Matches the login page layout */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Headings */
+h1 {
+    font-size: 36px; /* Consistent with login page */
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9); /* Light background for input fields */
+}
+
+/* Button Styling */
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-primary {
+    background: #008000; /* Green for primary actions */
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #006400; /* Darker green on hover */
+}
+
+/* Footer Link */
+p {
+    margin-top: 10px;
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* Links */
+a {
+    color: #ffa500; /* Orange for links */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a:hover {
+    text-decoration: underline;
+}

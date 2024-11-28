@@ -19,7 +19,9 @@ TRANSCRIPTION_FOLDER = "backend/static/output/transcription"
 @login_required
 def dashboard():
     user_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
-    return render_template('dashboard.html', files=user_files)
+
+    # CHECK HERE WHAT THE FILES PARAMETER MEANS!!!!
+    return render_template('dashboard.html', files=user_files, page_name='dashboard')
 
 @transcription_bp.route('/start', methods=['POST'])
 def start_recording():

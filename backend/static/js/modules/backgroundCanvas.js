@@ -63,7 +63,7 @@ export function setupCanvas() {
     const wave = new ComplexWave(
         canvas.height / 2,
         { min: 5, max: 30 },
-        { min: 0.1, max: 0.7 },
+        { min: 0.1, max: 0.45 },
         0.1,
         { r: 255, g: 255, b: 255 },
         100
@@ -74,6 +74,10 @@ export function setupCanvas() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Subtle trail effect
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Clear canvas with transparency
 
+        // REMOVE AGAIN AFTER SOLVING BACKGROUND PROBLEM !!!!
+        console.log(`Canvas size: ${canvas.width}x${canvas.height}`);
+        // REMOVE AGAIN AFTER SOLVING BACKGROUND PROBLEM !!!!
+
         wave.draw(ctx, canvas, time * 0.01); // Draw the wave
 
         requestAnimationFrame(animate);
@@ -81,11 +85,11 @@ export function setupCanvas() {
 
     animate(0); // Start animation loop
 
-    // Resize canvas when window size changes
+    // Defensive resize canvas when window size changes
     window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        wave.baseY = canvas.height / 2;
+        canvas.width = window.innerWidth > 0 ? window.innerWidth : 1; // Prevent zero width
+        canvas.height = window.innerHeight > 0 ? window.innerHeight : 1; // Prevent zero height
+        wave.baseY = canvas.height / 2; // Recenter the wave
     });
 }
 

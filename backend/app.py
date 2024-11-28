@@ -43,7 +43,7 @@ app = create_app()
 def index():
     # If the user is authenticated, show the main page (or dashboard)
     if current_user.is_authenticated:
-        return render_template('dashboard.html')  # Main page after login
+        return render_template('dashboard.html', page_name='dashboard')  # Main page after login
 
     # If not logged in, redirect to the login page
     return redirect(url_for('auth.login'))  # Login route (change if it's a different route)
