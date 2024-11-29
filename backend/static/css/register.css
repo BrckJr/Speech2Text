@@ -106,11 +106,51 @@ p {
 
 /* Links */
 a {
-    color: #ffa500; /* Orange for links */
+    color: #f1f1f1;
     text-decoration: none;
     font-weight: bold;
 }
 
 a:hover {
     text-decoration: underline;
+}
+
+
+/*
+############## HANDWRITTEN HEADING ###############
+ */
+/* SVG Container Styling */
+/* Container for centering */
+.svg-container {
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers the SVG horizontally */
+    align-items: center; /* Centers the SVG vertically */
+    flex-direction: column; /* Ensures vertical stacking for any additional elements */
+    text-align: center; /* Centers any accompanying text */
+}
+
+/* SVG Styling */
+svg {
+    max-width: 90%; /* Ensures the SVG scales responsively */
+    height: auto; /* Maintains aspect ratio */
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers the SVG horizontally */
+}
+
+
+/* Animated Path Styling */
+path {
+    stroke: #f1f1f1;
+    stroke-width: 2;
+    fill: none; /* Keeps the path invisible initially */
+    stroke-dasharray: 500; /* Adjust this based on the total path length */
+    stroke-dashoffset: 500; /* Hidden at the start */
+    animation: draw 10s ease-in-out forwards; /* animations */
+}
+
+/* Keyframes for Drawing Animation */
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0; /* Fully reveals the path */
+    }
 }

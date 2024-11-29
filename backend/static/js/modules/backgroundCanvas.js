@@ -81,11 +81,11 @@ export function setupCanvas() {
 
     animate(0); // Start animation loop
 
-    // Defensive resize canvas when window size changes
+    // Adjust canvas size on window resize
     window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth > 0 ? window.innerWidth : 1; // Prevent zero width
-        canvas.height = window.innerHeight > 0 ? window.innerHeight : 1; // Prevent zero height
-        wave.baseY = canvas.height / 2; // Recenter the wave
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        wave.baseY = canvas.height / 2; // Update wave center
     });
 }
 
