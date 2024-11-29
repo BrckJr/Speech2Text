@@ -6,6 +6,11 @@ import threading
 import numpy as np
 import backend.utils.utils as utils
 
+
+class RecordingError(Exception):
+    """Custom exception for recording errors."""
+    pass
+
 class Model:
     """
     The AudioModel class handles real-time audio recording, processing, and transcription.
@@ -91,24 +96,46 @@ class Model:
         Stops the audio recording process and saves the recorded audio to a file.
 
         This method terminates the recording loop by setting `is_recording` to False.
-        It then saves the buffered audio data to a .wav file. If the save operation fails,
-        the audio data is cleared without being stored.
+        It then attempts to save the buffered audio data to a .wav file. If the save
+        operation fails (e.g., due to invalid or incomplete audio data), the audio
+        data is cleared without being stored.
 
         Returns:
             tuple:
-                str: The file path of the saved audio file, or None if saving failed.
-                bool: True if the file was saved successfully, False otherwise.
+                - str: The file path of the saved audio file, or None if saving failed.
+                - bool: True if the file was saved successfully, False otherwise.
 
         Raises:
-            IOError: If there is an issue saving the file to disk.
+            ValueError: If there is an issue with the audio data (e.g., it's invalid or empty).
+            RecordingError: If the recording is too short or invalid.
         """
 
         self.is_recording = False
 
-        # Save the recorded audio data to a file
-        filepath, save_successful = self.save_raw_audio_to_file(self.temp_audio_data)
-        self.temp_audio_data = []  # Reset recordings after storing the raw audio file
-        return filepath, save_successful
+        # Try to save audio file but if it is too short, catch the exception
+        try:
+            # Save the recorded audio data to a file
+            if len(self.temp_audio_data) == 0:
+                print("RECORDING TOO SHORT")
+                raise RecordingError("Recording is too short.")
+            filepath = self.save_raw_audio_to_file(self.temp_audio_data)
+            self.temp_audio_data = []  # Reset recordings after storing the raw audio file
+            return filepath, True
+        except RecordingError as e:
+            # Catch the custom error for too short recordings
+            print(f"Recording error: {e}")
+            self.temp_audio_data = []  # Reset recordings
+            return None, False
+        except ValueError as err:
+            # Handle the ValueError exception from save_raw_audio_to_file
+            print(f"Error while concatenating audio: {err}")
+            self.temp_audio_data = []  # Reset recordings
+            return None, False
+        except Exception as e:
+            # Catch all other exceptions
+            print(f"Unexpected error: {e}")
+            self.temp_audio_data = []  # Reset recordings
+            return None, False
 
     def callback(self, indata, frames, time, status):
         """
@@ -130,42 +157,47 @@ class Model:
         """
         Saves raw audio data to a .wav file with a timestamped filename.
 
-        This method concatenates chunks of raw audio data into a single array and writes
-        it to a .wav file in the "output/raw_audio" directory. The filename includes a
-        timestamp to ensure uniqueness. If saving fails, an error message is printed.
+        This method concatenates chunks of raw audio data (passed as a list of numpy arrays)
+        into a single audio stream, then saves it to a .wav file in the "output/raw_audio"
+        directory. The filename is generated with a timestamp to ensure uniqueness.
+
+        If the audio data is invalid (e.g., the list is empty or contains invalid chunks),
+        a `ValueError` is raised. If the file cannot be written to disk, an `IOError` is raised.
 
         Args:
             raw_audio (list of numpy.ndarray): List of raw audio data chunks, where each
-                chunk is a NumPy array.
+                chunk is a NumPy array representing audio samples.
 
         Returns:
             tuple:
-                str: The file path of the saved .wav file, or None if saving failed.
-                bool: True if the file was saved successfully, False otherwise.
+                - str: The file path of the saved .wav file if the save is successful,
+                  or None if saving failed.
 
         Raises:
-            ValueError: If the input `raw_audio` list is empty or invalid.
-            IOError: If there is an issue writing the file to disk.
+            ValueError: If the input `raw_audio` list is empty or contains invalid data.
+            IOError: If there is an issue writing the .wav file to disk.
         """
 
         file_path = utils.generate_file_path("raw_audio")
-        save_successful = False
 
         try:
             # Combine the chunks of raw audio data into a single numpy array
             audio_data = np.concatenate(raw_audio, axis=0)
         except ValueError as err:
-            return None, save_successful
+            print(f"Error while concatenating audio: {err}")
+            return None
 
         # Save the audio data to the specified .wav file
         try:
-            sf.write(file_path, audio_data, self.sample_rate)  # Assuming a sample rate of 16kHz
-            save_successful = True
+            sf.write(file_path, audio_data, self.sample_rate)
             print(f"Audio saved to {file_path}")
-        except Exception as e:
+            return file_path  # No error, file saved successfully
+        except IOError as e:
             print(f"Failed to save audio: {e}")
-
-        return file_path, save_successful
+            return None
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            return None
 
     def transcribe_raw_audio(self, filepath):
         """

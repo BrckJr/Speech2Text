@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Transcriber Interface{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    {% block styles %}
+        {% if page_name == "dashboard" %}
+            <link rel="stylesheet" href="/static/css/dashboard.css">
+        {% elif page_name == "login" %}
+            <link rel="stylesheet" href="/static/css/login.css">
+        {% elif page_name == "register" %}
+            <link rel="stylesheet" href="/static/css/register.css">
+        {% endif %}
+    {% endblock %}
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body class="{% block body_class %}{% endblock %}" data-page="{% block data_page %}{% endblock %}">
+    <!-- User Info and Logout Button -->
+    {% if page_name != "login" and page_name != "register" %}
+        <div class="user-info">
+            <span class="user-email">User: {{ current_user.email }}</span>
+            <form method="POST" action="{{ url_for('auth.logout') }}">
+                <button type="submit" class="btn btn-logout">Logout</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <!-- Canvas for dynamic wave background -->
+    <canvas id="backgroundCanvas"></canvas>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <p1>
+            Developed by Kilian Brickl © 2024
+        </p1>
+    </footer>
+
+    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

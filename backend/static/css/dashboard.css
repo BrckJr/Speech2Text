@@ -1,0 +1,376 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    color: #f1f1f1; /* Light text color for readability on dark background */
+    background: grey; /* Remove the fixed background image */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative; /* Needed for layering canvas behind content */
+}
+
+/* Set the canvas to cover the whole screen and be positioned behind content */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;  /* Make sure the canvas stays behind the other content */
+    pointer-events: none; /* Prevent interactions with the background */
+    background: none;
+}
+
+/* Container Layout */
+.container {
+    display: grid;
+    grid-template-areas:
+        "raw-audio center transcribed"
+        "raw-audio settings transcribed";
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Panels */
+.panel {
+    background: rgba(51, 51, 51, 0.85); /* Dark grey with 85% opacity */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    min-height: 390px;
+    width: 290px;
+}
+
+#raw-audio-files {
+    grid-area: raw-audio;
+
+}
+
+#transcribed-files {
+    grid-area: transcribed;
+}
+
+.file-list {
+    height: 90%;
+    max-height: 90%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9); /* Light grey with 90% opacity */
+    font-size: 12px;
+    overflow-y: auto; /* Ensure list gets scrollable when height isn't enough */
+}
+
+/* Center Section */
+.center {
+    grid-area: center;
+    text-align: center;
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
+    min-width: 580px;
+}
+
+h1 {
+    font-size: 48px;
+    margin: 15px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+p {
+    font-size: 16px;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+p_footer {
+    font-size: 9px;
+    font-style: italic;
+    text-align: center;
+    padding: 5px 5px;
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.control-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#start {
+    background: #008000; /* Dark green on hover */
+    color: white;
+}
+
+#pause {
+    background: #FFA500; /* Dark orange on hover */
+    color: white;
+}
+
+#stop {
+    background: #B22222; /* Dark red on hover */
+    color: white;
+}
+
+/* Specific disabled style for the Start button */
+#start:disabled {
+    background: rgba(0, 128, 0, 0.6) !important; /* Light green for Stop button */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
+    cursor: not-allowed !important; /* Visual indicator for disabled state */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+}
+
+/* Specific disabled style for the Pause button */
+#pause:disabled {
+    background: rgba(255, 165, 0, 0.6) !important; /* Light orange for Stop button */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
+    cursor: not-allowed !important; /* Visual indicator for disabled state */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+}
+
+/* Specific disabled style for the Stop button */
+#stop:disabled {
+    background: rgba(178, 34, 34, 0.6) !important; /* Light red for Stop button */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
+    cursor: not-allowed !important; /* Visual indicator for disabled state */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+}
+
+#start:hover {
+    background-color: #00B000; /* Lighter green on hover */
+}
+
+#pause:hover {
+    background-color: #FFC107; /* Lighter orange on hover */
+}
+
+#stop:hover {
+    background-color: #D21404; /* Candy red on hover */
+}
+
+#delete_all {
+    padding: 10px 40px;
+    background: #455a64;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background 0.3s ease;
+}
+
+#delete_all:hover {
+    background: #607d8b;
+}
+
+/* Model Settings */
+.model-settings {
+    grid-area: settings;
+    background: rgba(51, 51, 51, 0.90); /* Dark grey with 90% opacity */
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 5px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    display: flex;
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    text-align: center;
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
+    color: #f1f1f1;
+    margin-top: 20px; /* Add space between the footer and the previous section */
+}
+
+/*
+################## Saving Modal #####################
+*/
+
+/* Modal Styling */
+#stop-options-modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 285px;
+    width: 360px;
+    background: rgba(51, 51, 51); /* Dark grey with slight transparency */
+    color: #f1f1f1; /* Light text color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears on top of other elements */
+    text-align: center; /* Center align modal content */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between buttons */
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Button styles for modal */
+#save-audio-only {
+    background: #455a64; /* Green */
+    color: white;
+}
+#save-audio-only:hover {
+    background: #607d8b; /* Lighter green */
+}
+
+#save-audio-transcribe {
+    background: #455a64; /* Orange */
+    color: white;
+}
+#save-audio-transcribe:hover {
+    background: #607d8b; /* Lighter orange */
+}
+
+#delete-audio {
+    background: #B22222; /* Red */
+    color: white;
+}
+#delete-audio:hover {
+    background: #D21404; /* Candy red */
+}
+
+/*
+################## Delete Modal #####################
+*/
+
+/* Delete Confirmation Modal Styling */
+#delete-confirmation-modal {
+    display: none;
+    position: fixed;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 285px;
+    width: 360px;
+    background: rgba(51, 51, 51); /* Dark grey with slight transparency */
+    color: #f1f1f1; /* Light text color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears on top */
+    text-align: center; /* Center align modal content */
+}
+
+#delete-confirmation-modal .modal-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+#delete-confirmation-modal button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Styles for Confirm and Cancel buttons */
+#confirm-delete {
+    background: #B22222; /* Red for Delete */
+    color: white;
+}
+#confirm-delete:hover {
+    background: #D21404; /* Lighter red */
+}
+
+#cancel-delete {
+    background: #455a64; /* Grey-blue for Cancel */
+    color: white;
+}
+#cancel-delete:hover {
+    background: #607d8b; /* Lighter grey-blue */
+}
+
+
+
+/*
+############## HANDWRITTEN HEADING ###############
+ */
+/* SVG Container Styling */
+/* Container for centering */
+.svg-container {
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers the SVG horizontally */
+    align-items: center; /* Centers the SVG vertically */
+    flex-direction: column; /* Ensures vertical stacking for any additional elements */
+    text-align: center; /* Centers any accompanying text */
+}
+
+/* SVG Styling */
+svg {
+    max-width: 90%; /* Ensures the SVG scales responsively */
+    height: auto; /* Maintains aspect ratio */
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers the SVG horizontally */
+}
+
+
+/* Animated Path Styling */
+path {
+    stroke: #f1f1f1;
+    stroke-width: 2;
+    fill: none; /* Keeps the path invisible initially */
+    stroke-dasharray: 500; /* Adjust this based on the total path length */
+    stroke-dashoffset: 500; /* Hidden at the start */
+    animation: draw 10s ease-in-out forwards; /* animations */
+}
+
+/* Keyframes for Drawing Animation */
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0; /* Fully reveals the path */
+    }
+}

@@ -52,20 +52,21 @@ export class ComplexWave {
 
 export function setupCanvas() {
     const canvas = document.querySelector('#backgroundCanvas');
+    if (!canvas) return; // Exit if canvas is not found
+
     const ctx = canvas.getContext('2d');
 
     // Set canvas size to match window size
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Create a single complex wave
     const wave = new ComplexWave(
-        canvas.height / 2, // Center vertically
-        { min: 5, max: 30 }, // Amplitude range
-        { min: 0.1, max: 0.7 }, // Frequency range
-        0.1, // Slow speed
-        { r: 255, g: 255, b: 255 }, // White color
-        100 // High number of harmonics for complexity
+        canvas.height / 2,
+        { min: 5, max: 30 },
+        { min: 0.1, max: 0.45 },
+        0.7,
+        { r: 255, g: 255, b: 255 },
+        100
     );
 
     // Animation loop
@@ -73,13 +74,12 @@ export function setupCanvas() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Subtle trail effect
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Clear canvas with transparency
 
-        wave.draw(ctx, canvas, time * 0.01); // Draw the wave with slow horizontal motion
+        wave.draw(ctx, canvas, time * 0.01); // Draw the wave
 
         requestAnimationFrame(animate);
     }
 
-    // Start animation
-    animate(0);
+    animate(0); // Start animation loop
 
     // Adjust canvas size on window resize
     window.addEventListener('resize', () => {
@@ -88,3 +88,4 @@ export function setupCanvas() {
         wave.baseY = canvas.height / 2; // Update wave center
     });
 }
+
