@@ -50,10 +50,12 @@ body {
     padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
+    max-height: 394px;
 }
 
 #raw-audio-files {
     grid-area: raw-audio;
+
 }
 
 #transcribed-files {
@@ -62,10 +64,12 @@ body {
 
 .file-list {
     height: 90%;
+    max-height: 90%;
     border: 1px solid #ccc;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.9); /* Light grey with 90% opacity */
     font-size: 12px;
+    overflow-y: auto; /* Ensure list gets scrollable when height isn't enough */
 }
 
 /* Center Section */
@@ -112,20 +116,21 @@ p_footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 #start {
-    background: #008000;
+    background: #008000; /* Dark green on hover */
     color: white;
 }
 
 #pause {
-    background: #FFA500;
+    background: #FFA500; /* Dark orange on hover */
     color: white;
 }
 
 #stop {
-    background: #B22222;
+    background: #B22222; /* Dark red on hover */
     color: white;
 }
 
@@ -153,19 +158,32 @@ p_footer {
     transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
 }
 
+#start:hover {
+    background-color: #00B000; /* Lighter green on hover */
+}
+
+#pause:hover {
+    background-color: #FFC107; /* Lighter orange on hover */
+}
+
+#stop:hover {
+    background-color: #D21404; /* Candy red on hover */
+}
+
 #delete_all {
     padding: 10px 40px;
-    background: #A9A9A9;
+    background: #455a64;
     color: white;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 20px;
+    transition: background 0.3s ease;
 }
 
-.delete-btn:hover {
-    background: #455a64;
+#delete_all:hover {
+    background: #607d8b;
 }
 
 /* Model Settings */

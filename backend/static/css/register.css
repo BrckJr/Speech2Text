@@ -24,9 +24,9 @@ body {
     border-radius: 5px;
     background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
     padding: 40px 20px;
-    width: 90%;
     max-width: 400px; /* Matches the login page layout */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    width: 400px;
 }
 
 /* Headings */
@@ -55,6 +55,26 @@ h1 {
     border: 1px solid #ccc;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.9); /* Light background for input fields */
+}
+
+/* Style of alert messages e.g. for not registered users */
+.alert-container {
+    font-size: 16px;
+    color: #D21404;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.alert {
+    color: #D21404;
+}
+
+.alert-success {
+    color: #00B000;
+}
+
+.alert-danger {
+    color: #D21404;
 }
 
 /* Button Styling */

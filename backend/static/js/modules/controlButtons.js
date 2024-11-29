@@ -58,6 +58,9 @@ export function setupControlButtons(startButton, pauseButton, stopButton) {
                 loadAudioFiles();
                 loadTranscriptionFiles();
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while stopping the recording. Please try again.');
+            });
     });
 }

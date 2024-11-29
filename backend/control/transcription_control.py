@@ -19,9 +19,7 @@ TRANSCRIPTION_FOLDER = "backend/static/output/transcription"
 @login_required
 def dashboard():
     user_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
-
-    # CHECK HERE WHAT THE FILES PARAMETER MEANS!!!!
-    return render_template('dashboard.html', files=user_files, page_name='dashboard')
+    return render_template('dashboard.html', page_name='dashboard', files=user_files)
 
 @transcription_bp.route('/start', methods=['POST'])
 def start_recording():
@@ -42,44 +40,53 @@ def stop_recording():
     # Stop recording
     audio_filepath, audio_save_successful = transcriber.stop_recording_audio()
 
-    # Prepare transcription and save paths to the database
     if audio_save_successful:
-        transcription_filepath = None
+        # Remove '/backend/static/' part of the path for both audio and transcription to be compliant with Flask
+        stripped_audio_path = audio_filepath.replace('backend/static/', '')
+
         if transcribe:
             transcription_filepath, transcription_save_successful = transcriber.transcribe_raw_audio(audio_filepath)
+            if transcription_save_successful:
+                stripped_transcription_path = transcription_filepath.replace('backend/static/', '')
+            else:
+                stripped_transcription_path = None
+        else:
+            stripped_transcription_path = None
 
-        # Remove '/backend/static/' part of the path for both audio and transcription to be compliant with Flask
-        # path conventions in the static folder
-        stripped_audio_path = audio_filepath.replace('backend/static/', '')
-        stripped_transcription_path = transcription_filepath.replace('backend/static/', '')
+        # Ensure the user is logged in
+        if current_user.is_authenticated:
+            # Save to the database
+            audio_recording = AudioTranscription(
+                audio_path=stripped_audio_path,
+                transcription_path=stripped_transcription_path,
+                user_id=current_user.id  # Associate the recording with the logged-in user
+            )
+            db.session.add(audio_recording)
+            db.session.commit()
 
-        # Save to the database
-        audio_recording = AudioTranscription(
-            audio_path=stripped_audio_path,
-            transcription_path=stripped_transcription_path
-        )
-        db.session.add(audio_recording)
-        db.session.commit()
+            return jsonify({"message": "Recording stopped and saved"})
+        else:
+            return jsonify({"message": "User not authenticated"}), 401
 
-        return jsonify({"message": "Recording stopped and saved"})
+    # Handle case where the recording was not saved successfully
+    return jsonify({"message": "Recording failed. It might be too short."}), 400
 
-    return jsonify({"message": "Failed to save recording"}), 500
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
 def delete_files():
     try:
-        # Query all records from the database
-        recordings = AudioTranscription.query.all()
+        # Query all records from the database of the current user
+        all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Delete files from the local filesystem
-        for recording in recordings:
-            if os.path.exists(recording.audio_path):
-                os.remove(recording.audio_path)
-            if recording.transcription_path and os.path.exists(recording.transcription_path):
-                os.remove(recording.transcription_path)
+        for file in all_files:
+            if os.path.exists(file.audio_path):
+                os.remove(file.audio_path)
+            if file.transcription_path and os.path.exists(file.transcription_path):
+                os.remove(file.transcription_path)
 
-        # Clear database records
-        db.session.query(AudioTranscription).delete()
+        # Clear database records for the current user only
+        db.session.query(AudioTranscription).filter_by(user_id=current_user.id).delete()
         db.session.commit()
 
         return jsonify({"success": True, "message": "All files deleted"})
@@ -90,8 +97,8 @@ def delete_files():
 @transcription_bp.route('/list-audio-files', methods=['GET'])
 def list_audio_files():
     try:
-        # Query the database for all audio recordings
-        audio_recordings = AudioTranscription.query.all()
+        # Query the database for all audio recordings of the current user
+        audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Create a list of audio file paths (audio_path)
         audio_files = [recording.audio_path for recording in audio_recordings]
@@ -105,7 +112,7 @@ def list_audio_files():
 def list_transcription_files():
     try:
         # Query the database for all transcription records
-        audio_recordings = AudioTranscription.query.all()
+        audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Create a list of transcription file paths (transcription_path)
         transcription_files = [recording.transcription_path for recording in audio_recordings if recording.transcription_path]

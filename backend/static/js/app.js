@@ -6,28 +6,30 @@ import { setupCanvas } from './modules/backgroundCanvas.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
+    // console.log('Currently running page: ' + page);
 
-    // Common functionality (e.g., background)
+    // Common functionality (e.g. background, footer) for all pages
     setupCanvas();
 
-    // Page-specific functionality
+    // Logic for the dashboard page
     if (page === 'dashboard') {
         const startButton = document.getElementById('start');
         const pauseButton = document.getElementById('pause');
         const stopButton = document.getElementById('stop');
         const deleteButton = document.querySelector('.delete-btn');
 
+        // Loading all files of a respective user at start
         loadAudioFiles();
         loadTranscriptionFiles();
+
+        // Logic for control and delete buttons
         setupControlButtons(startButton, pauseButton, stopButton);
         setupDeleteButton(deleteButton);
     }
 
-    if (page === 'login') {
-        // Add login-specific JS modules or functions
-    }
+    // Logic for the login page
+    // if (page === 'login') {}
 
-    if (page === 'register') {
-        // Add register-specific JS modules or functions
-    }
+    // Logic for the registration page
+    // if (page === 'register') {}
 });

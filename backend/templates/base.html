@@ -16,12 +16,12 @@
     {% endblock %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}" data-page="{% block data_page %}{% endblock %}">
     <!-- User Info and Logout Button -->
     {% if page_name != "login" and page_name != "register" %}
         <div class="user-info">
             <span class="user-email">User: {{ current_user.email }}</span>
-            <form method="POST" action="{{ url_for('auth.login') }}">
+            <form method="POST" action="{{ url_for('auth.logout') }}">
                 <button type="submit" class="btn btn-logout">Logout</button>
             </form>
         </div>
@@ -40,6 +40,6 @@
         </p1>
     </footer>
 
-    <script type="module" src="static/js/app.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
