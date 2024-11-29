@@ -38,29 +38,73 @@ export function setupControlButtons(startButton, pauseButton, stopButton) {
             .catch(error => console.error('Error:', error));
     });
 
-    // Event listener for Stop button
-    stopButton.addEventListener('click', () => {
-        console.log('Stop clicked');
+    // Function to show the modal
+    function showStopOptionsModal() {
+        const modal = document.getElementById('stop-options-modal');
+        modal.style.display = 'block';
 
-        const userConfirmed = confirm('Do you want to transcribe the recorded audio file?');
+        // Add event listeners for modal buttons
+        document.getElementById('save-audio-only').onclick = () => {
+            handleStopAction('save_audio_only');
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('save-audio-transcribe').onclick = () => {
+            handleStopAction('save_audio_and_transcribe');
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('delete-audio').onclick = () => {
+            handleStopAction('delete_audio');
+            modal.style.display = 'none';
+        };
+    }
+
+    // Function to handle the selected action
+    function handleStopAction(action) {
+        console.log('Stop clicked with action:', action);
 
         fetch('/stop', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ transcribe: userConfirmed }), // Pass the user's choice
+            body: JSON.stringify({ action }), // Pass the selected action
         })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message);
-                updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
-                loadAudioFiles();
-                loadTranscriptionFiles();
+            .then(response => {
+                if (response.status === 204) {
+                    // Action was delete_audio, no content expected
+                    console.log('Recording deleted successfully.');
+                    updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
+                } else if (response.status === 201) {
+                    // Action was save or save-and-transcribe, process JSON response
+                    return response.json().then(data => {
+                        console.log('Audio saved successfully.');
+                        if (action === 'save_audio_and_transcribe') {
+                            console.log('Transcription saved at:', data.transcription_path);
+                        }
+                        loadAudioFiles();
+                        loadTranscriptionFiles();
+                        updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
+                    });
+                } else if (response.status === 401) {
+                    // User is not authenticated
+                    alert('You are not authorized to perform this action.');
+                } else {
+                    // Handle other errors
+                    console.error('Failed to perform action. Status:', response.status);
+                    alert('An error occurred while stopping the recording. Please try again.');
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('An error occurred while stopping the recording. Please try again.');
+                alert('An unexpected error occurred. Please try again.');
             });
+    }
+
+    // Attach modal trigger to the Stop button
+    stopButton.addEventListener('click', () => {
+        showStopOptionsModal();
     });
+
 }

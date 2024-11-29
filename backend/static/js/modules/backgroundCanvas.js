@@ -64,7 +64,7 @@ export function setupCanvas() {
         canvas.height / 2,
         { min: 5, max: 30 },
         { min: 0.1, max: 0.45 },
-        0.1,
+        0.7,
         { r: 255, g: 255, b: 255 },
         100
     );
@@ -73,10 +73,6 @@ export function setupCanvas() {
     function animate(time) {
         ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Subtle trail effect
         ctx.fillRect(0, 0, canvas.width, canvas.height); // Clear canvas with transparency
-
-        // REMOVE AGAIN AFTER SOLVING BACKGROUND PROBLEM !!!!
-        console.log(`Canvas size: ${canvas.width}x${canvas.height}`);
-        // REMOVE AGAIN AFTER SOLVING BACKGROUND PROBLEM !!!!
 
         wave.draw(ctx, canvas, time * 0.01); // Draw the wave
 

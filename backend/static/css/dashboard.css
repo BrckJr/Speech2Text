@@ -92,6 +92,7 @@ h2 {
 
 p {
     font-size: 16px;
+    font-style: italic;
     margin-bottom: 20px;
 }
 
@@ -200,7 +201,7 @@ select {
     padding: 10px;
     font-size: 16px;
     width: 100%;
-    border: 1px solid #ccc;
+    border: 5px solid #ccc;
     border-radius: 5px;
 }
 
@@ -215,3 +216,119 @@ footer {
     color: #f1f1f1;
     margin-top: 20px; /* Add space between the footer and the previous section */
 }
+
+/*
+################## Saving Modal #####################
+*/
+
+/* Modal Styling */
+#stop-options-modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 285px;
+    width: 360px;
+    background: rgba(51, 51, 51); /* Dark grey with slight transparency */
+    color: #f1f1f1; /* Light text color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears on top of other elements */
+    text-align: center; /* Center align modal content */
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between buttons */
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Button styles for modal */
+#save-audio-only {
+    background: #455a64; /* Green */
+    color: white;
+}
+#save-audio-only:hover {
+    background: #607d8b; /* Lighter green */
+}
+
+#save-audio-transcribe {
+    background: #455a64; /* Orange */
+    color: white;
+}
+#save-audio-transcribe:hover {
+    background: #607d8b; /* Lighter orange */
+}
+
+#delete-audio {
+    background: #B22222; /* Red */
+    color: white;
+}
+#delete-audio:hover {
+    background: #D21404; /* Candy red */
+}
+
+/*
+################## Delete Modal #####################
+*/
+
+/* Delete Confirmation Modal Styling */
+#delete-confirmation-modal {
+    display: none;
+    position: fixed;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-height: 285px;
+    width: 360px;
+    background: rgba(51, 51, 51); /* Dark grey with slight transparency */
+    color: #f1f1f1; /* Light text color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears on top */
+    text-align: center; /* Center align modal content */
+}
+
+#delete-confirmation-modal .modal-buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+#delete-confirmation-modal button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Styles for Confirm and Cancel buttons */
+#confirm-delete {
+    background: #B22222; /* Red for Delete */
+    color: white;
+}
+#confirm-delete:hover {
+    background: #D21404; /* Lighter red */
+}
+
+#cancel-delete {
+    background: #455a64; /* Grey-blue for Cancel */
+    color: white;
+}
+#cancel-delete:hover {
+    background: #607d8b; /* Lighter grey-blue */
+}
+

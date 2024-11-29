@@ -39,4 +39,27 @@
             <option value="whisper">Whisper (OpenAI)</option>
         </select>
     </div>
+
+    <!-- Modal for Stop Options -->
+    <div id="stop-options-modal" class="modal">
+        <div class="modal-content">
+            <h2>File Saving</h2>
+            <p>Select one of the following options below.</p>
+            <button id="save-audio-only">Save Audio Only</button>
+            <button id="save-audio-transcribe">Save Audio and Transcribe</button>
+            <button id="delete-audio">Discard Audio</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-confirmation-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Delete all Files</h2>
+            <p>Are you sure you want to delete all files? <br>
+                This action cannot be undone.</p>
+            <button id="confirm-delete">Yes, Delete All</button>
+            <button id="cancel-delete">Cancel</button>
+        </div>
+    </div>
+
 {% endblock %}

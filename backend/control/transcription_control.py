@@ -33,44 +33,45 @@ def pause_recording():
 
 @transcription_bp.route('/stop', methods=['POST'])
 def stop_recording():
-    # Get the user's choice from the request body
     data = request.get_json()
-    transcribe = data.get('transcribe', False)
+    action = data.get('action')
 
-    # Stop recording
+    # Stop recording and save audio
     audio_filepath, audio_save_successful = transcriber.stop_recording_audio()
 
+    if action == "delete_audio":
+        # If user chooses to delete audio, return a success status without a message
+        return '', 204  # 204 No Content
+
     if audio_save_successful:
-        # Remove '/backend/static/' part of the path for both audio and transcription to be compliant with Flask
         stripped_audio_path = audio_filepath.replace('backend/static/', '')
 
-        if transcribe:
+        if action == "save_audio_and_transcribe":
             transcription_filepath, transcription_save_successful = transcriber.transcribe_raw_audio(audio_filepath)
-            if transcription_save_successful:
-                stripped_transcription_path = transcription_filepath.replace('backend/static/', '')
-            else:
-                stripped_transcription_path = None
+            stripped_transcription_path = transcription_filepath.replace('backend/static/', '') if transcription_save_successful else None
         else:
             stripped_transcription_path = None
 
-        # Ensure the user is logged in
+        # Save paths to the database for authenticated users
         if current_user.is_authenticated:
-            # Save to the database
             audio_recording = AudioTranscription(
                 audio_path=stripped_audio_path,
                 transcription_path=stripped_transcription_path,
-                user_id=current_user.id  # Associate the recording with the logged-in user
+                user_id=current_user.id
             )
             db.session.add(audio_recording)
             db.session.commit()
 
-            return jsonify({"message": "Recording stopped and saved"})
-        else:
-            return jsonify({"message": "User not authenticated"}), 401
+            return jsonify({
+                "audio_path": stripped_audio_path,
+                "transcription_path": stripped_transcription_path,
+            }), 201
 
-    # Handle case where the recording was not saved successfully
-    return jsonify({"message": "Recording failed. It might be too short."}), 400
+        # Handle case when user is not authenticated
+        return jsonify({"message": "User not authenticated"}), 401
 
+    # Handle case when saving audio failed
+    return jsonify({"success": False, "message": "Failed to save files."}), 500  # if a error occurs, trigger a prompt
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
 def delete_files():
