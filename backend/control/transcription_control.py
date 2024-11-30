@@ -80,11 +80,7 @@ def delete_files():
         all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Delete files from the local filesystem
-        for file in all_files:
-            if os.path.exists(file.audio_path):
-                os.remove(file.audio_path)
-            if file.transcription_path and os.path.exists(file.transcription_path):
-                os.remove(file.transcription_path)
+        transcriber.delete_all_files(all_files)
 
         # Clear database records for the current user only
         db.session.query(AudioTranscription).filter_by(user_id=current_user.id).delete()
@@ -122,7 +118,6 @@ def list_transcription_files():
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
 
 @transcription_bp.route('/static/<path:filename>')
 def serve_file(filename):

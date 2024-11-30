@@ -257,31 +257,28 @@ class Model:
         return file_path, save_successful
 
     @staticmethod
-    def delete_all_files():
+    def delete_all_files(files_to_delete):
         """
+        Deleting files in output directory.
+
         Cleans up the output directory by removing all existing files,
-        including all raw audio files and transcriptions.
+        including all raw audio files and transcriptions for a specific user.
+
+        Args:
+            files_to_delete (list of str): The list of audio files to delete for a specific user.
+
         """
         try:
-            # Define the paths to the directories
-            raw_audio_dir = 'backend/static/output/raw_audio'
-            transcription_dir = 'backend/static/output/transcription'
-
-            # Check if raw_audio directory exists and remove all its contents
-            if os.path.exists(raw_audio_dir) and os.path.isdir(raw_audio_dir):
-                for filename in os.listdir(raw_audio_dir):
-                    file_path = os.path.join(raw_audio_dir, filename)
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-                print("Raw audio files cleared.")
-
-            # Check if transcription directory exists and remove all its contents
-            if os.path.exists(transcription_dir) and os.path.isdir(transcription_dir):
-                for filename in os.listdir(transcription_dir):
-                    file_path = os.path.join(transcription_dir, filename)
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-                print("Transcription files cleared.")
+            # Delete the files which are contained in the files_to_delete list
+            for file in files_to_delete:
+                file_path_audio = os.path.join('backend/static', file.audio_path)
+                file_path_transcription = os.path.join('backend/static', file.transcription_path)
+                print(f"Deleting {file_path_audio}")
+                if os.path.isfile(file_path_audio):
+                    os.remove(file_path_audio)
+                if os.path.isfile(file_path_transcription):
+                    os.remove(file_path_transcription)
+                print("User specific files cleared.")
 
         except Exception as e:
             print(f"Error during cleanup: {e}")
