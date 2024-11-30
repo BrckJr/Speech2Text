@@ -4,7 +4,6 @@
 {% block content %}
     <div class="center">
 
-
         <div class="svg-container">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 650 200" preserveAspectRatio="xMidYMid meet">
                  <path
@@ -20,8 +19,9 @@
             </svg>
         </div>
 
-        <h1>Register</h1>
-        <!-- Display Flash Messages for unsuccessful log-in -->
+        <h1 data-i18n="register_header">Register</h1>
+
+        <!-- Display Flash Messages for unsuccessful registration -->
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
                 <div class="alert-container">
@@ -33,6 +33,7 @@
                 </div>
             {% endif %}
         {% endwith %}
+
         <form method="POST" action="{{ url_for('auth.register') }}">
             {{ form.hidden_tag() }}
             <div class="form-group">
@@ -57,8 +58,8 @@
         </form>
 
         <!-- Button to navigate to the login page -->
-        <p>Already have an account? <br>
-            <a href="{{ url_for('auth.login') }}">Login here</a>
+        <p data-i18n="already_account">Already have an account? <br>
+            <a href="{{ url_for('auth.login') }}" data-i18n="login_link">Login here</a>
         </p>
     </div>
 {% endblock %}

@@ -90,3 +90,35 @@ p1 {
     font-style: italic; /* Italicize text */
     padding: 5px 5px; /* Padding around text */
 }
+
+
+.language-switcher {
+    position: absolute;
+    top: 18px;
+    left: 10px;
+    z-index: 1000;
+    display: flex;
+}
+
+.language-switcher button {
+    padding: 2px 10px;
+    font-size: 14px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s ease; /* Smooth transition on hover */
+}
+
+.language-switcher button:hover {
+    text-decoration: underline;
+}
+
+/* Add vertical line between the buttons */
+.language-switcher button:first-child {
+    border-right: 1px solid #ccc; /* Adds a border to the right of the first button */
+}
+
+.language-switcher button:last-child {
+    border-left: 1px solid #ccc; /* Adds a border to the left of the second button */
+}

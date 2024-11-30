@@ -93,6 +93,7 @@ h2 {
 }
 
 p {
+    padding: 10px 10px;
     font-size: 16px;
     font-style: italic; /* Italicize the paragraph text */
     margin-bottom: 20px;

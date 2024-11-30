@@ -7,7 +7,7 @@
 {% block content %}
     <!-- Left Panel -->
     <div class="panel" id="raw-audio-files">
-        <h2>Raw Audio Files</h2>
+        <h2 data-i18n="raw_audio_files">Raw Audio Files</h2>
         <div class="file-list"></div>
     </div>
 
@@ -27,51 +27,52 @@
                     stroke-dashoffset="500" />
             </svg>
         </div>
-        <p>Press the start button to begin recording.<br>
+        <p data-i18n="recording_instructions">
+            Press the start button to begin recording.<br>
             Press the pause button to pause the recording.<br>
             Finish the recording by pressing the stop button.
         </p>
         <div class="button-group">
-            <button class="control-btn" id="start">Start ▶️</button>
-            <button class="control-btn" id="pause" disabled>Pause ⏸️</button>
-            <button class="control-btn" id="stop" disabled>Stop ⏹️</button>
+            <button class="control-btn" id="start" data-i18n="start_button">Start ▶️</button>
+            <button class="control-btn" id="pause" disabled data-i18n="pause_button">Pause ⏸️</button>
+            <button class="control-btn" id="stop" disabled data-i18n="stop_button">Stop ⏹️</button>
         </div>
-        <button class="delete-btn" id="delete_all">Delete all Files 🗑️</button>
+        <button class="delete-btn" id="delete_all" data-i18n="delete_all_files">Delete all Files 🗑️</button>
     </div>
 
     <!-- Right Panel -->
     <div class="panel" id="transcribed-files">
-        <h2>Transcribed Files</h2>
+        <h2 data-i18n="transcribed_files">Transcribed Files</h2>
         <div class="file-list"></div>
     </div>
 
     <!-- Model Settings -->
     <div class="model-settings">
-        <h2>Model Settings</h2>
+        <h2 data-i18n="model_settings">Model Settings</h2>
         <select>
-            <option value="whisper">Whisper (OpenAI)</option>
+            <option value="whisper" data-i18n="whisper_model">Whisper (OpenAI)</option>
         </select>
     </div>
 
     <!-- Modal for Stop Options -->
     <div id="stop-options-modal" class="modal">
         <div class="modal-content">
-            <h2>File Saving</h2>
-            <p>Select one of the following options below.</p>
-            <button id="save-audio-only">Save Audio Only</button>
-            <button id="save-audio-transcribe">Save Audio and Transcribe</button>
-            <button id="delete-audio">Discard Audio</button>
+            <h2 data-i18n="file_saving">File Saving</h2>
+            <p data-i18n="select_option">Select one of the following options below.</p>
+            <button id="save-audio-only" data-i18n="save_audio_only">Save Audio Only</button>
+            <button id="save-audio-transcribe" data-i18n="save_audio_transcribe">Save Audio and Transcribe</button>
+            <button id="delete-audio" data-i18n="discard_audio">Discard Audio</button>
         </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
     <div id="delete-confirmation-modal" class="modal" style="display: none;">
         <div class="modal-content">
-            <h2>Delete all Files</h2>
-            <p>Are you sure you want to delete all files? <br>
+            <h2 data-i18n="delete_all_files_modal">Delete all Files</h2>
+            <p data-i18n="delete_confirmation_message">Are you sure you want to delete all files? <br>
                 This action cannot be undone.</p>
-            <button id="confirm-delete">Yes, Delete All</button>
-            <button id="cancel-delete">Cancel</button>
+            <button id="confirm-delete" data-i18n="yes_delete_all">Yes, Delete All</button>
+            <button id="cancel-delete" data-i18n="cancel">Cancel</button>
         </div>
     </div>
 
