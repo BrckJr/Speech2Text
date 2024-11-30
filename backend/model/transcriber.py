@@ -257,7 +257,7 @@ class Model:
         return file_path, save_successful
 
     @staticmethod
-    def delete_all_files(files_to_delete):
+    def delete_all_files(files_to_delete, userID):
         """
         Deleting files in output directory.
 
@@ -266,21 +266,22 @@ class Model:
 
         Args:
             files_to_delete (list of str): The list of audio files to delete for a specific user.
-
+            userID (int): The ID of the user for whom files should be deleted.
         """
         try:
-            # Delete the files which are contained in the files_to_delete list
-            for file in files_to_delete:
-                file_path_audio = os.path.join('backend/static', file.audio_path)
-                file_path_transcription = os.path.join('backend/static', file.transcription_path)
-                print(f"Deleting {file_path_audio}")
-                if os.path.isfile(file_path_audio):
-                    os.remove(file_path_audio)
-                if os.path.isfile(file_path_transcription):
-                    os.remove(file_path_transcription)
-                print("User specific files cleared.")
+            # Define the base path for static files
+            BASE_PATH = 'backend/static'
 
+            # Delete the files contained in the files_to_delete list
+            for file in files_to_delete:
+                for attribute in ['audio_path', 'transcription_path']:
+                    file_path = getattr(file, attribute, None)
+                    if file_path:
+                        full_path = os.path.join(BASE_PATH, file_path)
+                        if os.path.isfile(full_path):
+                            os.remove(full_path)
         except Exception as e:
             print(f"Error during cleanup: {e}")
         else:
-            print("All contents from the output directories are cleared.")
+            print(f"Files of user {userID} deleted successfully.")
+

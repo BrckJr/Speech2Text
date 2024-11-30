@@ -80,7 +80,7 @@ def delete_files():
         all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Delete files from the local filesystem
-        transcriber.delete_all_files(all_files)
+        transcriber.delete_all_files(all_files, current_user.id)
 
         # Clear database records for the current user only
         db.session.query(AudioTranscription).filter_by(user_id=current_user.id).delete()
