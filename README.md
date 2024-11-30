@@ -1,28 +1,28 @@
 # Speech2Text
 
-This is a ongoing development project in which I experiment with transcribing and analysing of spoken language.
+This is a ongoing development project in which I experiment with transcription and analysis of spoken language.
 I am not entirely sure in which direction I will develop it next, therefore I list here what is currently included 
 and what are my ideas to develop further.
 
 Currently, the projects includes following components:
-- A main webpage for the interaction with the program which includes
-  - Starting, Pausing and stopping a audio recording
-  - After stopping the recording a prompt will show up to ask the user if the audio recording shall be transcribed. 
-  If the user agrees, the file will be transcribed and both, the raw audio file and the transcription will show up
-  in the respective frame in the webpage. 
-  - The user can open the raw audio file as well as the transcription by simply clicking on the files. 
-  The name of the files include the timestamp of when they were created.
-  - A button to delete all audio recordings and transcriptions.
+- Registration of new users and log in for already registered users
+- A main webpage for the interaction with the program which includes the recording of audio files and transcribing them.
+- Possibility to listen to recorded audios and read the transcriptions in a new tab in the browser. 
+The name of the files include the timestamp of when they were created.
+- Possibility to delete all audio files for the currently logged-in user. 
+At the moment it is not possible to delete single files.
+- All files are stored with respect to the currently logged-in user. This is tracked via a SQLite database in the backend.
 - The recordings and the transcriptions are saved locally in the 'backend/static/output' directory. A link to the 
-stored files is contained in a SQLite database. This can be extended to have online storage of the ressources and changing
-the stored links to the URLs to the remote data.
+stored files is contained in a SQLite database.
+
+![screenshot](backend/static/figures/dashboard.png)
+
 
 
 Future developments might include but are certainly not limited to:
-- having individual users to register  
-- allowing a users to have access only to their respective files on the database.
-- improving the system visually with a nicer WEB UI e.g. by including some animations, ...
+- extending the interaction with the files, e.g. deleting single files, changing their name, ...
 - including a text analysis tool which can analyse the speaking speed, vocabulary, length of pauses, usage of fillers, ...
+- hosting the whole platform as a website by switching to PostgreSQL and storing the user files on a cloud
 
 # Installation
 To get the program running, just install the libraries mentioned in the requirements.txt with the python package manager 
