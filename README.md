@@ -15,8 +15,7 @@ At the moment it is not possible to delete single files.
 - The recordings and the transcriptions are saved locally in the 'backend/static/output' directory. A link to the 
 stored files is contained in a SQLite database.
 
-![screenshot](backend/static/figures/dashboard.png)
-
+![Alt text](backend/static/figures/dashboard.png)
 
 
 Future developments might include but are certainly not limited to:
