@@ -91,7 +91,9 @@ h1 {
 }
 
 .btn-primary {
-    background: #008000; /* Green for consistency */
+    background: #008000;
+
+/* Green for consistency */
     color: #f1f1f1;
 }
 
@@ -104,6 +106,7 @@ a {
     color: #FFFFFF; /* Orange for contrast */
     text-decoration: none;
     font-weight: bold;
+    font-style: italic;
 }
 
 a:hover {

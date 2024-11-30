@@ -23,12 +23,12 @@
     "email_label": "E-Mail",
     "password_label": "Passwort",
     "login_button": "Anmelden",
-    "no_account": "Sie haben noch kein Konto?",
-    "register_link": "Hier registrieren",
+    "no_account": "Sie haben noch keinen Account?",
+    "register_link": "Registrieren",
     "register_header": "Registrieren",
     "username_label": "Benutzername",
     "confirm_password_label": "Passwort bestätigen",
     "register_button": "Registrieren",
     "already_account": "Sie haben bereits ein Konto?",
-    "login_link": "Hier einloggen"
+    "login_link": "Einloggen"
 }

@@ -5,7 +5,6 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="center">
 
         <div class="svg-container">
@@ -24,7 +23,6 @@
         </div>
 
         <h1 data-i18n="login_header">Login</h1>
-
         <!-- Display Flash Messages for unsuccessful log-in -->
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -37,7 +35,6 @@
                 </div>
             {% endif %}
         {% endwith %}
-
         <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() }}
             <div class="form-group">
@@ -54,9 +51,8 @@
         </form>
 
         <!-- Button to navigate to the registration page -->
-        <p data-i18n="no_account">Don't have an account? <br>
-            <a href="{{ url_for('auth.register') }}" data-i18n="register_link">Register here</a>
-        </p>
+        <p data-i18n="no_account">Don't have an account? </p>
+        <a href="{{ url_for('auth.register') }}" data-i18n="register_link">Register here</a>
     </div>
 
 {% endblock %}

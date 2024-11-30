@@ -40,11 +40,21 @@ export function setupLangSwitcherButtons(enButton, deButton, esButton) {
 
 // Function to update text content based on the loaded language data
 function updateText(translations) {
-  // Loop through all elements with a `data-i18n` attribute
-  document.querySelectorAll('[data-i18n]').forEach(element => {
-    const key = element.getAttribute('data-i18n');
-    if (translations[key]) {
-      element.textContent = translations[key];
-    }
-  });
+    document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.getAttribute('data-i18n');
+        if (translations[key]) {
+            let translatedText = translations[key];
+
+            // Replace placeholders with dynamic values from data attributes
+            Object.entries(element.dataset).forEach(([dataKey, dataValue]) => {
+                const placeholder = `{{${dataKey.replace('i18n-', '')}}}`;
+                translatedText = translatedText.replace(placeholder, dataValue);
+            });
+
+            // Set the translated text with placeholders replaced
+            element.innerHTML = translatedText;
+        }
+    });
 }
+
+

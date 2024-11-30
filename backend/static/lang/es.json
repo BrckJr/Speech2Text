@@ -24,11 +24,11 @@
     "password_label": "Contraseña",
     "login_button": "Iniciar sesión",
     "no_account": "¿No tienes una cuenta?",
-    "register_link": "Regístrate aquí",
-    "register_header": "Registrarse",
+    "register_link": "Registrarse",
+    "register_header": "Registro",
     "username_label": "Nombre de usuario",
     "confirm_password_label": "Confirmar contraseña",
     "register_button": "Registrarse",
     "already_account": "¿Ya tienes una cuenta?",
-    "login_link": "Inicia sesión aquí"
+    "login_link": "Iniciar sesión"
 }

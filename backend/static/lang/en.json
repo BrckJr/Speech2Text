@@ -24,11 +24,11 @@
     "password_label": "Password",
     "login_button": "Login",
     "no_account": "Don't have an account?",
-    "register_link": "Register here",
+    "register_link": "Register",
     "register_header": "Register",
     "username_label": "Username",
     "confirm_password_label": "Confirm Password",
     "register_button": "Register",
     "already_account": "Already have an account?",
-    "login_link": "Login here"
+    "login_link": "Login"
 }
