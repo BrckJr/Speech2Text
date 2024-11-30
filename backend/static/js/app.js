@@ -4,6 +4,7 @@ import { setupControlButtons } from './modules/controlButtons.js';
 import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 
+// Function to display webpage
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
     // console.log('Currently running page: ' + page);

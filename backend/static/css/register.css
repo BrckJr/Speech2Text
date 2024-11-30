@@ -70,7 +70,7 @@ h1 {
 }
 
 .alert-success {
-    color: #00B000;
+    color: #008000;
 }
 
 .alert-danger {
@@ -90,7 +90,7 @@ h1 {
 
 .btn-primary {
     background: #008000; /* Green for primary actions */
-    color: white;
+    color: #f1f1f1;
 }
 
 .btn-primary:hover {
@@ -120,7 +120,6 @@ a:hover {
 ############## HANDWRITTEN HEADING ###############
  */
 /* SVG Container Styling */
-/* Container for centering */
 .svg-container {
     display: flex; /* Enables flexbox layout */
     justify-content: center; /* Centers the SVG horizontally */
@@ -136,7 +135,6 @@ svg {
     display: flex; /* Enables flexbox layout */
     justify-content: center; /* Centers the SVG horizontally */
 }
-
 
 /* Animated Path Styling */
 path {

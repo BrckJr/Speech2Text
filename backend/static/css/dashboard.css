@@ -2,19 +2,19 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Ensure consistent box sizing across elements */
 }
 
 /* Body Styling */
 body {
     font-family: Arial, sans-serif;
     color: #f1f1f1; /* Light text color for readability on dark background */
-    background: grey; /* Remove the fixed background image */
+    background: grey; /* Background color */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    height: 100vh; /* Full viewport height */
     position: relative; /* Needed for layering canvas behind content */
 }
 
@@ -25,91 +25,91 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;  /* Make sure the canvas stays behind the other content */
+    z-index: -1;  /* Ensure canvas stays behind content */
     pointer-events: none; /* Prevent interactions with the background */
     background: none;
 }
 
-/* Container Layout */
+/* Container Layout using CSS Grid */
 .container {
     display: grid;
     grid-template-areas:
         "raw-audio center transcribed"
-        "raw-audio settings transcribed";
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 20px;
-    width: 90%;
-    max-width: 1200px;
+        "raw-audio settings transcribed"; /* Define grid areas */
+    grid-template-columns: 1fr 2fr 1fr; /* Define column sizes */
+    grid-template-rows: auto auto; /* Auto adjust rows */
+    gap: 20px; /* Space between grid items */
+    width: 90%; /* Container width */
+    max-width: 1200px; /* Maximum container width */
 }
 
-/* Panels */
+/* Panels Styling */
 .panel {
     background: rgba(51, 51, 51, 0.85); /* Dark grey with 85% opacity */
-    border-radius: 8px;
+    border-radius: 8px; /* Rounded corners */
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
-    min-height: 390px;
-    width: 290px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow effect */
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    min-height: 390px; /* Minimum height for panels */
+    width: 290px; /* Fixed width for panels */
 }
 
 #raw-audio-files {
-    grid-area: raw-audio;
-
+    grid-area: raw-audio; /* Place in the 'raw-audio' grid area */
 }
 
 #transcribed-files {
-    grid-area: transcribed;
+    grid-area: transcribed; /* Place in the 'transcribed' grid area */
 }
 
+/* File List Styling */
 .file-list {
     height: 90%;
     max-height: 90%;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc; /* Light grey border */
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.9); /* Light grey with 90% opacity */
     font-size: 12px;
-    overflow-y: auto; /* Ensure list gets scrollable when height isn't enough */
+    overflow-y: auto; /* Enable scroll when content exceeds height */
 }
 
-/* Center Section */
+/* Center Section Styling */
 .center {
     grid-area: center;
-    text-align: center;
+    text-align: center; /* Center text */
     border-radius: 5px;
     background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
-    min-width: 580px;
+    min-width: 580px; /* Minimum width for center section */
 }
 
 h1 {
-    font-size: 48px;
-    margin: 15px;
+    font-size: 48px; /* Large font size for headings */
+    margin: 15px; /* Space around the heading */
 }
 
 h2 {
-    font-size: 24px;
+    font-size: 24px; /* Medium font size for subheadings */
     margin-bottom: 5px;
 }
 
 p {
     font-size: 16px;
-    font-style: italic;
+    font-style: italic; /* Italicize the paragraph text */
     margin-bottom: 20px;
 }
 
 p_footer {
     font-size: 9px;
-    font-style: italic;
-    text-align: center;
+    font-style: italic; /* Italicize the footer text */
+    text-align: center; /* Center-align footer text */
     padding: 5px 5px;
 }
 
-/* Buttons */
+/* Buttons Group */
 .button-group {
     display: flex;
-    justify-content: center;
-    gap: 15px;
+    justify-content: center; /* Center-align buttons */
+    gap: 15px; /* Space between buttons */
     margin-bottom: 20px;
 }
 
@@ -119,48 +119,47 @@ p_footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 
 #start {
-    background: #008000; /* Dark green on hover */
-    color: white;
+    background: #008000; /* Dark green background */
+    color: #f1f1f1;
 }
 
 #pause {
-    background: #FFA500; /* Dark orange on hover */
-    color: white;
+    background: #FFA500; /* Orange background */
+    color: #f1f1f1;
 }
 
 #stop {
-    background: #B22222; /* Dark red on hover */
-    color: white;
+    background: #B22222; /* Red background */
+    color: #f1f1f1;
 }
 
-/* Specific disabled style for the Start button */
+/* Disabled Button Styles */
 #start:disabled {
-    background: rgba(0, 128, 0, 0.6) !important; /* Light green for Stop button */
-    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
-    cursor: not-allowed !important; /* Visual indicator for disabled state */
-    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+    background: rgba(0, 128, 0, 0.6) !important; /* Light green */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text */
+    cursor: not-allowed !important; /* Visual indicator for disabled */
+    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
-/* Specific disabled style for the Pause button */
 #pause:disabled {
-    background: rgba(255, 165, 0, 0.6) !important; /* Light orange for Stop button */
-    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
-    cursor: not-allowed !important; /* Visual indicator for disabled state */
-    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+    background: rgba(255, 165, 0, 0.6) !important; /* Light orange */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text */
+    cursor: not-allowed !important; /* Disabled cursor */
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Specific disabled style for the Stop button */
 #stop:disabled {
-    background: rgba(178, 34, 34, 0.6) !important; /* Light red for Stop button */
-    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text for consistency */
-    cursor: not-allowed !important; /* Visual indicator for disabled state */
-    transition: background 0.3s ease, color 0.3s ease; /* Smooth transition for feedback */
+    background: rgba(178, 34, 34, 0.6) !important; /* Light red */
+    color: rgba(255, 255, 255, 0.6) !important; /* Dimmed text */
+    cursor: not-allowed !important; /* Disabled cursor */
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
+/* Hover Effects for Buttons */
 #start:hover {
     background-color: #00B000; /* Lighter green on hover */
 }
@@ -170,26 +169,27 @@ p_footer {
 }
 
 #stop:hover {
-    background-color: #D21404; /* Candy red on hover */
+    background-color: #D21404; /* Lighter red on hover */
 }
 
+/* Delete All Button */
 #delete_all {
     padding: 10px 40px;
-    background: #455a64;
-    color: white;
+    background: #455a64; /* Blue-grey background */
+    color: #f1f1f1;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     margin-bottom: 20px;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease; /* Smooth background transition */
 }
 
 #delete_all:hover {
-    background: #607d8b;
+    background: #607d8b; /* Lighter blue-grey on hover */
 }
 
-/* Model Settings */
+/* Model Settings Styling */
 .model-settings {
     grid-area: settings;
     background: rgba(51, 51, 51, 0.90); /* Dark grey with 90% opacity */
@@ -207,16 +207,16 @@ select {
     border-radius: 5px;
 }
 
-/* Footer */
+/* Footer Styling */
 footer {
     display: flex;
-    justify-content: center; /* Horizontally center */
-    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center footer */
+    align-items: center; /* Vertically center footer */
     text-align: center;
     border-radius: 5px;
     background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
     color: #f1f1f1;
-    margin-top: 20px; /* Add space between the footer and the previous section */
+    margin-top: 20px; /* Space between footer and content */
 }
 
 /*
@@ -237,7 +237,7 @@ footer {
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
-    z-index: 1000; /* Ensure it appears on top of other elements */
+    z-index: 1000; /* Ensure modal is on top */
     text-align: center; /* Center align modal content */
 }
 
@@ -253,32 +253,33 @@ footer {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 
 /* Button styles for modal */
 #save-audio-only {
-    background: #455a64; /* Green */
-    color: white;
+    background: #455a64;
+    color: #f1f1f1;
 }
 #save-audio-only:hover {
-    background: #607d8b; /* Lighter green */
+    background: #607d8b;
 }
 
 #save-audio-transcribe {
-    background: #455a64; /* Orange */
-    color: white;
+    background: #455a64;
+    color: #f1f1f1;
 }
+
 #save-audio-transcribe:hover {
-    background: #607d8b; /* Lighter orange */
+    background: #607d8b;
 }
 
 #delete-audio {
-    background: #B22222; /* Red */
-    color: white;
+    background: #B22222;
+    color: #f1f1f1;
 }
 #delete-audio:hover {
-    background: #D21404; /* Candy red */
+    background: #D21404;
 }
 
 /*
@@ -320,7 +321,7 @@ footer {
 /* Styles for Confirm and Cancel buttons */
 #confirm-delete {
     background: #B22222; /* Red for Delete */
-    color: white;
+    color: #f1f1f1;
 }
 #confirm-delete:hover {
     background: #D21404; /* Lighter red */
@@ -328,19 +329,16 @@ footer {
 
 #cancel-delete {
     background: #455a64; /* Grey-blue for Cancel */
-    color: white;
+    color: #f1f1f1;
 }
 #cancel-delete:hover {
     background: #607d8b; /* Lighter grey-blue */
 }
 
-
-
 /*
 ############## HANDWRITTEN HEADING ###############
  */
 /* SVG Container Styling */
-/* Container for centering */
 .svg-container {
     display: flex; /* Enables flexbox layout */
     justify-content: center; /* Centers the SVG horizontally */
@@ -374,3 +372,4 @@ path {
         stroke-dashoffset: 0; /* Fully reveals the path */
     }
 }
+

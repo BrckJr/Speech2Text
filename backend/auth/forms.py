@@ -3,6 +3,16 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 class RegistrationForm(FlaskForm):
+    """
+    Form for user registration.
+
+    Attributes:
+        username (StringField): The desired username, 3-20 characters long.
+        email (StringField): The user's email address (validated format).
+        password (PasswordField): The user's password, minimum 6 characters.
+        confirm_password (PasswordField): Confirmation of the password (must match the password).
+        submit (SubmitField): Submit button for the registration form.
+    """
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=20)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
@@ -10,6 +20,14 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
 class LoginForm(FlaskForm):
+    """
+    Form for user login.
+
+    Attributes:
+        email (StringField): The user's email address (validated format).
+        password (PasswordField): The user's password.
+        submit (SubmitField): Submit button for the login form.
+    """
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')

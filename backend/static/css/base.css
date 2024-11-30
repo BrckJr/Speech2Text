@@ -2,24 +2,24 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Ensure consistent box sizing */
 }
 
 html, body {
     height: 100%; /* Ensure full height for proper layout */
-    min-height: 250px;
-    min-width:1150px;
+    min-height: 250px; /* Minimum height for small screens */
+    min-width: 1150px; /* Ensure a minimum width */
 }
 
 body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start; /* Align content to the top */
-    align-items: center;
+    align-items: center; /* Center-align the content */
     position: relative; /* For layering the canvas */
     margin: 0;
     padding: 0;
-    color: #f1f1f1;
+    color: #f1f1f1; /* Set default text color */
 }
 
 /* Set the canvas to cover the whole screen and be positioned behind content */
@@ -31,7 +31,7 @@ body {
     height: 100%;
     z-index: -1; /* Make sure the canvas stays behind the other content */
     pointer-events: none; /* Prevent interactions with the background */
-    background: none;
+    background: none; /* No background for the canvas */
 }
 
 /* User Info Container */
@@ -40,7 +40,7 @@ body {
     top: 10px;
     right: 20px;
     display: flex;
-    align-items: center;
+    align-items: center; /* Align items vertically */
     gap: 10px; /* Space between email and logout button */
 }
 
@@ -50,7 +50,7 @@ body {
     color: #f1f1f1; /* Light color for visibility */
     background: rgba(51, 51, 51, 0.8); /* Slightly opaque background */
     padding: 8px 16px;
-    border-radius: 5px;
+    border-radius: 5px; /* Rounded corners */
 }
 
 /* Logout Button Styling */
@@ -60,32 +60,33 @@ body {
     color: white;
     background-color: #B22222; /* Red for logout */
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 
 .btn-logout:hover {
     background-color: #D21404; /* Candy red on hover */
 }
+
 h1, h2, p {
-    margin: 0;
+    margin: 0; /* Remove margin for headings and paragraphs */
 }
 
 footer {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Center-align footer content */
     align-items: center;
     text-align: center;
-    border-radius: 5px;
+    border-radius: 5px; /* Rounded corners */
     background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
     color: #f1f1f1;
-    margin-top: 20px;
+    margin-top: 20px; /* Space above the footer */
 }
 
-p1{
-    text-align: center;
-    font-size: 9px;
-    font-style: italic;
-    padding: 5px 5px;
+p1 {
+    text-align: center; /* Center-align text */
+    font-size: 9px; /* Small font size */
+    font-style: italic; /* Italicize text */
+    padding: 5px 5px; /* Padding around text */
 }

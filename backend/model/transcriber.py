@@ -31,9 +31,9 @@ class Model:
             sample_rate (int): The audio sample rate in Hz. Defaults to 16000.
 
         Attributes:
-            transcription_model (whisper.Whisper): The loaded Whisper model for transcription.
-            is_recording (bool): Indicates whether audio recording is active.
-            temp_audio_data (list): Buffer for temporarily storing recorded audio data.
+            self.transcription_model (whisper.Whisper): The loaded Whisper model for transcription.
+            self.is_recording (bool): Indicates whether audio recording is active.
+            self.temp_audio_data (list): Buffer for temporarily storing recorded audio data.
             sample_rate (int): The sample rate for audio recording.
         """
 

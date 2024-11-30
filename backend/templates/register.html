@@ -3,18 +3,7 @@
 
 {% block content %}
     <div class="center">
-        <!-- Display Flash Messages for unsuccessful log-in -->
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                <div class="alert-container">
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+
 
         <div class="svg-container">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 650 200" preserveAspectRatio="xMidYMid meet">
@@ -32,7 +21,18 @@
         </div>
 
         <h1>Register</h1>
-
+        <!-- Display Flash Messages for unsuccessful log-in -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
         <form method="POST" action="{{ url_for('auth.register') }}">
             {{ form.hidden_tag() }}
             <div class="form-group">

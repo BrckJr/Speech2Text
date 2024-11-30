@@ -92,7 +92,7 @@ h1 {
 
 .btn-primary {
     background: #008000; /* Green for consistency */
-    color: white;
+    color: #f1f1f1;
 }
 
 .btn-primary:hover {
@@ -121,7 +121,6 @@ p {
 ############## HANDWRITTEN HEADING ###############
  */
 /* SVG Container Styling */
-/* Container for centering */
 .svg-container {
     display: flex; /* Enables flexbox layout */
     justify-content: center; /* Centers the SVG horizontally */

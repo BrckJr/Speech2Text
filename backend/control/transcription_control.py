@@ -1,4 +1,3 @@
-import os
 from flask import Blueprint, jsonify, send_from_directory, request, render_template
 from flask_login import login_required, current_user
 from backend.model.transcriber import Model
@@ -18,21 +17,44 @@ TRANSCRIPTION_FOLDER = "backend/static/output/transcription"
 @transcription_bp.route('/dashboard')
 @login_required
 def dashboard():
+    """
+    Displays the user's dashboard with all their uploaded audio files.
+
+    Retrieves the list of audio transcription records from the database
+    for the authenticated user and renders them in the 'dashboard' template.
+    """
     user_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
     return render_template('dashboard.html', page_name='dashboard', files=user_files)
 
 @transcription_bp.route('/start', methods=['POST'])
 def start_recording():
+    """
+    Starts audio recording.
+
+    Calls the 'start_recording_audio' method of the transcriber model to begin recording.
+    """
     transcriber.start_recording_audio()
     return jsonify({"message": "Recording started"})
 
 @transcription_bp.route('/pause', methods=['POST'])
 def pause_recording():
+    """
+    Pauses the current audio recording.
+
+    Calls the 'pause_recording_audio' method of the transcriber model to pause recording.
+    """
     transcriber.pause_recording_audio()
     return jsonify({"message": "Recording paused"})
 
 @transcription_bp.route('/stop', methods=['POST'])
 def stop_recording():
+    """
+    Stops the audio recording and handles various actions based on the request.
+
+    The function stops the recording, processes the audio file,
+    and either saves it or deletes it based on the user's choice.
+    Saving is done in the filesystem and referenced in the database.
+    """
     data = request.get_json()
     action = data.get('action')
 
@@ -44,6 +66,7 @@ def stop_recording():
         return '', 204  # 204 No Content
 
     if audio_save_successful:
+        # Process transcription if saving audio was successful
         stripped_audio_path = audio_filepath.replace('backend/static/', '')
 
         if action == "save_audio_and_transcribe":
@@ -71,10 +94,15 @@ def stop_recording():
         return jsonify({"message": "User not authenticated"}), 401
 
     # Handle case when saving audio failed
-    return jsonify({"success": False, "message": "Failed to save files."}), 500  # if a error occurs, trigger a prompt
+    return jsonify({"success": False, "message": "Failed to save files."}), 500  # if an error occurs, trigger a prompt
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
 def delete_files():
+    """
+    Deletes all audio and transcription files for the authenticated user.
+
+    This removes both the files from the file system and the corresponding database records.
+    """
     try:
         # Query all records from the database of the current user
         all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
@@ -93,6 +121,11 @@ def delete_files():
 
 @transcription_bp.route('/list-audio-files', methods=['GET'])
 def list_audio_files():
+    """
+    Lists all audio file paths for the authenticated user.
+
+    Queries the database for the user's audio recordings and returns their file paths in JSON format.
+    """
     try:
         # Query the database for all audio recordings of the current user
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
@@ -107,6 +140,11 @@ def list_audio_files():
 
 @transcription_bp.route('/list-transcription-files', methods=['GET'])
 def list_transcription_files():
+    """
+    Lists all transcription file paths for the authenticated user.
+
+    Queries the database for the user's transcription files and returns their paths in JSON format.
+    """
     try:
         # Query the database for all transcription records
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
@@ -121,6 +159,9 @@ def list_transcription_files():
 
 @transcription_bp.route('/static/<path:filename>')
 def serve_file(filename):
-    """ Serve static files from the 'static' folder """
+    """
+    Serves static files from the 'static' folder.
 
+    This route is used to retrieve and serve raw audio or transcription files from the server.
+    """
     return send_from_directory('static', filename)
