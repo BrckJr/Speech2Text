@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="center">
+    <!--suppress XmlInvalidId -->
+<div class="center">
 
         <div class="svg-container">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 650 200" preserveAspectRatio="xMidYMid meet">
@@ -38,15 +39,15 @@
         <form method="POST" action="{{ url_for('auth.login') }}">
             {{ form.hidden_tag() }}
             <div class="form-group">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control") }}
+                <label for="email" data-i18n="email_label" class="form-label">{{ form.email.label.text }}</label>
+                {{ form.email(id="email", class="form-control") }}
             </div>
             <div class="form-group">
-                {{ form.password.label(class="form-label") }}
-                {{ form.password(class="form-control") }}
+                <label for="password" data-i18n="password_label" class="form-label">{{ form.password.label.text }}</label>
+                {{ form.password(id="password", class="form-control") }}
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary" data-i18n="login_button">Login</button>
             </div>
         </form>
 
