@@ -6,10 +6,16 @@ const languageFiles = {
 
 let currentLanguage = 'en'; // Default language
 
+window.loadLanguage = loadLanguage; // Expose the function globally to avoid ReferenceError
+
+// Attach event listeners
+document.getElementById('btn_en').addEventListener('click', () => loadLanguage('en'));
+document.getElementById('btn_de').addEventListener('click', () => loadLanguage('de'));
+document.getElementById('btn_es').addEventListener('click', () => loadLanguage('es'));
+
 // Function to load the language data and update text
 export function loadLanguage(lang) {
   currentLanguage = lang;
-  console.log("Current Language: " + currentLanguage);
   fetch(languageFiles[lang])
     .then(response => response.json())
     .then(data => {

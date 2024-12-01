@@ -15,14 +15,16 @@
         {% endif %}
     {% endblock %}
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
+
 </head>
 <body class="{% block body_class %}{% endblock %}" data-page="{% block data_page %}{% endblock %}">
 
     <!-- Language Switcher Buttons -->
     <div class="language-switcher">
-        <button id="btn_en" onclick="loadLanguage('en')" >en</button>
-        <button id="btn_de" onclick="loadLanguage('de')" >de</button>
-        <button id="btn_es" onclick="loadLanguage('es')" >es</button>
+        <button id="btn_en">en</button>
+        <button id="btn_de">de</button>
+        <button id="btn_es">es</button>
     </div>
 
     <!-- User Info and Logout Button -->
@@ -45,6 +47,5 @@
     <footer>
         <p1 data-i18n="footer">Developed by Kilian Brickl © 2024</p1>
     </footer>
-    <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
 </body>
 </html>
