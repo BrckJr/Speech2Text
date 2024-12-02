@@ -57,7 +57,7 @@ body {
 /* Adjust the container to start below the header */
 .container {
     flex: 1; /* Allow the container to grow and fill available space */
-    max-width: 1000px;
+    max-width: 1400px;
     z-index: 1000;
     text-align: center; /* Optional: Center the text inside the container */
 }
