@@ -1,4 +1,7 @@
-//Change this Value to set the percentage
+// Set the radius you want to use
+let radius = 120; // You can change this value to any desired radius
+
+// Change this Value to set the percentage
 let totalRot = ((90 / 100) * 180 * Math.PI) / 180;
 
 let rotation = 0;
@@ -10,109 +13,65 @@ canvas = document.getElementById("canvas_wpm_speedo");
 ctx = canvas.getContext("2d");
 setTimeout(requestAnimationFrame(animateSpeedometer), 1500);
 
-function calcPointsCirc(cx, cy, rad, dashLength){
-    var n = rad / dashLength,
-    alpha = (Math.PI * 2) / n,
-    pointObj = {},
-    points = [],
-    i = -1;
-
-    while (i < n) {
-        var theta = alpha * i,
-        theta2 = alpha * (i + 1);
-
-        points.push({
-            x: Math.cos(theta) * rad + cx,
-            y: Math.sin(theta) * rad + cy,
-            ex: Math.cos(theta2) * rad + cx,
-            ey: Math.sin(theta2) * rad + cy
-        });
-        i += 2;
-    }
-    return points;
-}
-
 export function animateSpeedometer() {
-    //Clearing animation on every iteration
+    // Clearing animation on every iteration
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Make center of the circle
     const center = {
-        x: 175,
-        y: 175
+        x: canvas.width/2,
+        y: canvas.height
     };
 
-    // Determine arc color based on rotation
-    const isRed = rotation >= 0.75 * Math.PI;
-    const arcColor = isRed ? "#B22222" : "#008000"; // Red or Green
-
-    // Main arc
+    // Main arc (background arc) - This is the full circle behind the progress sections
     ctx.beginPath();
-    ctx.strokeStyle = arcColor; // Use determined arc color
-    ctx.lineWidth = 3;
-    ctx.arc(center.x, center.y, 174, Math.PI, Math.PI + Math.PI);
+    ctx.strokeStyle = "#f1f1f1"; // light gray color for the background
+    ctx.lineWidth = 1;
+    ctx.arc(center.x, center.y, radius, Math.PI, Math.PI + Math.PI); // Use radius here
     ctx.stroke();
 
-    // Function to draw dotted lines with color based on arc percentage
-    const DrawDottedLine = (x1, y1, x2, y2, dotRadius, dotCount) => {
-        const dx = x2 - x1;
-        const dy = y2 - y1;
-        const slopeOfLine = dy / dx;
-
-        // Calculate angle of the line
-        let degOfLine =
-            Math.atan(slopeOfLine) * (180 / Math.PI) > 0
-                ? Math.atan(slopeOfLine) * (180 / Math.PI)
-                : 180 + Math.atan(slopeOfLine) * (180 / Math.PI);
-
-        // Determine the angle of the needle
-        let degOfNeedle = rotation * (180 / Math.PI);
-
-        // Determine dot color based on the threshold
-        let dotColor;
-        if (degOfLine >= 0.75 * 180) {
-            dotColor = degOfLine <= degOfNeedle ? "#B22222" : "#f1f1f1"; // Red for dots after 75%
-        } else {
-            dotColor = degOfLine <= degOfNeedle ? "#008000" : "#f1f1f1"; // Green for below 75%, light green for past the needle
-        }
-
-        // Calculate space between the dots
-        const spaceX = dx / (dotCount - 1);
-        const spaceY = dy / (dotCount - 1);
-
-        // Draw each dot
-        let newX = x1;
-        let newY = y1;
-        for (let i = 0; i < dotCount; i++) {
-            // Gradually reduce the size of the dot
-            dotRadius = dotRadius >= 0.75 ? dotRadius - i * (0.5 / 15) : dotRadius;
-            drawDot(newX, newY, dotRadius, `${dotColor}${100 - (i + 1)}`);
-            newX += spaceX;
-            newY += spaceY;
-        }
-    };
-    const drawDot = (x, y, dotRadius, dotColor) => {
+    // Function to draw full colored sections based on rotation
+    const drawProgressArc = (startAngle, endAngle, color) => {
         ctx.beginPath();
-        ctx.arc(x, y, dotRadius, 0, 2 * Math.PI, false);
-        ctx.fillStyle = dotColor;
-        ctx.fill();
+        ctx.arc(center.x, center.y, radius, startAngle, endAngle); // Use radius here
+        ctx.lineWidth = 8; // Make the arc thicker
+        ctx.strokeStyle = color;
+        ctx.stroke();
     };
-    let firstDottedLineDots = calcPointsCirc(center.x, center.y, 165, 1);
-    for (let k = 0; k < firstDottedLineDots.length; k++) {
-        let x = firstDottedLineDots[k].x;
-        let y = firstDottedLineDots[k].y;
-        DrawDottedLine(x, y, 175, 175, 2.5, 25, "#008000");
+
+    // Function to draw filled colored sector
+    const drawProgressSector = (startAngle, endAngle, color) => {
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y); // Move to center
+        ctx.arc(center.x, center.y, radius, startAngle, endAngle); // Use radius here
+        ctx.fillStyle = color; // Set fill color
+        ctx.fill(); // Fill the sector
+    };
+
+    // Draw the progress based on rotation
+    const greenArcEndAngle = Math.PI + rotation; // For green section (rotation-based)
+    const redArcStartAngle = Math.PI + rotation; // For red section (if any)
+    const redArcEndAngle = Math.PI + Math.PI; // Full 180 degrees
+    const threeQuarterAngle = Math.PI + 0.75 * Math.PI;
+
+    // Draw the green section (if there's any rotation)
+    drawProgressArc(Math.PI, greenArcEndAngle, "rgba(0, 128, 0)");
+    drawProgressSector(redArcEndAngle, redArcStartAngle, "rgba(0, 128, 0, 0.3)")
+
+    // Draw the red section if rotation exceeds 75% of the range
+    if (rotation > 0.75 * Math.PI) {
+        drawProgressArc(threeQuarterAngle, redArcEndAngle, "rgba(178, 34, 34)");
+        drawProgressSector(threeQuarterAngle, redArcStartAngle, "rgba(178, 34, 34, 0.5)")
     }
 
-
-    //dummy circle to hide the line connecting to center
+    // Dummy circle to hide the line connecting to center
     ctx.beginPath();
-    ctx.arc(center.x, center.y, 60, 2 * Math.PI, 0);
+    ctx.arc(center.x, center.y, 65, 0, 2 * Math.PI);
     ctx.fillStyle = "#333333";
     ctx.fill();
 
-    //Speedometer triangle
-    var x = -75,
+    // Speedometer triangle
+    var x = -62,
     y = 0;
     ctx.save();
     ctx.beginPath();
@@ -137,5 +96,4 @@ export function animateSpeedometer() {
     // Words per minute range: 50 - 250 wpm
     text.innerHTML = 50 + Math.round((rotation / Math.PI) * 200) + " wpm";
     requestAnimationFrame(animateSpeedometer);
-
 }
