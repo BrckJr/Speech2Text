@@ -95,3 +95,19 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+/* Overwrite base.css */
+p {
+    font-size: 16px;
+    margin: 5px;
+    text-align: center;
+}
+
+/* Overwrite base.css */
+/* Styling for section headings */
+h2 {
+    text-align: center;
+    font-size: 32px; /* Medium font size for subheadings */
+    font-weight: bold;
+    margin: 20px;
+}
