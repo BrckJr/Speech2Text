@@ -5,6 +5,8 @@ import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 import { setupLangSwitcherButtons } from './modules/langSwitcher.js';
 import { setupAnalysisButton } from './modules/analysisButton.js'
+import { animateSpeedometer } from './modules/speedometer.js';
+
 
 // Function to display webpage
 document.addEventListener('DOMContentLoaded', () => {
@@ -35,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAnalysisButton(analysisButton);
         setupControlButtons(startButton, pauseButton, stopButton);
         setupDeleteButton(deleteButton);
+
+        animateSpeedometer();
     }
 
     // Logic for the login page

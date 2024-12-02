@@ -52,7 +52,13 @@
         <div class="analytics-panel" data-i18n="sentiment_analysis">Sentiment Analysis</div>
         <div class="analytics-panel" data-i18n="fluency">Fluency (# Fill Words, Pauses, etc.)</div>
         <div class="analytics-panel" data-i18n="pitch_analysis">Pitch Analysis</div>
-        <div class="analytics-panel" data-i18n="speech_rate">Speech Rate</div>
+
+        <!-- Replace the Speech Rate panel with the speedometer -->
+        <div class="analytics-panel speedometer-panel">
+            <h3 data-i18n="speech_rate">Speech Rate</h3>
+            <canvas id="canvas_wpm_speedo" height="175" width="350"></canvas>
+            <div class="text_wpm_speedo">60 % </div>
+        </div>
     </div>
 </div>
 
@@ -101,7 +107,6 @@
         <button id="cancel-delete" data-i18n="cancel">Cancel</button>
     </div>
 </div>
-
 
 <!-- Delete Confirmation Modal -->
 <div id="analysis-selection-modal" class="modal" style="display: none;">

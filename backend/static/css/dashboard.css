@@ -325,8 +325,22 @@
 .analytics-panel {
     border: 1px solid #ccc; /* Light grey border */
     border-radius: 5px;
-    padding: 20px;
     text-align: center;
     color: white;
     min-height: 150px; /* Set minimum height for panels */
+}
+
+/* Style the canvas to fit the speedometer inside the panel */
+#canvas_wpm_speedo {
+    display: block;
+    margin: auto;
+    width: 80%; /* Full width of the parent container */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.text_wpm_speedo {
+    color: white;
+    font-size: 16px;
+    position: relative;
+    top: -10%;
 }
