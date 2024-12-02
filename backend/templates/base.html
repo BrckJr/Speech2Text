@@ -31,8 +31,17 @@
 
         <!-- User Info and Logout Button -->
         {% if page_name != "login" and page_name != "register" %}
-            <div class="user-info">
-                <span class="user-email">{{ current_user.email }}</span>
+            <div class="user-info-container">
+                <div class="user-icon">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="black">
+                        <circle cx="12" cy="9" r="5" stroke=#f4f4f4 stroke-width="1.5" fill="black"></circle>
+                        <path d="M4,20c0-4,4-6,8-6s8,2,8,6" stroke=#f4f4f4 stroke-width="1.5" fill=black></path>
+                    </svg>
+                </div>
+                <div class="info-panel">
+                    <p><strong>Name:</strong> {{ current_user.username }}</p>
+                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                </div>
                 <form method="POST" action="{{ url_for('auth.logout') }}">
                     <button type="submit" class="btn btn-logout" data-i18n="logout_button">Logout</button>
                 </form>

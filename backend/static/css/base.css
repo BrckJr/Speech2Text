@@ -91,23 +91,6 @@ body {
     padding-left: 15px;
 }
 
-/* User Info */
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Spacing between email and button */
-    padding: 8px 16px;
-    border-radius: 5px; /* Rounded edges */
-}
-
-.user-email {
-    font-size: 14px;
-    color: #f1f1f1; /* White text for contrast */
-    white-space: nowrap; /* Prevent email wrapping */
-    overflow: hidden; /* Ensure long emails are truncated */
-    text-overflow: ellipsis; /* Show ellipsis if the email overflows */
-    max-width: 200px; /* Limit the maximum width of the email text */
-}
 
 .btn-logout {
     padding: 8px 16px;
@@ -199,4 +182,46 @@ footer {
     font-style: italic;
     border-radius: 5px 5px 0 0; /* Rounded top corners */
     z-index: 1000;
+}
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between email and button */
+    position: relative; /* Ensures child elements are positioned relative to this container */
+}
+
+.user-icon {
+    display: flex;
+    align-items: center; /* Centers the SVG vertically */
+    justify-content: center; /* Centers the SVG horizontally */
+    cursor: pointer;
+    width: 32px;
+    height: 32px; /* Matches the visual height of the button */
+    border: 1px solid #f1f1f1;
+    border-radius: 50%; /* Makes the icon circular */
+    box-sizing: border-box; /* Ensures borders are included in width/height */
+}
+
+.user-icon svg {
+    display: block; /* Removes any inline spacing issues */
+    width: 80%;
+    height: 80%; /* Scales the SVG to fit the icon container */
+}
+
+.info-panel {
+    display: none;
+    position: absolute; /* Positioned relative to .user-info-container */
+    top: 120%;
+    left: -100%;
+    background-color: #121212;
+    border: 1px solid #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 10001;
+    width: max-content;
+}
+
+.user-info-container:hover .info-panel {
+    display: block;
 }
