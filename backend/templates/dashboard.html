@@ -9,7 +9,7 @@
 <div class="intro">
     <h1>Presentable</h1>
     <p data-i18n="intro_text">
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+        Lorem ipsum dolor ...
     </p>
 </div>
 
@@ -31,6 +31,21 @@
 <!-- Analytics Section -->
 <div class="analytics">
     <h2 data-i18n="analytics_section">Analytics</h2>
+
+    <p data-i18n="analytics_text">
+        Lorem ipsum dolor sit amet, ...
+    </p>
+
+    <!-- Select Recording Dropdown Menu -->
+    <div class="select-recording">
+        <label for="recordings-dropdown" data-i18n="select_recording_label">Select a Recording:</label>
+        <select id="recordings-dropdown">
+            <!-- Options will be populated dynamically -->
+        </select>
+        <!-- Button next to the dropdown -->
+        <button id="get-analysis-btn" class="btn" data-i18n="get_analysis_button">Select Recording</button>
+    </div>
+
     <div class="analytics-panel-grid">
         <div class="analytics-panel" data-i18n="overview">Overview (Topic, Length, Language, etc.)</div>
         <div class="analytics-panel" data-i18n="summary_of_speech">Summary of Speech</div>
@@ -44,8 +59,9 @@
 <!-- File Management Section -->
 <div class="file_management">
     <h2 data-i18n="file_management">File Management</h2>
+
     <p data-i18n="file_management_text">
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+        Lorem ipsum dolor sit amet, ...
     </p>
 
     <!-- Audio File Panel -->
@@ -83,6 +99,16 @@
             This action cannot be undone.</p1>
         <button id="confirm-delete" data-i18n="yes_delete_all">Yes, Delete All</button>
         <button id="cancel-delete" data-i18n="cancel">Cancel</button>
+    </div>
+</div>
+
+
+<!-- Delete Confirmation Modal -->
+<div id="analysis-selection-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="analysis-selection_modal">Error</h10>
+        <p1 data-i18n="analysis-selection_modal_text">An error occurred, please try again. Maybe you did not choose a recording?</p1>
+        <button id="close-error-modal">OK</button>
     </div>
 </div>
 

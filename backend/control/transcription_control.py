@@ -165,3 +165,21 @@ def serve_file(filename):
     This route is used to retrieve and serve raw audio or transcription files from the server.
     """
     return send_from_directory('static', filename)
+
+@transcription_bp.route('/process-recording', methods=['POST'])
+def process_recording():
+    try:
+        data = request.get_json()
+        recording = data.get('recording')
+
+        if not recording:
+            return jsonify({'error': 'Recording not specified'}), 400
+
+        # Process the recording (your logic here)
+        print(f'Processing recording: {recording}')
+
+        # Simulate processing success
+        return jsonify({'success': True})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500

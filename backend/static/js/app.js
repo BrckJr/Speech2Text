@@ -4,6 +4,7 @@ import { setupControlButtons } from './modules/controlButtons.js';
 import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 import { setupLangSwitcherButtons } from './modules/langSwitcher.js';
+import { setupAnalysisButton } from './modules/analysisButton.js'
 
 // Function to display webpage
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,12 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const pauseButton = document.getElementById('pause');
         const stopButton = document.getElementById('stop');
         const deleteButton = document.querySelector('.delete-btn');
+        const analysisButton = document.getElementById('get-analysis-btn');
 
         // Loading all files of a respective user at start
         loadAudioFiles();
         loadTranscriptionFiles();
 
-        // Logic for control and delete buttons
+        // Logic for control, delete and recording analysis buttons
+        setupAnalysisButton(analysisButton);
         setupControlButtons(startButton, pauseButton, stopButton);
         setupDeleteButton(deleteButton);
     }

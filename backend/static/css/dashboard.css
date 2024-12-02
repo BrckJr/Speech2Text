@@ -100,7 +100,7 @@
 /* Delete All Button */
 #delete_all {
     padding: 10px 40px;
-    background: #455a64; /* Blue-grey background */
+    background: #007BFF; /* Blue-grey background */
     color: #f1f1f1;
     font-size: 16px;
     border: none;
@@ -111,7 +111,7 @@
 }
 
 #delete_all:hover {
-    background: #607d8b; /* Lighter blue-grey on hover */
+    background: #0056b3; /* Lighter blue-grey on hover */
 }
 
 /* Stop Modal Styling */
@@ -126,7 +126,7 @@
     color: #f1f1f1; /* Light text color */
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
+    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
     z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
 }
@@ -157,6 +157,55 @@
     background: #D21404;
 }
 
+/* Container for the "Select a Recording" dropdown aligned to the left */
+.select-recording {
+    margin: 20px;
+    display: flex;             /* Use flexbox for alignment */
+    align-items: center;       /* Vertically center label and dropdown */
+    justify-content: flex-start; /* Align content to the left */
+}
+
+/* Label for the dropdown menu */
+.select-recording label {
+    margin-right: 10px;
+    font-size: 16px;
+    display: inline-block;
+    align-items: center;       /* Vertically center label and dropdown */
+    justify-content: flex-start; /* Align content to the left */
+}
+
+/* Style for the dropdown menu */
+#recordings-dropdown {
+    min-width: 270px;  /* Set the minimum width to 100px */
+    width: auto;       /* Allow the width to scale based on content */
+    padding: 3px 10px; /* Adjust padding to match button height */
+    font-size: 14px;   /* Adjust font size */
+    border: 1px solid #f1f1f1; /* Border for the dropdown */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f1f1f1; /* Light background color */
+    display: inline-block; /* Ensure it aligns with the label */
+    height: 25px;      /* Set a fixed height to match button size */
+    line-height: 20px; /* Ensure text is centered vertically */
+}
+
+/* Button styling */
+#get-analysis-btn {
+    font-size: 14px;
+    padding: 3px 10px; /* Adjust padding to match dropdown height */
+    margin-left: 10px; /* Space between dropdown and button */
+    background-color: #007BFF; /* Blue background */
+    color: white;
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    height: 25px;      /* Set the height to match the dropdown */
+}
+
+/* Hover effect for the button */
+#get-analysis-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
 /* Delete Confirmation Modal Styling */
 #delete-confirmation-modal {
     display: none;
@@ -169,7 +218,7 @@
     color: #f1f1f1; /* Light text color */
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
+    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
     z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
 }
@@ -188,6 +237,32 @@
 }
 #cancel-delete:hover {
     background: #607d8b; /* Lighter grey-blue */
+}
+
+/* Delete Confirmation Modal Styling */
+#analysis-selection-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    background: rgba(51, 51, 51); /* Dark grey with slight transparency */
+    color: #f1f1f1; /* Light text color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears on top */
+    text-align: center; /* Center align modal content */
+}
+
+#close-error-modal {
+    background: #007BFF; /* Grey-blue for Cancel */
+    color: #f1f1f1;
+}
+
+#close-error-modal:hover {
+    background: #0056b3; /* Lighter grey-blue */
 }
 
 /* Panels Styling */
