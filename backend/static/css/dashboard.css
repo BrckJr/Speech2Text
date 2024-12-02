@@ -1,109 +1,8 @@
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box; /* Ensure consistent box sizing across elements */
-}
-
-/* Body Styling */
-body {
-    font-family: Arial, sans-serif;
-    color: #f1f1f1; /* Light text color for readability on dark background */
-    background: grey; /* Background color */
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
-    height: 100vh; /* Full viewport height */
-    position: relative; /* Needed for layering canvas behind content */
-}
-
-/* Set the canvas to cover the whole screen and be positioned behind content */
-#backgroundCanvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;  /* Ensure canvas stays behind content */
-    pointer-events: none; /* Prevent interactions with the background */
-    background: none;
-}
-
-/* Container Layout using CSS Grid */
-.container {
-    display: grid;
-    grid-template-areas:
-        "raw-audio center transcribed"
-        "raw-audio settings transcribed"; /* Define grid areas */
-    grid-template-columns: 1fr 2fr 1fr; /* Define column sizes */
-    grid-template-rows: auto auto; /* Auto adjust rows */
-    gap: 20px; /* Space between grid items */
-    width: 90%; /* Container width */
-    max-width: 1200px; /* Maximum container width */
-}
-
-/* Panels Styling */
-.panel {
-    background: rgba(51, 51, 51, 0.85); /* Dark grey with 85% opacity */
-    border-radius: 8px; /* Rounded corners */
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Light shadow effect */
-    overflow-y: auto; /* Allow vertical scrolling if content overflows */
-    min-height: 390px; /* Minimum height for panels */
-    width: 290px; /* Fixed width for panels */
-}
-
-#raw-audio-files {
-    grid-area: raw-audio; /* Place in the 'raw-audio' grid area */
-}
-
-#transcribed-files {
-    grid-area: transcribed; /* Place in the 'transcribed' grid area */
-}
-
-/* File List Styling */
-.file-list {
-    height: 90%;
-    max-height: 90%;
-    border: 1px solid #ccc; /* Light grey border */
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.9); /* Light grey with 90% opacity */
-    font-size: 12px;
-    overflow-y: auto; /* Enable scroll when content exceeds height */
-}
-
 /* Center Section Styling */
 .center {
-    grid-area: center;
-    text-align: center; /* Center text */
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
-    min-width: 580px; /* Minimum width for center section */
-}
-
-h1 {
-    font-size: 48px; /* Large font size for headings */
-    margin: 15px; /* Space around the heading */
-}
-
-h2 {
-    font-size: 24px; /* Medium font size for subheadings */
-    margin-bottom: 5px;
-}
-
-p {
-    padding: 10px 10px;
-    font-size: 16px;
-    font-style: italic; /* Italicize the paragraph text */
-    margin-bottom: 20px;
-}
-
-p_footer {
-    font-size: 9px;
-    font-style: italic; /* Italicize the footer text */
-    text-align: center; /* Center-align footer text */
-    padding: 5px 5px;
+    background: rgba(51, 51, 51, 0.7); /* Dark grey with 90% opacity */
+    padding: 30px 20px;
 }
 
 /* Buttons Group */
@@ -208,53 +107,21 @@ select {
     border-radius: 5px;
 }
 
-/* Footer Styling */
-footer {
-    display: flex;
-    justify-content: center; /* Horizontally center footer */
-    align-items: center; /* Vertically center footer */
-    text-align: center;
-    border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
-    color: #f1f1f1;
-    margin-top: 20px; /* Space between footer and content */
-}
-
-/*
-################## Saving Modal #####################
-*/
-
-/* Modal Styling */
+/* Stop Modal Styling */
 #stop-options-modal {
-    display: none; /* Initially hidden */
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-height: 285px;
     width: 360px;
     background: rgba(51, 51, 51); /* Dark grey with slight transparency */
     color: #f1f1f1; /* Light text color */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 14px 20px rgba(0, 0, 0, 1); /* Subtle shadow */
-    z-index: 1000; /* Ensure modal is on top */
+    z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
-}
-
-.modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Space between buttons */
-}
-
-.modal-content button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 
 /* Button styles for modal */
@@ -283,18 +150,13 @@ footer {
     background: #D21404;
 }
 
-/*
-################## Delete Modal #####################
-*/
-
 /* Delete Confirmation Modal Styling */
 #delete-confirmation-modal {
     display: none;
     position: fixed;
-    top: 48%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-height: 285px;
     width: 360px;
     background: rgba(51, 51, 51); /* Dark grey with slight transparency */
     color: #f1f1f1; /* Light text color */
@@ -305,21 +167,6 @@ footer {
     text-align: center; /* Center align modal content */
 }
 
-#delete-confirmation-modal .modal-buttons {
-    display: flex;
-    justify-content: space-around;
-}
-
-#delete-confirmation-modal button {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-/* Styles for Confirm and Cancel buttons */
 #confirm-delete {
     background: #B22222; /* Red for Delete */
     color: #f1f1f1;
@@ -335,42 +182,3 @@ footer {
 #cancel-delete:hover {
     background: #607d8b; /* Lighter grey-blue */
 }
-
-/*
-############## HANDWRITTEN HEADING ###############
- */
-/* SVG Container Styling */
-.svg-container {
-    display: flex; /* Enables flexbox layout */
-    justify-content: center; /* Centers the SVG horizontally */
-    align-items: center; /* Centers the SVG vertically */
-    flex-direction: column; /* Ensures vertical stacking for any additional elements */
-    text-align: center; /* Centers any accompanying text */
-}
-
-/* SVG Styling */
-svg {
-    max-width: 90%; /* Ensures the SVG scales responsively */
-    height: auto; /* Maintains aspect ratio */
-    display: flex; /* Enables flexbox layout */
-    justify-content: center; /* Centers the SVG horizontally */
-}
-
-
-/* Animated Path Styling */
-path {
-    stroke: #f1f1f1;
-    stroke-width: 2;
-    fill: none; /* Keeps the path invisible initially */
-    stroke-dasharray: 500; /* Adjust this based on the total path length */
-    stroke-dashoffset: 500; /* Hidden at the start */
-    animation: draw 10s ease-in-out forwards; /* animations */
-}
-
-/* Keyframes for Drawing Animation */
-@keyframes draw {
-    to {
-        stroke-dashoffset: 0; /* Fully reveals the path */
-    }
-}
-

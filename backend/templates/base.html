@@ -14,28 +14,30 @@
             <link rel="stylesheet" href="/static/css/register.css">
         {% endif %}
     {% endblock %}
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
 
 </head>
 <body class="{% block body_class %}{% endblock %}" data-page="{% block data_page %}{% endblock %}">
 
-    <!-- Language Switcher Buttons -->
-    <div class="language-switcher">
-        <button id="btn_en">en</button>
-        <button id="btn_de">de</button>
-        <button id="btn_es">es</button>
-    </div>
-
-    <!-- User Info and Logout Button -->
-    {% if page_name != "login" and page_name != "register" %}
-        <div class="user-info">
-            <span class="user-email" >{{ current_user.email }}</span>
-            <form method="POST" action="{{ url_for('auth.logout') }}">
-                <button type="submit" class="btn btn-logout" data-i18n="logout_button">Logout</button>
-            </form>
+    <!-- Header for all pages -->
+    <header class="header">
+        <!-- Language Switcher Buttons -->
+        <div class="language-switcher">
+            <button id="btn_en">en</button>
+            <button id="btn_de">de</button>
+            <button id="btn_es">es</button>
         </div>
-    {% endif %}
+
+        <!-- User Info and Logout Button -->
+        {% if page_name != "login" and page_name != "register" %}
+            <div class="user-info">
+                <span class="user-email">{{ current_user.email }}</span>
+                <form method="POST" action="{{ url_for('auth.logout') }}">
+                    <button type="submit" class="btn btn-logout" data-i18n="logout_button">Logout</button>
+                </form>
+            </div>
+        {% endif %}
+    </header>
 
     <!-- Canvas for dynamic wave background -->
     <canvas id="backgroundCanvas"></canvas>
@@ -45,7 +47,7 @@
     </div>
 
     <footer>
-        <p1 data-i18n="footer">Developed by Kilian Brickl © 2024</p1>
+        <p_f data-i18n="footer">Developed by Kilian Brickl © 2024</p_f>
     </footer>
 </body>
 </html>

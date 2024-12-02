@@ -5,120 +5,180 @@
     box-sizing: border-box; /* Ensure consistent box sizing */
 }
 
+/* Ensure full height for html and body */
 html, body {
-    height: 100%; /* Ensure full height for proper layout */
-    min-height: 250px; /* Minimum height for small screens */
-    min-width: 1150px; /* Ensure a minimum width */
+    height: 100%; /* Full viewport height */
+    width: 100%; /* Full viewport width */
+    display: block;
+    overflow: auto; /* Allow scrolling */
 }
 
+/* Body styling */
 body {
+    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
+    align-items: center; /* Center-align horizontally */
     justify-content: flex-start; /* Align content to the top */
-    align-items: center; /* Center-align the content */
-    position: relative; /* For layering the canvas */
-    margin: 0;
-    padding: 0;
-    color: #f1f1f1; /* Set default text color */
+    position: relative; /* Position for layered canvas */
+    background: #121212; /* Dark background for contrast */
+    color: #f1f1f1; /* Default light text color */
+    z-index: 1; /* Set above background */
+    margin: 0; /* Remove default body margin */
+    min-height: 100vh; /* Full viewport height */
+    overflow: auto; /* Allow scrolling */
 }
 
-/* Set the canvas to cover the whole screen and be positioned behind content */
+/* Background Canvas */
 #backgroundCanvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1; /* Make sure the canvas stays behind the other content */
-    pointer-events: none; /* Prevent interactions with the background */
-    background: none; /* No background for the canvas */
+    z-index: 0; /* Layer the canvas behind other elements */
+    pointer-events: none; /* Disable interaction with the canvas */
+    background: none;
 }
 
-/* User Info Container */
-.user-info {
-    position: absolute;
-    top: 10px;
-    right: 20px;
+/* Header Styling */
+.header {
+    position: relative; /* Keeps the header fixed at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
     display: flex;
-    align-items: center; /* Align items vertically */
-    gap: 10px; /* Space between email and logout button */
-}
-
-/* User Email Styling */
-.user-email {
-    font-size: 14px;
-    color: #f1f1f1; /* Light color for visibility */
-    background: rgba(51, 51, 51, 0.8); /* Slightly opaque background */
-    padding: 8px 16px;
-    border-radius: 5px; /* Rounded corners */
-}
-
-/* Logout Button Styling */
-.btn-logout {
-    padding: 8px 16px;
-    font-size: 14px;
-    color: white;
-    background-color: #B22222; /* Red for logout */
-    border: none;
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background 0.3s ease; /* Smooth transition on hover */
-}
-
-.btn-logout:hover {
-    background-color: #D21404; /* Candy red on hover */
-}
-
-h1, h2, p {
-    margin: 0; /* Remove margin for headings and paragraphs */
-}
-
-footer {
-    display: flex;
-    justify-content: center; /* Center-align footer content */
+    justify-content: space-between; /* Space between language switcher and logout */
     align-items: center;
-    text-align: center;
-    border-radius: 5px; /* Rounded corners */
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
-    color: #f1f1f1;
-    margin-top: 20px; /* Space above the footer */
-}
-
-p1 {
-    text-align: center; /* Center-align text */
-    font-size: 9px; /* Small font size */
-    font-style: italic; /* Italicize text */
-    padding: 5px 5px; /* Padding around text */
-}
-
-
-.language-switcher {
-    position: absolute;
-    top: 18px;
-    left: 10px;
+    padding: 10px 20px;
     z-index: 1000;
+}
+
+/* Adjust the container to start below the header */
+.container {
+    flex: 1; /* Allow the container to grow and fill available space */
+    max-width: 800px;
+    margin: auto; /* Center horizontally and add top margin for the header */
+    padding: 20px;
+    z-index: 1000;
+    text-align: center; /* Optional: Center the text inside the container */
+}
+
+/* Language Switcher Buttons */
+.language-switcher {
     display: flex;
+    gap: 5px;
 }
 
 .language-switcher button {
-    padding: 2px 10px;
+    padding: 5px 10px;
     font-size: 14px;
     color: white;
-    background: none;
+    background: transparent;
     border: none;
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: background 0.3s ease; /* Smooth transition on hover */
+    cursor: pointer;
+    transition: text-decoration 0.3s ease;
 }
 
 .language-switcher button:hover {
     text-decoration: underline;
 }
 
-/* Add vertical line between the buttons */
-.language-switcher button:first-child {
-    border-right: 1px solid #ccc; /* Adds a border to the right of the first button */
+.language-switcher button:not(:last-child) {
+    border-right: 1px solid #ccc; /* Divider between buttons */
+    padding-right: 15px;
 }
 
-.language-switcher button:last-child {
-    border-left: 1px solid #ccc; /* Adds a border to the left of the second button */
+.language-switcher button:not(:first-child) {
+    padding-left: 15px;
+}
+
+/* User Info */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spacing between email and button */
+    padding: 8px 16px;
+    border-radius: 5px; /* Rounded edges */
+}
+
+.user-email {
+    font-size: 14px;
+    color: #f1f1f1; /* White text for contrast */
+    white-space: nowrap; /* Prevent email wrapping */
+    overflow: hidden; /* Ensure long emails are truncated */
+    text-overflow: ellipsis; /* Show ellipsis if the email overflows */
+    max-width: 200px; /* Limit the maximum width of the email text */
+}
+
+.btn-logout {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background-color: #B22222;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #D21404;
+}
+
+h {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 64px;
+    margin: 30px;
+}
+
+h1 {
+    font-size: 48px; /* Large font size for headings */
+    margin: 25px; /* Space around the heading */
+}
+
+h2 {
+    font-size: 24px; /* Medium font size for subheadings */
+    margin-bottom: 5px;
+}
+
+p {
+    font-size: 16px;
+    font-style: italic; /* Italicize the paragraph text */
+}
+
+p_f {
+    font-size: 12px;
+    font-style: italic; /* Italicize the paragraph text */
+}
+
+/* Modal Styling */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between buttons */
+    justify-content: space-around;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Footer */
+footer {
+    width: 100%;
+    padding: 10px 0;
+    color: #f1f1f1;
+    text-align: center;
+    font-size: 10px;
+    font-style: italic;
+    border-radius: 5px 5px 0 0; /* Rounded top corners */
+    z-index: 1000;
 }
