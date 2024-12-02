@@ -1,5 +1,5 @@
 // Set the radius you want to use
-let radius = 120; // You can change this value to any desired radius
+let radius = 150; // You can change this value to any desired radius
 
 // Change this Value to set the percentage
 let totalRot = ((90 / 100) * 180 * Math.PI) / 180;
@@ -66,12 +66,12 @@ export function animateSpeedometer() {
 
     // Dummy circle to hide the line connecting to center
     ctx.beginPath();
-    ctx.arc(center.x, center.y, 65, 0, 2 * Math.PI);
+    ctx.arc(center.x, center.y, 70, 0, 2 * Math.PI);
     ctx.fillStyle = "#333333";
     ctx.fill();
 
     // Speedometer triangle
-    var x = -62,
+    var x = -68,
     y = 0;
     ctx.save();
     ctx.beginPath();
@@ -94,6 +94,6 @@ export function animateSpeedometer() {
     }
 
     // Words per minute range: 50 - 250 wpm
-    text.innerHTML = 50 + Math.round((rotation / Math.PI) * 200) + " wpm";
+    text.innerHTML = 50 + Math.round((rotation / Math.PI) * 200) + "";
     requestAnimationFrame(animateSpeedometer);
 }
