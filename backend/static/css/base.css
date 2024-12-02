@@ -57,9 +57,7 @@ body {
 /* Adjust the container to start below the header */
 .container {
     flex: 1; /* Allow the container to grow and fill available space */
-    max-width: 800px;
-    margin: auto; /* Center horizontally and add top margin for the header */
-    padding: 20px;
+    max-width: 1000px;
     z-index: 1000;
     text-align: center; /* Optional: Center the text inside the container */
 }
@@ -126,27 +124,47 @@ body {
     background-color: #D21404;
 }
 
-h {
+/* Styling for main heading */
+h1 {
     font-family: "Times New Roman", Times, serif;
     font-style: italic;
     font-weight: bold;
-    font-size: 64px;
-    margin: 30px;
+    font-size: 65px; /* Large font size for headings */
+    margin-bottom: 30px;
 }
 
-h1 {
-    font-size: 48px; /* Large font size for headings */
-    margin: 25px; /* Space around the heading */
-}
-
+/* Styling for section headings */
 h2 {
+    text-align: left;
+    font-size: 32px; /* Medium font size for subheadings */
+    font-weight: bold;
+    margin: 20px;
+}
+
+/* Styling for subsection headings */
+h3 {
+    text-align: left;
     font-size: 24px; /* Medium font size for subheadings */
-    margin-bottom: 5px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Styling for prompt headings */
+h10 {
+    text-align: left;
+    font-size: 24px; /* Medium font size for subheadings */
+    font-weight: bold;
 }
 
 p {
     font-size: 16px;
-    font-style: italic; /* Italicize the paragraph text */
+    margin: 20px;
+    text-align: justify;
+}
+
+/* Styling for modal / prompts */
+p1 {
+    font-size: 16px;
 }
 
 p_f {

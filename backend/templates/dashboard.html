@@ -5,9 +5,85 @@
 {% block data_page %}dashboard{% endblock %}
 
 {% block content %}
-<!-- Center Section -->
-<div class="center">
-    <h> presentable </h>
+<!-- Intro Section -->
+<div class="intro">
+    <h1> presentable </h1>
+    <p data-i18n="...">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+    </p>
+</div>
+
+<!-- Recording Audio -->
+<div class="record_audio">
+    <h2> Audio Recording </h2>
+    <p data-i18n="recording_instructions">
+        Press the start button to begin recording.<br>
+        Press the pause button to pause the recording.<br>
+        Finish the recording by pressing the stop button.
+    </p>
+    <div class="button-group">
+        <button class="control-btn" id="start" data-i18n="start_button">Start ▶️</button>
+        <button class="control-btn" id="pause" disabled data-i18n="pause_button">Pause ⏸️</button>
+        <button class="control-btn" id="stop" disabled data-i18n="stop_button">Stop ⏹️</button>
+    </div>
+</div>
+
+<!-- Analytics Section -->
+<div class="analytics">
+    <h2> Analytics </h2>
+    <div class="analytics-panel-grid">
+        <div class="analytics-panel">Panel 1</div>
+        <div class="analytics-panel">Panel 2</div>
+        <div class="analytics-panel">Panel 3</div>
+        <div class="analytics-panel">Panel 4</div>
+        <div class="analytics-panel">Panel 5</div>
+        <div class="analytics-panel">Panel 6</div>
+    </div>
+</div>
+
+<!-- Analytics Section -->
+<div class="file_management">
+    <h2> File Management </h2>
+    <p data-i18n="...">
+    Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.
+    </p>
+
+    <!-- Audio File Panel -->
+    <div class="panel" id="raw-audio-files">
+        <h3 data-i18n="raw_audio_files">Raw Audio Files</h3>
+        <div class="file-list"></div>
+    </div>
+
+    <!-- File Panel -->
+    <div class="panel" id="transcribed-files">
+        <h3 data-i18n="transcribed_files">Transcribed Files</h3>
+        <div class="file-list"></div>
+    </div>
+
+    <!-- Delete Button -->
+    <button class="delete-btn" id="delete_all" data-i18n="delete_all_files">Delete all Files 🗑️</button>
+</div>
+
+<!-- Modal for Stop Options -->
+<div id="stop-options-modal" class="modal">
+    <div class="modal-content">
+        <h10 data-i18n="file_saving">File Saving</h10>
+        <p1 data-i18n="select_option">Select one of the following options below.</p1>
+        <button id="save-audio-only" data-i18n="save_audio_only">Save Audio Only</button>
+        <button id="save-audio-transcribe" data-i18n="save_audio_transcribe">Save Audio and Transcribe</button>
+        <button id="delete-audio" data-i18n="discard_audio">Discard Audio</button>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-confirmation-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="delete_all_files_modal">Delete all Files</h10>
+        <p1 data-i18n="delete_confirmation_message">Are you sure you want to delete all files? <br>
+            This action cannot be undone.</p1>
+        <button id="confirm-delete" data-i18n="yes_delete_all">Yes, Delete All</button>
+        <button id="cancel-delete" data-i18n="cancel">Cancel</button>
+    </div>
 </div>
 
 {% endblock %}

@@ -1,8 +1,33 @@
-/* Center Section Styling */
-.center {
+/* Section Styling for Introduction */
+.intro {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.7); /* Dark grey with 90% opacity */
+    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
     padding: 30px 20px;
+    margin: auto auto 30px auto;
+}
+
+/* Section Styling for Record Audio */
+.record_audio {
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    padding: 30px 20px;
+    margin: auto auto 30px auto;
+}
+
+/* Section Styling for Analytics */
+.analytics {
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    padding: 30px 20px;
+    margin: auto auto 30px auto;
+}
+
+/* Section Styling for File Management */
+.file_management {
+    border-radius: 5px;
+    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    padding: 30px 20px;
+    margin: auto auto 30px auto;
 }
 
 /* Buttons Group */
@@ -10,7 +35,7 @@
     display: flex;
     justify-content: center; /* Center-align buttons */
     gap: 15px; /* Space between buttons */
-    margin-bottom: 20px;
+    margin: 20px auto 20px auto;
 }
 
 .control-btn {
@@ -89,24 +114,6 @@
     background: #607d8b; /* Lighter blue-grey on hover */
 }
 
-/* Model Settings Styling */
-.model-settings {
-    grid-area: settings;
-    background: rgba(51, 51, 51, 0.90); /* Dark grey with 90% opacity */
-    border-radius: 5px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-select {
-    padding: 10px;
-    font-size: 16px;
-    width: 100%;
-    border: 5px solid #ccc;
-    border-radius: 5px;
-}
-
 /* Stop Modal Styling */
 #stop-options-modal {
     display: none;
@@ -181,4 +188,70 @@ select {
 }
 #cancel-delete:hover {
     background: #607d8b; /* Lighter grey-blue */
+}
+
+/* Panels Styling */
+.panel {
+    /* background: rgba(51, 51, 51);  Dark grey with 85% opacity */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px;
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+    min-height: 100px; /* Minimum height for panels */
+}
+
+/* File List Styling */
+.file-list {
+    height: 90%; /* Use the remaining space */
+    min-height: 90px; /* Ensure the file list container is always visible */
+    max-height: 150px; /* Do not scale the file lists a lot */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px;
+    font-size: 14px;
+    overflow-y: auto; /* Enable scroll when content exceeds height */
+    display: flex;
+    flex-direction: column; /* Stack file items vertically */
+    justify-content: flex-start; /* Align items to the top */
+    align-items: flex-start; /* Align items to the left */
+    text-align: left; /* Align text to the left */
+    color: #333; /* Set the text color (dark grey as an example) */
+}
+
+/* File List Item Styling */
+.file-item {
+    font-size: 14px; /* Adjust font size for list items */
+    color: #f1f1f1; /* Light grey color for file items */
+    margin: 5px 0; /* Add some margin between the items */
+    padding: 0 5px; /* Add some padding in x direction */
+}
+
+/* Link Styling */
+.file-item a {
+    color: #007bff; /* Link color */
+    text-decoration: none; /* Remove underline */
+    display: block; /* Make the link block-level to span the full width */
+}
+
+.file-item a:hover {
+    color: #0056b3; /* Darker color on hover */
+    text-decoration: underline; /* Underline on hover */
+}
+
+
+/* Grid Layout for Panels */
+.analytics-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+    gap: 20px; /* Spacing between panels */
+    justify-items: stretch; /* Make sure all panels stretch to fill the available space */
+    padding: 0 20px; /* Pad left and right boundary */
+}
+
+/* Panel Styling */
+.analytics-panel {
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    min-height: 150px; /* Set minimum height for panels */
 }
