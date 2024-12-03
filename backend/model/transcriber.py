@@ -28,13 +28,13 @@ class Model:
 
         Args:
             whisper_model (str): The name of the Whisper model to use (e.g., "base", "large"). Defaults to "base".
-            sample_rate (int): The audio sample rate in Hz. Defaults to 16000.
+            Sample_rate (int): The audio sample rate in Hz. Defaults to 16000.
 
         Attributes:
             self.transcription_model (whisper.Whisper): The loaded Whisper model for transcription.
             self.is_recording (bool): Indicates whether audio recording is active.
             self.temp_audio_data (list): Buffer for temporarily storing recorded audio data.
-            sample_rate (int): The sample rate for audio recording.
+            Sample_rate (int): The sample rate for audio recording.
         """
 
         # The model is running on CPU as Whisper shows problems with running on MPS,
@@ -91,7 +91,7 @@ class Model:
         else:
             print("Recording is not active. Cannot pause.")
 
-    def stop_recording_audio(self):
+    def stop_recording_audio(self, save_audio):
         """
         Stops the audio recording process and saves the recorded audio to a file.
 
@@ -99,6 +99,9 @@ class Model:
         It then attempts to save the buffered audio data to a .wav file. If the save
         operation fails (e.g., due to invalid or incomplete audio data), the audio
         data is cleared without being stored.
+
+        Args:
+            save_audio (bool): Indicates whether audio data should be saved.
 
         Returns:
             tuple:
@@ -112,7 +115,12 @@ class Model:
 
         self.is_recording = False
 
-        # Try to save audio file but if it is too short, catch the exception
+        # If audio should not be saved, stop and reset temp_audio_data
+        if not save_audio:
+            self.temp_audio_data = []  # Reset recordings after storing the raw audio file
+            return None, False
+
+        # Try to save an audio file but if it is too short, catch the exception
         try:
             # Save the recorded audio data to a file
             if len(self.temp_audio_data) == 0:

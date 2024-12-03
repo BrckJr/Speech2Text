@@ -58,12 +58,14 @@ def stop_recording():
     data = request.get_json()
     action = data.get('action')
 
-    # Stop recording and save audio
-    audio_filepath, audio_save_successful = transcriber.stop_recording_audio()
 
+    # If a user chooses to delete audio, return a success status without a message
+    # Otherwise, get the audio_filepath and success message
     if action == "delete_audio":
-        # If user chooses to delete audio, return a success status without a message
+        transcriber.stop_recording_audio(False)
         return '', 204  # 204 No Content
+    else:
+        audio_filepath, audio_save_successful = transcriber.stop_recording_audio(True)
 
     if audio_save_successful:
         # Process transcription if saving audio was successful
@@ -166,8 +168,8 @@ def serve_file(filename):
     """
     return send_from_directory('static', filename)
 
-@transcription_bp.route('/process-recording', methods=['POST'])
-def process_recording():
+@transcription_bp.route('/get-analytics', methods=['POST'])
+def get_analytics():
     try:
         data = request.get_json()
         recording = data.get('recording')
