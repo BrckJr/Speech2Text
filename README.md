@@ -15,9 +15,6 @@ At the moment it is not possible to delete single files.
 - The recordings and the transcriptions are saved locally in the 'backend/static/output' directory. A link to the 
 stored files is contained in a SQLite database.
 
-![Alt text](backend/static/figures/dashboard.png)
-
-
 Future developments might include but are certainly not limited to:
 - extending the interaction with the files, e.g. deleting single files, changing their name, ...
 - including a text analysis tool which can analyse the speaking speed, vocabulary, length of pauses, usage of fillers, ...

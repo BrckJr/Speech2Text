@@ -1,39 +1,20 @@
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* Overwrite base.css for centering of the content */
+/* Parent Container for Centering */
+.container {
+    display: flex; /* Enable flexbox layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    padding: 20px; /* Optional: Padding for better spacing */
+    box-sizing: border-box; /* Include padding in height calculation */
 }
 
-/* Body Styling */
-body {
-    font-family: Arial, sans-serif;
-    color: #f1f1f1; /* Light text color for readability on dark background */
-    background: grey; /* Matches the dashboard and other pages */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    position: relative; /* For potential background layering */
-}
-
-/* Center Section for Register Form */
+/* Center Section Styling */
 .center {
-    text-align: center;
     border-radius: 5px;
     background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
-    padding: 40px 20px;
-    max-width: 400px; /* Matches the login page layout */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 30px 20px;
     width: 400px;
-}
-
-/* Headings */
-h1 {
-    font-size: 36px; /* Consistent with login page */
-    margin-bottom: 20px;
-    color: #ffffff;
+    max-width: 90%; /* Ensure it looks good on smaller screens */
 }
 
 /* Form Styling */
@@ -45,7 +26,6 @@ h1 {
     display: block;
     margin-bottom: 5px;
     font-size: 16px;
-    color: #ffffff;
 }
 
 .form-control {
@@ -54,14 +34,13 @@ h1 {
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.9); /* Light background for input fields */
+    background: rgba(255, 255, 255, 0.9); /* Matches dashboard panel styles */
 }
 
 /* Style of alert messages e.g. for not registered users */
 .alert-container {
     font-size: 16px;
     color: #D21404;
-    font-style: italic;
     margin-bottom: 20px;
 }
 
@@ -71,10 +50,16 @@ h1 {
 
 .alert-success {
     color: #008000;
+    font-style: italic;
 }
 
 .alert-danger {
     color: #D21404;
+    font-style: italic;
+}
+
+.alert-info {
+    color: #ffffff;
 }
 
 /* Button Styling */
@@ -85,28 +70,23 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease;
-    margin-top: 10px;
+    margin: 10px;
 }
 
 .btn-primary {
-    background: #008000; /* Green for primary actions */
+    background: #008000;
+
+/* Green for consistency */
     color: #f1f1f1;
 }
 
 .btn-primary:hover {
-    background: #006400; /* Darker green on hover */
+    background: #006400; /* Darker green for hover state */
 }
 
-/* Footer Link */
-p {
-    margin-top: 10px;
-    font-size: 14px;
-    font-style: italic;
-}
-
-/* Links */
+/* Link to Registration */
 a {
-    color: #f1f1f1;
+    color: #FFFFFF; /* Orange for contrast */
     text-decoration: none;
     font-weight: bold;
     font-style: italic;
@@ -116,40 +96,18 @@ a:hover {
     text-decoration: underline;
 }
 
-
-/*
-############## HANDWRITTEN HEADING ###############
- */
-/* SVG Container Styling */
-.svg-container {
-    display: flex; /* Enables flexbox layout */
-    justify-content: center; /* Centers the SVG horizontally */
-    align-items: center; /* Centers the SVG vertically */
-    flex-direction: column; /* Ensures vertical stacking for any additional elements */
-    text-align: center; /* Centers any accompanying text */
+/* Overwrite base.css */
+p {
+    font-size: 16px;
+    margin: 5px;
+    text-align: center;
 }
 
-/* SVG Styling */
-svg {
-    max-width: 90%; /* Ensures the SVG scales responsively */
-    height: auto; /* Maintains aspect ratio */
-    display: flex; /* Enables flexbox layout */
-    justify-content: center; /* Centers the SVG horizontally */
-}
-
-/* Animated Path Styling */
-path {
-    stroke: #f1f1f1;
-    stroke-width: 2;
-    fill: none; /* Keeps the path invisible initially */
-    stroke-dasharray: 500; /* Adjust this based on the total path length */
-    stroke-dashoffset: 500; /* Hidden at the start */
-    animation: draw 10s ease-in-out forwards; /* animations */
-}
-
-/* Keyframes for Drawing Animation */
-@keyframes draw {
-    to {
-        stroke-dashoffset: 0; /* Fully reveals the path */
-    }
+/* Overwrite base.css */
+/* Styling for section headings */
+h2 {
+    text-align: center;
+    font-size: 32px; /* Medium font size for subheadings */
+    font-weight: bold;
+    margin: 20px;
 }
