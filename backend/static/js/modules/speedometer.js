@@ -5,15 +5,11 @@ let radius = 150; // You can change this value to any desired radius
 let totalRot = ((90 / 100) * 180 * Math.PI) / 180;
 
 let rotation = 0;
-let doAnim = true;
-let canvas = null;
-let ctx = null;
 let text = document.querySelector(".text_wpm_speedo");
-canvas = document.getElementById("canvas_wpm_speedo");
-ctx = canvas.getContext("2d");
-setTimeout(requestAnimationFrame(animateSpeedometer), 1500);
 
 export function animateSpeedometer() {
+    const canvas = document.getElementById("canvas_wpm_speedo");
+    const ctx = canvas.getContext("2d");
     // Clearing animation on every iteration
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
