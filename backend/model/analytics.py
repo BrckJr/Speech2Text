@@ -1,36 +1,37 @@
 import matplotlib.pyplot as plt
-
+import os
 
 class Analytics:
     """
     The Analytics class handles the analysis of an audio recording.
     """
-    def __init__(self, audio_file_path, recording_file_path):
+    def __init__(self, audio_file_path, recording_file_path, transcription_segments):
         """
         Initializes the Analytics class.
         """
+        self.audio_file_path = audio_file_path
+        self.recording_file_path = recording_file_path
+        self.transcription_segments = transcription_segments
 
-
-    @staticmethod
-    def calculate_wpm(transcription_segments, interval=5):
+    def calculate_wpm(self, interval=5):
         """
         Calculate words per minute (WPM) from Whisper transcription segments.
 
         Args:
-            transcription_segments (list): List of transcription segments with start/end times and text.
             interval (int): Time interval in seconds for WPM calculation.
 
         Returns:
             list: A list of tuples (time, wpm) for each interval.
         """
-        if not transcription_segments:
-            raise ValueError("No transcription segments provided.")
+        if not self.transcription_segments:
+            # No data, return an empty list
+            return []
 
         time_wpm = []
         current_time = 0
         current_words = []
 
-        for segment in transcription_segments:
+        for segment in self.transcription_segments:
             start = segment["start"]
             end = segment["end"]
             words = segment["text"].split()
@@ -52,29 +53,64 @@ class Analytics:
 
         return time_wpm
 
-    @staticmethod
-    def plot_wpm(time_wpm, output_path="wpm_analysis.png"):
+    def generate_plot_wpm(self):
         """
-        Plot the WPM over time.
-
-        Args:
-            time_wpm (list): A list of tuples (time, wpm) for each interval.
-            output_path (str): Path to save the resulting plot.
+        Plot the WPM over time and store the generated graphic in the output/speed_graphics directory.
 
         Returns:
-            None
+            str: Path to the stored speech speed graphic
         """
+
+        # Get the audio filename to create filename for graphic plot
+        audio_filename = self.audio_file_path.replace('output/raw_audio/', '')
+        audio_filename = audio_filename[:-4]  # Removes the last 4 characters (".wav")
+        graphics_filename = f"speed_graphics_for_{audio_filename}"
+        os.makedirs("backend/static/output/speed_graphics", exist_ok=True)
+        output_path = f"backend/static/output/speed_graphics/{graphics_filename}.png"
+
+        time_wpm = self.calculate_wpm()
+
         times, wpms = zip(*time_wpm) if time_wpm else ([], [])
-        plt.figure(figsize=(10, 6))
-        plt.plot(times, wpms, label="Words per Minute (WPM)", color='blue')
-        plt.title("Speech Speed Analysis")
-        plt.xlabel("Time (seconds)")
-        plt.ylabel("WPM")
-        plt.legend()
-        plt.grid(True)
-        plt.savefig(output_path)
+
+        plt.figure(figsize=(10, 6), facecolor='white')
+
+        # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
+        plt.axhspan(50, 100, color='red', alpha=0.1)
+        plt.axhspan(200, 250, color='red', alpha=0.1)
+
+        # Prepare colors for WPM values based on bounds
+        colors = ['red' if w < 100 or w > 200 else 'blue' for w in wpms]
+
+        # Plot each segment with an appropriate color
+        for i in range(1, len(times)):
+            plt.plot(times[i - 1:i + 1], wpms[i - 1:i + 1], color=colors[i], linewidth=2)
+
+        # Set y-axis limits
+        plt.ylim(50, 250)
+
+        # Add labels, grid, and legend
+        plt.xlabel("Time (seconds)", fontsize=16, fontweight='bold', color='#f1f1f1')
+        plt.ylabel("WPM", fontsize=16, fontweight='bold', color='#f1f1f1')
+        plt.grid(True, color='#f1f1f1')
+
+        # Make the outer frame bolder and white
+        ax = plt.gca()  # Get current axes
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_linewidth(2)  # Make the frame bolder
+            spine.set_color('#f1f1f1')  # Set frame color to white
+
+        # Adjust the size and weight of tick labels (numbers on the axes)
+        plt.tick_params(axis='both', which='major', labelsize=12, width=2,
+                        colors='#f1f1f1')  # Tick marks and labels in white
+        plt.xticks(fontsize=12, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+        plt.yticks(fontsize=12, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+
+        # Save and show the plot
+        plt.savefig(output_path, format="png", dpi=300, transparent=True)
         plt.show()
-        print(f"WPM analysis plot saved to {output_path}")
+
+        return output_path
 
     def get_general_info(self):
         """

@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from backend.model.transcriber import Model
 from backend.database import db
 from backend.database.models import AudioTranscription
-from backend.control import utils
+from backend.control import actions
 
 # Create a Blueprint for transcription routes
 transcription_bp = Blueprint('transcription', __name__)
@@ -64,10 +64,10 @@ def stop_recording():
             transcriber.stop_recording_audio(False)
             return '', 204  # 204 No Content
         case 'save_audio_and_transcribe':
-            response, status_code = utils.transcribe(transcriber, current_user, db)
+            response, status_code = actions.transcribe(transcriber, current_user, db)
             return jsonify(response), status_code
         case 'save_audio_and_analyse':
-            response, status_code = utils.transcribe_and_analyse(transcriber, current_user, db)
+            response, status_code = actions.transcribe_and_analyse(transcriber, current_user, db)
             return jsonify(response), status_code
         case _:
             return jsonify({"success": False, "message": "Action for stopping recording unknown."}), 500

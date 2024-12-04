@@ -71,7 +71,6 @@ def extract_timestamp_from_filename(filename):
     timestamp_str = base_name.split("_")[-1]   # Extract the timestamp part
     return datetime.strptime(timestamp_str, "%Y-%m-%dT%H-%M-%S")
 
-
 def extract_filetype_from_filename(filename):
     """
     Extracts the timestamp from a filename and converts it to a datetime object.

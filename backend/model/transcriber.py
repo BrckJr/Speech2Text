@@ -124,7 +124,6 @@ class Model:
         try:
             # Save the recorded audio data to a file
             if len(self.temp_audio_data) == 0:
-                print("RECORDING TOO SHORT")
                 raise RecordingError("Recording is too short.")
             filepath = self.save_raw_audio_to_file(self.temp_audio_data)
             self.temp_audio_data = []  # Reset recordings after storing the raw audio file
