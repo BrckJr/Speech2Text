@@ -4,7 +4,7 @@ import { setupControlButtons } from './modules/controlButtons.js';
 import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 import { setupLangSwitcherButtons } from './modules/langSwitcher.js';
-import { setupAnalysisButton } from './modules/getAnalyticsButton.js'
+import { setupAnalysisButton } from './modules/getAnalytics.js'
 import { animateSpeedometer } from './modules/speedometer.js';
 
 
@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const stopButton = document.getElementById('stop');
         const deleteButton = document.querySelector('.delete-btn');
         const analysisButton = document.getElementById('get-analysis-btn');
+        const recordingsDropdown = document.getElementById('recordings-dropdown');
+
 
         // Loading all files of a respective user at start
         loadAudioFiles();
@@ -35,10 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Logic for control, delete and recording analysis buttons
         setupAnalysisButton(analysisButton);
-        setupControlButtons(startButton, pauseButton, stopButton);
+        setupControlButtons(startButton, pauseButton, stopButton, recordingsDropdown);
         setupDeleteButton(deleteButton);
 
-        animateSpeedometer();
+        // animateSpeedometer();
     }
 
     // Logic for the login page

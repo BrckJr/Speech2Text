@@ -49,16 +49,13 @@
     <div class="analytics-panel-grid">
         <div class="analytics-panel" data-i18n="overview">Overview (Topic, Length, Language, etc.)</div>
         <div class="analytics-panel" data-i18n="summary_of_speech">Summary of Speech</div>
-        <div class="analytics-panel" data-i18n="sentiment_analysis">Sentiment Analysis</div>
+        <div class="analytics-panel" data-i18n="speech_rate">
+            <p> Speech rate </p>
+            <img src="" alt="Speech Speed Analysis" style="max-width: 100%;">
+        </div>
         <div class="analytics-panel" data-i18n="fluency">Fluency (# Fill Words, Pauses, etc.)</div>
         <div class="analytics-panel" data-i18n="pitch_analysis">Pitch Analysis</div>
-
-        <!-- Replace the Speech Rate panel with the speedometer -->
-        <div class="analytics-panel speedometer-panel">
-            <h3 data-i18n="speech_rate">Speech Rate</h3>
-            <canvas id="canvas_wpm_speedo" height="175" width="350"></canvas>
-            <div class="text_wpm_speedo">60 % </div>
-        </div>
+        <div class="analytics-panel">Analysis 6</div>
     </div>
 </div>
 
@@ -91,8 +88,8 @@
     <div class="modal-content">
         <h10 data-i18n="file_saving">File Saving</h10>
         <p1 data-i18n="select_option">Select one of the following options below.</p1>
-        <button id="save-audio-analyse" data-i18n="save_audio_analyse">Save Audio and Analyse</button>
-        <button id="save-audio-transcribe" data-i18n="save_audio_transcribe">Save Audio and Transcribe</button>
+        <button id="save-audio-analyze" data-i18n="save_audio_analyze">Save Audio and Analyse</button>
+        <!-- <button id="save-audio-transcribe" data-i18n="save_audio_transcribe">Save Audio and Transcribe</button> -->
         <button id="delete-audio" data-i18n="discard_audio">Discard Audio</button>
     </div>
 </div>

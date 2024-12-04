@@ -132,11 +132,11 @@
 }
 
 /* Button styles for modal */
-#save-audio-analyse {
+#save-audio-analyze {
     background: #455a64;
     color: #f1f1f1;
 }
-#save-audio-analyse:hover {
+#save-audio-analyze:hover {
     background: #607d8b;
 }
 

@@ -1,8 +1,9 @@
 import { loadAudioFiles } from './audioFileLoader.js';
 import { loadTranscriptionFiles } from './transcriptionFileLoader.js';
+import { setAnalytics } from './getAnalytics.js'
 
 // Function to set up control buttons (Start, Pause, Stop) with event listeners
-export function setupControlButtons(startButton, pauseButton, stopButton) {
+export function setupControlButtons(startButton, pauseButton, stopButton, recordingsDropdown) {
 
     // Helper function to update button states (enable/disable)
     const updateButtonStates = (startState, pauseState, stopState) => {
@@ -50,15 +51,17 @@ export function setupControlButtons(startButton, pauseButton, stopButton) {
         modal.style.display = 'block'; // Show the modal
 
         // Add event listeners for modal buttons to handle the selected stop action
-        document.getElementById('save-audio-analyse').onclick = () => {
-            handleStopAction('save_audio_and_analyse');  // Save audio only
+        document.getElementById('save-audio-analyze').onclick = () => {
+            handleStopAction('save_audio_and_analyze');  // Save audio only
             modal.style.display = 'none'; // Close the modal
         };
 
+        /*
         document.getElementById('save-audio-transcribe').onclick = () => {
             handleStopAction('save_audio_and_transcribe');  // Save audio and transcription
             modal.style.display = 'none'; // Close the modal
         };
+        */
 
         document.getElementById('delete-audio').onclick = () => {
             handleStopAction('delete_audio');  // Delete audio
@@ -81,18 +84,32 @@ export function setupControlButtons(startButton, pauseButton, stopButton) {
             .then(response => {
                 if (response.status === 204) {
                     // Action was 'delete_audio', no content expected from server
-                    console.log('Recording deleted successfully.');
+                    console.log('Audio discarded successfully.');
                     updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
                 } else if (response.status === 201) {
-                    // Action was 'save_audio_only' or 'save_audio_and_transcribe'
-                    return response.json().then(data => {
-                        console.log('Audio saved successfully.');
-                        if (action === 'save_audio_and_transcribe') {
-                            console.log('Transcription saved at:', data.transcription_path);
+                    // Action was 'save_audio_and_analyse
+                    return response.json().then(async data => {
+                        console.log('Audio and Transcription saved successfully.');
+
+                        // Refresh the audio files list and wait until it is finished to be able to
+                        // select the value in the 'save_audio_and_analyze' action
+                        await loadAudioFiles();
+                        await loadTranscriptionFiles();
+
+                        updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop000);
+
+                        // If save-audio-analyze is selected, trigger the update of the analytics section
+                        // by setting the dropdown value and triggering the setAnalytics() from getAnalytics.js
+                        if (action === 'save_audio_and_analyze') {
+                            // If the response carries the dropdown_value, set the dropdown value
+                            if (data.dropdown_value) {
+                                if (recordingsDropdown) {
+                                    recordingsDropdown.value = data.dropdown_value; // Set the dropdown value
+                                    await setAnalytics()
+                                }
+                            }
+                            console.log('Analysis done successfully.');
                         }
-                        loadAudioFiles();  // Refresh audio files list
-                        loadTranscriptionFiles();  // Refresh transcription files list
-                        updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
                     });
                 } else if (response.status === 401) {
                     // Handle case when user is not authenticated

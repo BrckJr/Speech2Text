@@ -63,12 +63,12 @@ def stop_recording():
         case 'delete_audio':
             transcriber.stop_recording_audio(False)
             return '', 204  # 204 No Content
-        case 'save_audio_and_transcribe':
-            response, status_code = actions.transcribe(transcriber, current_user, db)
-            return jsonify(response), status_code
-        case 'save_audio_and_analyse':
-            response, status_code = actions.transcribe_and_analyse(transcriber, current_user, db)
-            return jsonify(response), status_code
+        # case 'save_audio_and_transcribe':
+        #    response, status_code = actions.transcribe(transcriber, current_user, db)
+        #    return jsonify({"response": response}), status_code
+        case 'save_audio_and_analyze':
+            response, status_code, audio_filename = actions.transcribe_and_analyse(transcriber, current_user, db)
+            return jsonify({"response": response, "dropdown_value": audio_filename}), status_code
         case _:
             return jsonify({"success": False, "message": "Action for stopping recording unknown."}), 500
 
@@ -146,16 +146,27 @@ def serve_file(filename):
 def get_analytics():
     try:
         data = request.get_json()
+        # Path to the audio file in format "output/raw_audio/..."
         recording = data.get('recording')
 
         if not recording:
             return jsonify({'error': 'Recording not specified'}), 400
 
-        # Process the recording (your logic here)
-        print(f'Processing recording: {recording}')
+
+        # Retrieve the relevant row in the database
+        target_database_entry = db.session.query(AudioTranscription).filter_by(audio_path=recording).first()
+
+        stripped_audio_filepath = target_database_entry.audio_path
+        stripped_transcription_filepath = target_database_entry.transcription_path
+
+        if target_database_entry:
+            speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
+
+        else:
+            return jsonify({'error': 'Recording not found in database'}), 404
 
         # Simulate processing success
-        return jsonify({'success': True})
+        return jsonify({'success': True, 'speech_speed_graphic_path': speech_speed_graphic_path }), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

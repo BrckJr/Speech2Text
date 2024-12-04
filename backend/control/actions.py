@@ -75,11 +75,11 @@ def transcribe(transcriber, current_user, db):
 
 def transcribe_and_analyse(transcriber, current_user, db):
     """
-    Transcribe audio, generate a speech speed graphic, and save the analysis to the database.
+    Transcribe audio, do analysis of the audio recording, and save the analysis to the database.
 
     Args:
         transcriber (Transcriber): An instance of the transcriber class to handle audio transcription.
-        current_user (User): The current user who is requesting the transcription and analysis.
+        current_user (User): The current user requesting the transcription and analysis.
         db (Database): The database instance where information is stored.
 
     Returns:
@@ -111,7 +111,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
             speech_speed_graphic_path=speech_speed_graphic_path
         )
 
-        return response, status_code
+        return response, status_code, stripped_audio_filepath
 
     except Exception as e:
         return {"success": False, "message": "An internal error occurred."}, 500
