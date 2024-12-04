@@ -50,8 +50,8 @@ export function setupControlButtons(startButton, pauseButton, stopButton) {
         modal.style.display = 'block'; // Show the modal
 
         // Add event listeners for modal buttons to handle the selected stop action
-        document.getElementById('save-audio-only').onclick = () => {
-            handleStopAction('save_audio_only');  // Save audio only
+        document.getElementById('save-audio-analyse').onclick = () => {
+            handleStopAction('save_audio_and_analyse');  // Save audio only
             modal.style.display = 'none'; // Close the modal
         };
 

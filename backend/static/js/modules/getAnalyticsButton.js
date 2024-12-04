@@ -16,8 +16,8 @@ export function setupAnalysisButton(analysisButton) {
                     return;
                 }
 
-                // Send the selected recording to the backend (controller.py)
-                const response = await fetch('/process-recording', {
+                // Send the selected recording to the backend (transcription_control.py)
+                const response = await fetch('/get-analytics', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -12,7 +12,7 @@
     "whisper_model": "Whisper (OpenAI)",
     "file_saving": "File Saving",
     "select_option": "Select one of the following options below.",
-    "save_audio_only": "Save Audio Only",
+    "save_audio_analyse": "Save Audio and Analyse",
     "save_audio_transcribe": "Save Audio and Transcribe",
     "discard_audio": "Discard Audio",
     "delete_all_files_modal": "Delete all Files",

@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
 
-from backend.control.transcription_control import transcription_bp
+from backend.control.control import transcription_bp
 from backend.config import Config
 from backend.database import db
 from backend.auth.routes import auth_blueprint

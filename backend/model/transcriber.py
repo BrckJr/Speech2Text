@@ -116,9 +116,9 @@ class Model:
         self.is_recording = False
 
         # If audio should not be saved, stop and reset temp_audio_data
-        if not save_audio:
-            self.temp_audio_data = []  # Reset recordings after storing the raw audio file
-            return None, False
+        # if not save_audio:
+        #    self.temp_audio_data = []  # Reset recordings after storing the raw audio file
+        #    return None, False
 
         # Try to save an audio file but if it is too short, catch the exception
         try:
@@ -207,7 +207,7 @@ class Model:
             print(f"Unexpected error: {e}")
             return None
 
-    def transcribe_raw_audio(self, filepath):
+    def transcribe_raw_audio(self, filepath, get_segments):
         """
         Transcribes the raw audio file using the Whisper model.
 
@@ -216,21 +216,31 @@ class Model:
 
         Args:
             filepath (str): The path to the audio file to transcribe.
+            get_segments (bool): Indicates whether the segments are needed (for analysis) or not (for transcription only).
 
         Returns:
             tuple:
                 str: The file path of the saved .txt file, or None if saving failed.
                 bool: True if the file was saved successfully, False otherwise.
+                list: List of dictionaries with each dictionary representing information about the transcription segment, e.g., the id, start/end time, text, etc.
 
         Raises:
             FileNotFoundError: If the specified audio file is not found.
             RuntimeError: If the transcription process encounters an error.
         """
 
-        result = self.transcription_model.transcribe(audio=filepath)
+        # Transcribe the audio including the timestamps to allow analysis in the analytics class
+        result = self.transcription_model.transcribe(audio=filepath, word_timestamps=True)
+
         transcription = result["text"].strip()  # Clean up any leading/trailing whitespace
         filepath, save_successful = self.save_transcription_to_file(transcription)
-        return filepath, save_successful
+
+        segments = None
+        # If segments are needed for analytics, extract them from the transcription result
+        if get_segments:
+            segments = result.get("segments", [])
+
+        return filepath, save_successful, segments
 
     @staticmethod
     def save_transcription_to_file(transcription):

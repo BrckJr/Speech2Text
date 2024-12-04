@@ -4,7 +4,7 @@ import { setupControlButtons } from './modules/controlButtons.js';
 import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 import { setupLangSwitcherButtons } from './modules/langSwitcher.js';
-import { setupAnalysisButton } from './modules/analysisButton.js'
+import { setupAnalysisButton } from './modules/getAnalyticsButton.js'
 import { animateSpeedometer } from './modules/speedometer.js';
 
 
