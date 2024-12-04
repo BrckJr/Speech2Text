@@ -1,3 +1,5 @@
+from sqlite3 import IntegrityError
+
 from backend.model.transcriber import Model
 from backend.database.models import AudioTranscription
 
@@ -76,19 +78,42 @@ def transcribe_and_analyse(transcriber, current_user, db):
 
 
 def save_info_to_database(current_user, db, stripped_audio_path, stripped_transcription_path):
-    # Save to the database if user is authenticated
-    if current_user.is_authenticated:
-        audio_recording = AudioTranscription(
-            audio_path=stripped_audio_path,
-            transcription_path=stripped_transcription_path,
-            user_id=current_user.id
-        )
-        db.session.add(audio_recording)
-        db.session.commit()
+    """
+    Saves audio and transcription information to the database if the user is authenticated.
 
+    Args:
+        current_user (User): The currently logged-in user.
+        db (SQLAlchemy): The database session object.
+        stripped_audio_path (str): The relative path to the saved audio file.
+        stripped_transcription_path (str): The relative path to the saved transcription file.
+
+    Returns:
+        tuple: A response dictionary and an HTTP status code.
+    """
+    # Check if the current user is authenticated
+    if current_user.is_authenticated:
+        # Create a new AudioTranscription object with the given data
+        audio_recording = AudioTranscription(
+            audio_path=stripped_audio_path,  # Path to the audio file
+            transcription_path=stripped_transcription_path,  # Path to the transcription file
+            user_id=current_user.id  # Associate the recording with the user's ID
+        )
+
+        try:
+            # Add the new record to the database session
+            db.session.add(audio_recording)
+            # Commit the changes to save the record in the database
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return {"success": False, "message": "File paths must be unique."}, 400
+
+        # Return a success response with the paths to the saved files
         return {
             "audio_path": stripped_audio_path,
             "transcription_path": stripped_transcription_path,
-        }, 201
+        }, 201  # HTTP 201 Created
 
-    return {"message": "User not authenticated"}, 401
+    # If the user is not authenticated, return an error response
+    return {"message": "User not authenticated"}, 401  # HTTP 401 Unauthorized
+

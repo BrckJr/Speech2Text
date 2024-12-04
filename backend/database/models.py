@@ -20,8 +20,8 @@ class AudioTranscription(db.Model):
     __tablename__ = "audio_transcriptions"
 
     id = db.Column(db.Integer, primary_key=True)  # Unique ID for each recording
-    audio_path = db.Column(db.String(200), nullable=False)  # Path to the .wav file
-    transcription_path = db.Column(db.String(200), nullable=True)  # Path to the .txt transcription
+    audio_path = db.Column(db.String(200), nullable=False, unique=True)  # Unique path to the .wav file
+    transcription_path = db.Column(db.String(200), nullable=True, unique=True)  # Unique path to the .txt transcription
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)  # Timestamp
     user_id = db.Column(db.Integer, db.ForeignKey('user_index.id'), nullable=False)  # Corresponding User ID
 
