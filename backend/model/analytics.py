@@ -24,7 +24,6 @@ class Analytics:
             list: A list of tuples (time, wpm) for each interval.
         """
         if not self.transcription_segments:
-            # No data, return an empty list
             return []
 
         time_wpm = []
@@ -36,17 +35,19 @@ class Analytics:
             end = segment["end"]
             words = segment["text"].split()
 
-            # Add words to the current interval
-            current_words.extend(words)
-
-            # Check if we've passed the current interval
+            # Process any words within the current interval
             while start >= current_time + interval:
+                # Calculate WPM for the interval
                 wpm = (len(current_words) / interval) * 60
                 time_wpm.append((current_time, wpm))
                 current_words = []  # Reset for the next interval
                 current_time += interval
 
-        # Process any remaining words
+            # Add words to the current interval
+            if current_time <= start < current_time + interval:
+                current_words.extend(words)
+
+        # Process any remaining words at the end
         if current_words:
             wpm = (len(current_words) / interval) * 60
             time_wpm.append((current_time, wpm))
@@ -60,7 +61,6 @@ class Analytics:
         Returns:
             str: Path to the stored speech speed graphic
         """
-
         # Get the audio filename to create filename for graphic plot
         audio_filename = self.audio_file_path.replace('output/raw_audio/', '')
         audio_filename = audio_filename[:-4]  # Removes the last 4 characters (".wav")
@@ -70,20 +70,33 @@ class Analytics:
 
         time_wpm = self.calculate_wpm()
 
-        times, wpms = zip(*time_wpm) if time_wpm else ([], [])
+        print(time_wpm)
+
+        if not time_wpm:
+            return None
+
+        times, wpms = zip(*time_wpm)
 
         plt.figure(figsize=(10, 6), facecolor='white')
 
         # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
-        plt.axhspan(50, 100, color='red', alpha=0.1)
         plt.axhspan(200, 250, color='red', alpha=0.1)
+        plt.axhspan(50, 100, color='red', alpha=0.1)
+
+        # Add green shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
+        plt.axhspan(100, 200, color='green', alpha=0.1)
 
         # Prepare colors for WPM values based on bounds
-        colors = ['red' if w < 100 or w > 200 else 'blue' for w in wpms]
+        colors = ['red' if w < 100 or w > 200 else 'white' for w in wpms]
 
-        # Plot each segment with an appropriate color
+        # Plot each point individually with color based on the WPM range
+        plt.scatter(times, wpms, c=colors, s=50, edgecolor='white')
+
+        # Plot each segment with an appropriate color (lines connecting the points)
         for i in range(1, len(times)):
-            plt.plot(times[i - 1:i + 1], wpms[i - 1:i + 1], color=colors[i], linewidth=2)
+            # Connecting the points with lines and applying the color scheme
+            plt.plot(times[i - 1:i + 1], wpms[i - 1:i + 1], color=colors[i], linewidth=3)
+
 
         # Set y-axis limits
         plt.ylim(50, 250)
