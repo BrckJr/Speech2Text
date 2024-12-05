@@ -75,7 +75,6 @@ def transcribe_and_analyse(transcriber, current_user, db):
             db=db,
             stripped_audio_path=stripped_audio_filepath,
             stripped_transcription_path=stripped_transcription_filepath,
-            already_analysed=True,
             speech_speed_graphic_path=speech_speed_graphic_path
         )
 
@@ -84,7 +83,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
     except Exception as e:
         return {"success": False, "message": "An internal error occurred."}, 500
 
-def save_info_to_database(current_user, db, stripped_audio_path, stripped_transcription_path, already_analysed=False,
+def save_info_to_database(current_user, db, stripped_audio_path, stripped_transcription_path,
                           speech_speed_graphic_path=None):
     """
     Saves audio and transcription information to the database if the user is authenticated.
@@ -107,7 +106,6 @@ def save_info_to_database(current_user, db, stripped_audio_path, stripped_transc
             user_id=current_user.id,  # Associate the recording with the user's ID
             audio_path=stripped_audio_path,  # Path to the audio file
             transcription_path=stripped_transcription_path,  # Path to the transcription file
-            already_analysed=already_analysed, # Change status in the database if transcription was analyzed
             speech_speed_graphic_path=speech_speed_graphic_path # Link to the stored graphic from speed analysis
         )
 

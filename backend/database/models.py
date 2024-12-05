@@ -24,7 +24,6 @@ class AudioTranscription(db.Model):
     audio_path = db.Column(db.String(200), nullable=False, unique=True)  # Unique path to the .wav file
     transcription_path = db.Column(db.String(200), nullable=True, unique=True)  # Unique path to the .txt transcription
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)  # Timestamp
-    already_analysed = db.Column(db.Boolean, default=False, nullable=False) # Set to true if line contains analysis info
     speech_speed_graphic_path = db.Column(db.String(200), nullable=True) # Path to the saved graphic from the speed analysis
 
     def __repr__(self):
