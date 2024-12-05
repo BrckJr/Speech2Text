@@ -51,7 +51,7 @@ body {
     justify-content: space-between; /* Space between language switcher and logout */
     align-items: center;
     padding: 10px 20px;
-    z-index: 1000;
+    z-index: 1001; /* Set it above the container to show the user info when hovered on */
 }
 
 /* Adjust the container to start below the header */
@@ -218,7 +218,6 @@ footer {
     border: 1px solid #f1f1f1;
     padding: 10px;
     border-radius: 5px;
-    z-index: 10001;
     width: max-content;
 }
 

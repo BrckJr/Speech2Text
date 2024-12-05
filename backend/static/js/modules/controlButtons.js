@@ -56,13 +56,6 @@ export function setupControlButtons(startButton, pauseButton, stopButton, record
             modal.style.display = 'none'; // Close the modal
         };
 
-        /*
-        document.getElementById('save-audio-transcribe').onclick = () => {
-            handleStopAction('save_audio_and_transcribe');  // Save audio and transcription
-            modal.style.display = 'none'; // Close the modal
-        };
-        */
-
         document.getElementById('delete-audio').onclick = () => {
             handleStopAction('delete_audio');  // Delete audio
             modal.style.display = 'none'; // Close the modal

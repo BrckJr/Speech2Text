@@ -63,9 +63,6 @@ def stop_recording():
         case 'delete_audio':
             transcriber.stop_recording_audio(False)
             return '', 204  # 204 No Content
-        # case 'save_audio_and_transcribe':
-        #    response, status_code = actions.transcribe(transcriber, current_user, db)
-        #    return jsonify({"response": response}), status_code
         case 'save_audio_and_analyze':
             response, status_code, audio_filename = actions.transcribe_and_analyse(transcriber, current_user, db)
             return jsonify({"response": response, "dropdown_value": audio_filename}), status_code

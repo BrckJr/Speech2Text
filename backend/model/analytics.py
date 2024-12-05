@@ -35,17 +35,15 @@ class Analytics:
             end = segment["end"]
             words = segment["text"].split()
 
-            # Process any words within the current interval
+            # Add words to the current interval
+            current_words.extend(words)
+            # Check if we've passed the current interval
             while start >= current_time + interval:
                 # Calculate WPM for the interval
                 wpm = (len(current_words) / interval) * 60
                 time_wpm.append((current_time, wpm))
                 current_words = []  # Reset for the next interval
                 current_time += interval
-
-            # Add words to the current interval
-            if current_time <= start < current_time + interval:
-                current_words.extend(words)
 
         # Process any remaining words at the end
         if current_words:
@@ -69,13 +67,7 @@ class Analytics:
         output_path = f"backend/static/output/speed_graphics/{graphics_filename}.png"
 
         time_wpm = self.calculate_wpm()
-
-        print(time_wpm)
-
-        if not time_wpm:
-            return None
-
-        times, wpms = zip(*time_wpm)
+        times, wpms = zip(*time_wpm) if time_wpm else ([], [])
 
         plt.figure(figsize=(10, 6), facecolor='white')
 

@@ -140,15 +140,6 @@
     background: #607d8b;
 }
 
-#save-audio-transcribe {
-    background: #455a64;
-    color: #f1f1f1;
-}
-
-#save-audio-transcribe:hover {
-    background: #607d8b;
-}
-
 #delete-audio {
     background: #B22222;
     color: #f1f1f1;
@@ -315,7 +306,7 @@
 /* Grid Layout for Panels */
 .analytics-panel-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+    grid-template-columns: repeat(2, 1fr); /* 3 equal-width columns */
     gap: 20px; /* Spacing between panels */
     justify-items: stretch; /* Make sure all panels stretch to fill the available space */
     padding: 0 20px; /* Pad left and right boundary */

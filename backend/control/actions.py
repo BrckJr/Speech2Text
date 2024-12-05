@@ -41,38 +41,6 @@ def stop_recording_and_save_files(transcriber):
 
     return stripped_audio_path, stripped_transcription_path, segments
 
-def transcribe(transcriber, current_user, db):
-    """
-    Transcribe audio and save the file paths and transcription data to the database.
-
-    Args:
-        transcriber (Transcriber): An instance of the transcriber class to handle audio transcription.
-        current_user (User): The current user who is requesting the transcription.
-        db (Database): The database instance where information is stored.
-
-    Returns:
-        tuple: A tuple containing a dictionary with success status and message, and the HTTP status code.
-    """
-    try:
-        # Attempt to stop recording and save the files
-        try:
-            stripped_audio_filepath, stripped_transcription_filepath, _ = stop_recording_and_save_files(transcriber)
-        except Exception as e:
-            return {"success": False, "message": f"Failed to save files due to error {e}"}, 500
-
-        # Save gained information to the database
-        response, status_code = save_info_to_database(
-            current_user=current_user,
-            db=db,
-            stripped_audio_path=stripped_audio_filepath,
-            stripped_transcription_path=stripped_transcription_filepath
-        )
-
-        return response, status_code
-
-    except Exception as e:
-        return {"success": False, "message": "An internal error occurred."}, 500
-
 def transcribe_and_analyse(transcriber, current_user, db):
     """
     Transcribe audio, do analysis of the audio recording, and save the analysis to the database.
