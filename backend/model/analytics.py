@@ -1,16 +1,16 @@
+from backend.utils import utils
 import matplotlib.pyplot as plt
-import os
 
 class Analytics:
     """
     The Analytics class handles the analysis of an audio recording.
     """
-    def __init__(self, audio_file_path, recording_file_path, transcription_segments):
+    def __init__(self, audio_filepath, recording_filepath, transcription_segments):
         """
         Initializes the Analytics class.
         """
-        self.audio_file_path = audio_file_path
-        self.recording_file_path = recording_file_path
+        self.audio_filepath = audio_filepath # Full file path to the audio file "backend/static/output/..."
+        self.recording_filepath = recording_filepath # Full file path to the transcription file "backend/static/output/..."
         self.transcription_segments = transcription_segments
 
     def calculate_wpm(self, interval=5):
@@ -59,12 +59,10 @@ class Analytics:
         Returns:
             str: Path to the stored speech speed graphic
         """
-        # Get the audio filename to create filename for graphic plot
-        audio_filename = self.audio_file_path.replace('output/raw_audio/', '')
-        audio_filename = audio_filename[:-4]  # Removes the last 4 characters (".wav")
-        graphics_filename = f"speed_graphics_for_{audio_filename}"
-        os.makedirs("backend/static/output/speed_graphics", exist_ok=True)
-        output_path = f"backend/static/output/speed_graphics/{graphics_filename}.png"
+        # Extract only the filename of the audio recording including timestamp
+        audio_filename = self.audio_filepath.replace('backend/static/output/raw_audio/', '')[:-4]
+        # Generate the file path for the transcription file
+        speed_graphics_filepath = utils.generate_file_path("speed_graphics", audio_filename)
 
         time_wpm = self.calculate_wpm()
         times, wpms = zip(*time_wpm) if time_wpm else ([], [])
@@ -112,10 +110,10 @@ class Analytics:
         plt.yticks(fontsize=12, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
         # Save and show the plot
-        plt.savefig(output_path, format="png", dpi=300, transparent=True)
+        plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
         plt.show()
 
-        return output_path
+        return speed_graphics_filepath
 
     def get_general_info(self):
         """

@@ -3,7 +3,7 @@ import { loadTranscriptionFiles } from './transcriptionFileLoader.js';
 import { setAnalytics } from './getAnalytics.js'
 
 // Function to set up control buttons (Start, Pause, Stop) with event listeners
-export function setupControlButtons(startButton, pauseButton, stopButton, recordingsDropdown) {
+export function setupControlButtons(startButton, pauseButton, stopButton, audioFileDropdown) {
 
     // Helper function to update button states (enable/disable)
     const updateButtonStates = (startState, pauseState, stopState) => {
@@ -96,8 +96,13 @@ export function setupControlButtons(startButton, pauseButton, stopButton, record
                         if (action === 'save_audio_and_analyze') {
                             // If the response carries the dropdown_value, set the dropdown value
                             if (data.dropdown_value) {
-                                if (recordingsDropdown) {
-                                    recordingsDropdown.value = data.dropdown_value; // Set the dropdown value
+                                // Retrieve only the actual relevant filepath "output/raw_audio/...".
+                                // This path is necessary, as in the file lists the files are clickable,
+                                // hence the FileLoaders have the relative paths included.
+                                let newDropdownValue = data.dropdown_value.replace('backend/static/', '');
+                                console.log('Received, new dropdown value:', newDropdownValue)
+                                if (audioFileDropdown) {
+                                    audioFileDropdown.value = newDropdownValue; // Set the dropdown value
                                     await setAnalytics()
                                 }
                             }

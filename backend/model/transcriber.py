@@ -93,53 +93,47 @@ class Model:
 
     def stop_recording_audio(self, save_audio):
         """
-        Stops the audio recording process and saves the recorded audio to a file.
+        Stops the audio recording process and saves the recorded audio to a file if specified.
 
         This method terminates the recording loop by setting `is_recording` to False.
-        It then attempts to save the buffered audio data to a .wav file. If the save
-        operation fails (e.g., due to invalid or incomplete audio data), the audio
-        data is cleared without being stored.
+        It then optionally saves the buffered audio data to a .wav file based on `save_audio`.
+        If saving fails, the audio data is cleared without being stored.
 
         Args:
             save_audio (bool): Indicates whether audio data should be saved.
 
         Returns:
             tuple:
-                - str: The file path of the saved audio file, or None if saving failed.
+                - str: The file path of the saved audio file, or None if saving failed or not saved.
                 - bool: True if the file was saved successfully, False otherwise.
 
         Raises:
             ValueError: If there is an issue with the audio data (e.g., it's invalid or empty).
             RecordingError: If the recording is too short or invalid.
         """
-
         self.is_recording = False
 
-        # If audio should not be saved, stop and reset temp_audio_data
-        # if not save_audio:
-        #    self.temp_audio_data = []  # Reset recordings after storing the raw audio file
-        #    return None, False
+        if not save_audio:
+            # If saving is not required, clear the audio data and return
+            self.temp_audio_data = []  # Reset recordings
+            return None, False
 
-        # Try to save an audio file but if it is too short, catch the exception
+        # Try to save the audio file
         try:
-            # Save the recorded audio data to a file
             if len(self.temp_audio_data) == 0:
                 raise RecordingError("Recording is too short.")
             filepath = self.save_raw_audio_to_file(self.temp_audio_data)
             self.temp_audio_data = []  # Reset recordings after storing the raw audio file
             return filepath, True
         except RecordingError as e:
-            # Catch the custom error for too short recordings
             print(f"Recording error: {e}")
             self.temp_audio_data = []  # Reset recordings
             return None, False
         except ValueError as err:
-            # Handle the ValueError exception from save_raw_audio_to_file
             print(f"Error while concatenating audio: {err}")
             self.temp_audio_data = []  # Reset recordings
             return None, False
         except Exception as e:
-            # Catch all other exceptions
             print(f"Unexpected error: {e}")
             self.temp_audio_data = []  # Reset recordings
             return None, False
@@ -185,7 +179,8 @@ class Model:
             IOError: If there is an issue writing the .wav file to disk.
         """
 
-        file_path = utils.generate_file_path("raw_audio")
+        # Get filepath for the new audio file
+        audio_filepath = utils.generate_file_path("raw_audio")
 
         try:
             # Combine the chunks of raw audio data into a single numpy array
@@ -196,9 +191,9 @@ class Model:
 
         # Save the audio data to the specified .wav file
         try:
-            sf.write(file_path, audio_data, self.sample_rate)
-            print(f"Audio saved to {file_path}")
-            return file_path  # No error, file saved successfully
+            sf.write(audio_filepath, audio_data, self.sample_rate)
+            print(f"Audio saved to {audio_filepath}")
+            return audio_filepath  # No error, file saved successfully
         except IOError as e:
             print(f"Failed to save audio: {e}")
             return None
@@ -206,7 +201,7 @@ class Model:
             print(f"Unexpected error: {e}")
             return None
 
-    def transcribe_raw_audio(self, filepath, get_segments):
+    def transcribe_raw_audio(self, audio_filepath, get_segments):
         """
         Transcribes the raw audio file using the Whisper model.
 
@@ -214,7 +209,7 @@ class Model:
         model to generate a transcription. The resulting text is saved to a file.
 
         Args:
-            filepath (str): The path to the audio file to transcribe.
+            audio_filepath (str): The path to the audio file to transcribe.
             get_segments (bool): Indicates whether the segments are needed (for analysis) or not (for transcription only).
 
         Returns:
@@ -229,10 +224,10 @@ class Model:
         """
 
         # Transcribe the audio including the timestamps to allow analysis in the analytics class
-        result = self.transcription_model.transcribe(audio=filepath, word_timestamps=True)
+        result = self.transcription_model.transcribe(audio=audio_filepath, word_timestamps=True)
 
         transcription = result["text"].strip()  # Clean up any leading/trailing whitespace
-        filepath, save_successful = self.save_transcription_to_file(transcription)
+        filepath, save_successful = self.save_transcription_to_file(transcription, audio_filepath)
 
         segments = None
         # If segments are needed for analytics, extract them from the transcription result
@@ -242,7 +237,7 @@ class Model:
         return filepath, save_successful, segments
 
     @staticmethod
-    def save_transcription_to_file(transcription):
+    def save_transcription_to_file(transcription, audio_filepath):
         """
         Save the transcribed text to a .txt file with a timestamped filename.
 
@@ -251,27 +246,32 @@ class Model:
 
         Args:
             transcription (str): The transcribed text to save to the file.
+            audio_filepath (str): The path to the audio file to transcribe.
 
         Returns:
             tuple:
                 str: The file path of the saved .txt file, or None if saving failed.
                 bool: True if the file was saved successfully, False otherwise.
         """
+
+
+        # Extract only the filename of the audio recording including timestamp
+        audio_filename = audio_filepath.replace('backend/static/output/raw_audio/', '')[:-4]
         # Generate the file path for the transcription file
-        file_path = utils.generate_file_path("transcription")
+        recording_filepath = utils.generate_file_path("transcription", audio_filename)
 
         # Save the transcription text to the file
         try:
-            with open(file_path, 'w') as file:
+            with open(recording_filepath, 'w') as file:
                 file.write(transcription)
             save_successful = True
 
-            print(f"Transcription saved to {file_path}")
+            print(f"Transcription saved to {recording_filepath}")
         except Exception as e:
             print(f"Failed to save transcription: {e}")
             return None
 
-        return file_path, save_successful
+        return recording_filepath, save_successful
 
     @staticmethod
     def delete_all_files(files_to_delete, userID):
@@ -286,17 +286,12 @@ class Model:
             userID (int): The ID of the user for whom files should be deleted.
         """
         try:
-            # Define the base path for static files
-            BASE_PATH = 'backend/static'
-
             # Delete the files contained in the files_to_delete list
             for file in files_to_delete:
-                for attribute in ['audio_path', 'transcription_path']:
+                for attribute in ['audio_path', 'transcription_path', 'speech_speed_graphic_path']:
                     file_path = getattr(file, attribute, None)
-                    if file_path:
-                        full_path = os.path.join(BASE_PATH, file_path)
-                        if os.path.isfile(full_path):
-                            os.remove(full_path)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)
         except Exception as e:
             print(f"Error during cleanup: {e}")
         else:

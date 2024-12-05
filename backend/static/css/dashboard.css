@@ -166,7 +166,7 @@
 }
 
 /* Style for the dropdown menu */
-#recordings-dropdown {
+#audioFile-dropdown{
     min-width: 270px;  /* Set the minimum width to 100px */
     width: auto;       /* Allow the width to scale based on content */
     padding: 3px 10px; /* Adjust padding to match button height */

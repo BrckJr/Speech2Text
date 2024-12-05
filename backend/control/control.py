@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint, jsonify, send_from_directory, request, render_template
 from flask_login import login_required, current_user
 from backend.model.transcriber import Model
@@ -103,8 +104,8 @@ def list_audio_files():
         # Query the database for all audio recordings of the current user
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
-        # Create a list of audio file paths (audio_path)
-        audio_files = [recording.audio_path for recording in audio_recordings]
+        # Create a list of audio file paths with the front part removed to make the files accessible
+        audio_files = [recording.audio_path.removeprefix("backend/static/") for recording in audio_recordings]
 
         return jsonify({'files': audio_files})
 
@@ -122,8 +123,8 @@ def list_transcription_files():
         # Query the database for all transcription records
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
-        # Create a list of transcription file paths (transcription_path)
-        transcription_files = [recording.transcription_path for recording in audio_recordings if recording.transcription_path]
+        # Create a list of transcription file paths with the front part removed to make the files accessible
+        transcription_files = [recording.transcription_path.removeprefix("backend/static/") for recording in audio_recordings]
 
         return jsonify({'files': transcription_files})
 
@@ -143,27 +144,20 @@ def serve_file(filename):
 def get_analytics():
     try:
         data = request.get_json()
-        # Path to the audio file in format "output/raw_audio/..."
-        recording = data.get('recording')
+        audio_filepath = data.get('recording')
 
-        if not recording:
+        if not audio_filepath:
             return jsonify({'error': 'Recording not specified'}), 400
 
-
         # Retrieve the relevant row in the database
-        target_database_entry = db.session.query(AudioTranscription).filter_by(audio_path=recording).first()
-
-        stripped_audio_filepath = target_database_entry.audio_path
-        stripped_transcription_filepath = target_database_entry.transcription_path
+        target_database_entry = db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first()
 
         if target_database_entry:
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
-
+            return jsonify({'success': True, 'speech_speed_graphic_path': speech_speed_graphic_path }), 200
         else:
             return jsonify({'error': 'Recording not found in database'}), 404
 
-        # Simulate processing success
-        return jsonify({'success': True, 'speech_speed_graphic_path': speech_speed_graphic_path }), 200
 
     except Exception as e:
         return jsonify({'error': str(e)}), 500

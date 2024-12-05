@@ -17,7 +17,8 @@ def stop_recording_and_save_files(transcriber):
                                    and transcribing the audio.
 
     Returns:
-        tuple: A tuple containing the stripped paths for the audio file and the transcription file, as well as the transcription segments.
+        tuple: A tuple containing the full paths for the audio file and the transcription file,
+                as well as the transcription segments.
 
     Raises:
         AudioStoringError: If an error occurs during the storage of the audio file.
@@ -35,11 +36,7 @@ def stop_recording_and_save_files(transcriber):
     if not transcription_save_successful:
         raise TranscriptionStoringError("Error occurred during storage of transcription file")
 
-    # Strip the file paths for storage in the database
-    stripped_audio_path = audio_filepath.replace('backend/static/', '')
-    stripped_transcription_path = transcription_filepath.replace('backend/static/', '')
-
-    return stripped_audio_path, stripped_transcription_path, segments
+    return audio_filepath, transcription_filepath, segments
 
 def transcribe_and_analyse(transcriber, current_user, db):
     """
@@ -51,39 +48,41 @@ def transcribe_and_analyse(transcriber, current_user, db):
         db (Database): The database instance where information is stored.
 
     Returns:
-        tuple: A tuple containing a dictionary with success status and message, and the HTTP status code.
+        tuple: A tuple containing a dictionary with success status and message, the HTTP status code and the full
+                audio filepath.
     """
+
     try:
         # Attempt to stop recording and save the files
         try:
-            stripped_audio_filepath, stripped_transcription_filepath, segments = stop_recording_and_save_files(transcriber)
+            audio_filepath, transcription_filepath, segments = stop_recording_and_save_files(transcriber)
         except Exception as e:
-            return {"success": False, "message": f"Failed to save files due to error {e}"}, 500
+            return {"success": False, "message": f"Failed to stop recording and save files due to error {e}"}, 500
+
 
         # Create a new analytics object to analyze the current audio
-        analytics = Analytics(stripped_audio_filepath, stripped_transcription_filepath, segments)
-
+        analytics = Analytics(audio_filepath, transcription_filepath, segments)
         try:
             # Generate the speech speed graphic plot
             speech_speed_graphic_path = analytics.generate_plot_wpm()
         except ValueError:
-            return {"success": False, "message": "An internal error occurred."}, 500
+            return {"success": False, "message": "Failed to generate analytics due to an internal error."}, 500
 
         # Save information to the database
         response, status_code = save_info_to_database(
             current_user=current_user,
             db=db,
-            stripped_audio_path=stripped_audio_filepath,
-            stripped_transcription_path=stripped_transcription_filepath,
+            audio_filepath=audio_filepath,
+            transcription_filepath=transcription_filepath,
             speech_speed_graphic_path=speech_speed_graphic_path
         )
 
-        return response, status_code, stripped_audio_filepath
+        return response, status_code, audio_filepath
 
     except Exception as e:
         return {"success": False, "message": "An internal error occurred."}, 500
 
-def save_info_to_database(current_user, db, stripped_audio_path, stripped_transcription_path,
+def save_info_to_database(current_user, db, audio_filepath, transcription_filepath,
                           speech_speed_graphic_path=None):
     """
     Saves audio and transcription information to the database if the user is authenticated.
@@ -91,21 +90,22 @@ def save_info_to_database(current_user, db, stripped_audio_path, stripped_transc
     Args:
         current_user (User): The currently logged-in user.
         db (SQLAlchemy): The database session object.
-        stripped_audio_path (str): The relative path to the saved audio file.
-        stripped_transcription_path (str): The relative path to the saved transcription file.
-        already_analysed (bool): Set to true parameters include the analysis info, default is false.
-        speech_speed_graphic_path (str): The relative path to the saved graphic from speed analysis.
+        audio_filepath (str): The full relative path to the saved audio file.
+        transcription_filepath (str): The full relative path to the saved transcription file.
+        speech_speed_graphic_path (str): The full relative path to the saved graphic from speed analysis.
 
     Returns:
         tuple: A response dictionary and an HTTP status code.
     """
+
     # Check if the current user is authenticated
     if current_user.is_authenticated:
+
         # Create a new AudioTranscription object with the given data
         audio_recording = AudioTranscription(
             user_id=current_user.id,  # Associate the recording with the user's ID
-            audio_path=stripped_audio_path,  # Path to the audio file
-            transcription_path=stripped_transcription_path,  # Path to the transcription file
+            audio_path=audio_filepath,  # Path to the audio file
+            transcription_path=transcription_filepath,  # Path to the transcription file
             speech_speed_graphic_path=speech_speed_graphic_path # Link to the stored graphic from speed analysis
         )
 
@@ -120,8 +120,8 @@ def save_info_to_database(current_user, db, stripped_audio_path, stripped_transc
 
         # Return a success response with the paths to the saved files
         return {
-            "audio_path": stripped_audio_path,
-            "transcription_path": stripped_transcription_path,
+            "audio_path": audio_filepath,
+            "transcription_path": transcription_filepath,
         }, 201  # HTTP 201 Created
 
     # If the user is not authenticated, return an error response

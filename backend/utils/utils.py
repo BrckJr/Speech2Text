@@ -8,21 +8,25 @@ def generate_output_directory(directory_path):
 
     os.makedirs(directory_path, exist_ok=True)
 
-def generate_file_path(dir_name):
+def generate_file_path(dir_name, filename=None):
     """
     Returns a relative path and name under which a file shall be stored including the time stamp.
 
     Args:
-        dir_name (str): The type of file to store, either "raw_audio" or "transcription".
+        dir_name (str): The type of file to store, e.g. "raw_audio", "transcription" or "speed_graphics".
+        filename (str): Name which shall be used to generate new filename.
+                        For 'transcription' and 'speed_graphics' this is only part of the name
+                        to relate these files to the underlying audio recording.
 
     Returns:
-        _ (str): The relative storage path and name of the file including the time stamp.
+        _ (str): A relative storage path depending on the type of file ("backend/static/output/...").
     """
 
     timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
     valid_filetypes = {
-        "raw_audio": f"raw_audio_{timestamp}.wav",
-        "transcription": f"transcription_{timestamp}.txt",
+        "raw_audio": f"audio_recording_{timestamp}.wav",
+        "transcription": f"transcription_of_{filename}.txt",
+        "speed_graphics": f"speed_graphics_of_{filename}.png",
     }
 
     filename = valid_filetypes.get(dir_name, f"corrupted_{timestamp}.txt")

@@ -1,25 +1,27 @@
 // Add a variable to set dropdown back to last valid selection when selecting nothing and hitting get analysis
-let lastValidRecording = null;
+let lastValidSelectedAudioFile = null;
 
 // Function to handle the logic when the "Get Analysis" button is clicked
 export async function setAnalytics() {
     try {
-        const recordingsDropdown = document.getElementById('recordings-dropdown');
-        const selectedRecording = recordingsDropdown.value;
+        const audioFileDropdown = document.getElementById('audioFile-dropdown');
+        const selectedAudioFile = audioFileDropdown.value;
 
-        if (!selectedRecording) {
+        if (!selectedAudioFile) {
             showErrorModal();
 
             // Reset the dropdown to the last valid value
-            if (lastValidRecording !== null) {
-                recordingsDropdown.value = lastValidRecording;
+            if (lastValidSelectedAudioFile !== null) {
+                audioFileDropdown.value = lastValidSelectedAudioFile;
             }
 
             return;
         }
 
         // Store the current valid selection
-        lastValidRecording = selectedRecording;
+        lastValidSelectedAudioFile = selectedAudioFile;
+
+        const fullPathSelectedRecording = `backend/static/${selectedAudioFile}`;
 
         // Send the selected recording to the backend
         const response = await fetch('/get-analytics', {
@@ -28,7 +30,7 @@ export async function setAnalytics() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                recording: selectedRecording, // Send selected recording to server
+                recording: fullPathSelectedRecording, // Send selected recording to server
             }),
         });
 
@@ -75,8 +77,6 @@ export async function setAnalytics() {
         showErrorModal();
     }
 }
-
-
 
 
 // Function to setup the event listener for the "Get Analysis" button

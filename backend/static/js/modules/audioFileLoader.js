@@ -16,7 +16,7 @@ export async function loadAudioFiles() {
         fileList.innerHTML = ''; // Clear existing content in the list
 
         // Get the dropdown element
-        const dropdown = document.getElementById('recordings-dropdown');
+        const dropdown = document.getElementById('audioFile-dropdown');
         dropdown.innerHTML = ''; // Clear existing options in the dropdown
 
         // Create a default "Select a recording" option for the dropdown

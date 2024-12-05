@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const stopButton = document.getElementById('stop');
         const deleteButton = document.querySelector('.delete-btn');
         const analysisButton = document.getElementById('get-analysis-btn');
-        const recordingsDropdown = document.getElementById('recordings-dropdown');
+        const audioFileDropdown = document.getElementById('audioFile-dropdown');
 
 
         // Loading all files of a respective user at start
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Logic for control, delete and recording analysis buttons
         setupAnalysisButton(analysisButton);
-        setupControlButtons(startButton, pauseButton, stopButton, recordingsDropdown);
+        setupControlButtons(startButton, pauseButton, stopButton, audioFileDropdown);
         setupDeleteButton(deleteButton);
 
         // animateSpeedometer();
