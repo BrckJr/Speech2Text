@@ -11,9 +11,8 @@ import { animateSpeedometer } from './modules/speedometer.js';
 // Function to display webpage
 document.addEventListener('DOMContentLoaded', () => {
     const page = document.body.dataset.page;
-    // console.log('Currently running page: ' + page);
 
-    // Common functionality (e.g. background, footer) for all pages
+    // Common functionality (e.g., background, footer) for all pages
     setupCanvas();
 
     const en_button = document.getElementById('btn_en')
@@ -30,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const analysisButton = document.getElementById('get-analysis-btn');
         const audioFileDropdown = document.getElementById('audioFile-dropdown');
 
-
         // Loading all files of a respective user at start
         loadAudioFiles();
         loadTranscriptionFiles();
@@ -39,13 +37,5 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAnalysisButton(analysisButton);
         setupControlButtons(startButton, pauseButton, stopButton, audioFileDropdown);
         setupDeleteButton(deleteButton);
-
-        // animateSpeedometer();
     }
-
-    // Logic for the login page
-    // if (page === 'login') {}
-
-    // Logic for the registration page
-    // if (page === 'register') {}
 });

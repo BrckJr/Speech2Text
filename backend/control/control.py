@@ -98,14 +98,14 @@ def list_audio_files():
     """
     Lists all audio file paths for the authenticated user.
 
-    Queries the database for the user's audio recordings and returns their file paths in JSON format.
+    Queries the database for the user's audio recordings and returns their full file paths in JSON format.
     """
     try:
         # Query the database for all audio recordings of the current user
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Create a list of audio file paths with the front part removed to make the files accessible
-        audio_files = [recording.audio_path.removeprefix("backend/static/") for recording in audio_recordings]
+        audio_files = [recording.audio_path for recording in audio_recordings]
 
         return jsonify({'files': audio_files})
 
@@ -124,7 +124,7 @@ def list_transcription_files():
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Create a list of transcription file paths with the front part removed to make the files accessible
-        transcription_files = [recording.transcription_path.removeprefix("backend/static/") for recording in audio_recordings]
+        transcription_files = [recording.transcription_path for recording in audio_recordings]
 
         return jsonify({'files': transcription_files})
 

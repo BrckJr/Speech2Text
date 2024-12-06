@@ -1,4 +1,6 @@
 // Function to load and display audio files and populate dropdown menu
+// noinspection DuplicatedCode
+
 export async function loadAudioFiles() {
     try {
         // Fetch the list of audio files from the server
@@ -32,7 +34,7 @@ export async function loadAudioFiles() {
             listItem.className = 'file-item';  // Add class to each list item
 
             const fileLink = document.createElement('a');
-            fileLink.href = `/static/${filePath}`;  // Use relative path to the static folder
+            fileLink.href = `${filePath.replace('backend/', '')}`;  // Use the relative path "static/output/..."
             fileLink.textContent = filePath.split('/').pop();  // Display only the file name (not the full path)
             fileLink.target = '_blank';  // Ensure the link opens in a new tab
 

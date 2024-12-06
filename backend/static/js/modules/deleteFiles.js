@@ -13,15 +13,12 @@ export function setupDeleteButton(deleteButton) {
 
         // Add event listener for the Cancel Delete button in the modal
         document.getElementById('cancel-delete').onclick = () => {
-            console.log('File deletion cancelled.');  // Log the cancellation
             modal.style.display = 'none';  // Close the modal
         };
     }
 
     // Function to handle the actual deletion of all files
     function handleDeleteAllFiles() {
-        console.log('Confirmed delete all files');
-
         // Send a POST request to delete all files from the server
         fetch('/delete-all-files', {
             method: 'POST',
@@ -52,7 +49,6 @@ export function setupDeleteButton(deleteButton) {
 
     // Attach event listener to the Delete button on the page
     deleteButton.addEventListener('click', () => {
-        console.log('Delete all files clicked');
         showDeleteConfirmationModal();  // Show the confirmation modal when delete is clicked
     });
 }

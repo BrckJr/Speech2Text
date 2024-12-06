@@ -1,4 +1,6 @@
 // Function to load and display transcription files
+// noinspection DuplicatedCode
+
 export async function loadTranscriptionFiles() {
     try {
         // Fetch the list of transcription files from the server
@@ -20,7 +22,7 @@ export async function loadTranscriptionFiles() {
 
             // Create a clickable link for each transcription file
             const fileLink = document.createElement('a');
-            fileLink.href = `/static/${filePath}`;  // Use the relative path to the static folder
+            fileLink.href = `${filePath.replace('backend/', '')}`;  // Use the relative path to the static folder
             fileLink.textContent = filePath.split('/').pop();  // Display only the file name (not the full path)
             fileLink.target = '_blank';  // Open the link in a new tab
 

@@ -9,19 +9,13 @@ export async function setAnalytics() {
 
         if (!selectedAudioFile) {
             showErrorModal();
-
             // Reset the dropdown to the last valid value
-            if (lastValidSelectedAudioFile !== null) {
-                audioFileDropdown.value = lastValidSelectedAudioFile;
-            }
-
+            if (lastValidSelectedAudioFile !== null) { audioFileDropdown.value = lastValidSelectedAudioFile; }
             return;
         }
 
         // Store the current valid selection
         lastValidSelectedAudioFile = selectedAudioFile;
-
-        const fullPathSelectedRecording = `backend/static/${selectedAudioFile}`;
 
         // Send the selected recording to the backend
         const response = await fetch('/get-analytics', {
@@ -30,7 +24,7 @@ export async function setAnalytics() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                recording: fullPathSelectedRecording, // Send selected recording to server
+                recording: selectedAudioFile, // Send selected recording to server
             }),
         });
 
@@ -38,19 +32,13 @@ export async function setAnalytics() {
         const result = await response.json();
 
         if (result.success) {
-            console.log('Recording analyzed successfully.');
-
             // Extract the graphic path
             let speechSpeedGraphicPath = result.speech_speed_graphic_path;
-            // Remove "/backend" to have a path with which the HTML can work
-            speechSpeedGraphicPath = speechSpeedGraphicPath.replace('backend/', '');
 
             if (speechSpeedGraphicPath) {
-                console.log('Speech Speed Graphic Path:', speechSpeedGraphicPath);
-
                 // Create an img element
                 const imgElement = document.createElement('img');
-                imgElement.src = speechSpeedGraphicPath; // Set the src to the graphic path
+                imgElement.src = speechSpeedGraphicPath.replace('backend/', ''); // Set the src to the graphic path
                 imgElement.alt = 'Speech Speed Analysis';
                 imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
                 imgElement.style.position = 'relative'; // Ensure it respects the layout flow
