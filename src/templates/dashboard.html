@@ -47,15 +47,32 @@
     </div>
 
     <div class="analytics-panel-grid">
-        <div class="analytics-panel" data-i18n="overview">Overview (Topic, Length, Language, etc.)</div>
-        <div class="analytics-panel" data-i18n="summary_of_speech">Summary of Speech</div>
-        <div class="analytics-panel" data-i18n="speech_rate">
-            <p> Speech rate </p>
-            <img src="" alt="Speech Speed Analysis" style="max-width: 100%;">
+
+        <!-- Panel for General Overview Information -->
+        <div class="analytics-panel" >
+            <h3 id="panel-title_general_info" data-i18n="overview">General Information</h3>
+            <p id="panel-topic" style="display: none;">Topic: <span id="topic">-</span></p>
+            <p id="panel-language" style="display: none;">Language: <span id="language">-</span></p>
+            <p id="panel-audio-length" style="display: none;">Audio Length: <span id="audio-length">-</span></p>
+            <p id="panel-word-count" style="display: none;">Word Count: <span id="word-count">-</span></p>
         </div>
-        <div class="analytics-panel" data-i18n="fluency">Fluency (# Fill Words, Pauses, etc.)</div>
-        <div class="analytics-panel" data-i18n="pitch_analysis">Pitch Analysis</div>
-        <div class="analytics-panel">Analysis 6</div>
+
+        <!-- Panel for Summary of Content -->
+        <div class="analytics-panel" >
+            <h3 id="panel-title_summary_of_speech" data-i18n="summary_of_speech">Summary of Speech</h3>
+        </div>
+
+        <!-- Panel for Analysis of Speech Rate -->
+        <div class="analytics-panel" >
+            <h3 id="panel-title_speech_rate" data-i18n="speech_rate">Speech rate</h3>
+            <img src="" alt="" style="max-width: 100%;">
+        </div>
+
+        <!-- Panel for Analysis of Speech Fluency -->
+        <div class="analytics-panel" >
+            <h3 id="panel-title_speech_fluency" data-i18n="fluency">Fluency (Fill Words, Pauses, etc.)</h3>
+        </div>
+
     </div>
 </div>
 

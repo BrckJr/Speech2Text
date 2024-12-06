@@ -207,6 +207,8 @@ class Model:
                 str: The file path of the saved .txt file, or None if saving failed.
                 bool: True if the file was saved successfully, False otherwise.
                 list: List of dictionaries with each dictionary representing information about the transcription segment, e.g., the id, start/end time, text, etc.
+                int: Number of words in the transcription.
+                str: Language of the audio recording and transcription.
 
         Raises:
             FileNotFoundError: If the specified audio file is not found.
@@ -217,6 +219,9 @@ class Model:
         result = self.transcription_model.transcribe(audio=audio_filepath, word_timestamps=True)
 
         transcription = result["text"].strip()  # Clean up any leading/trailing whitespace
+        language = result["language"] # Get the language from the audio recording / transcription
+        word_count = len(transcription.split()) # Count words in the transcription text
+
         filepath, save_successful = self.save_transcription_to_file(transcription, audio_filepath)
 
         segments = None
@@ -224,7 +229,7 @@ class Model:
         if get_segments:
             segments = result.get("segments", [])
 
-        return filepath, save_successful, segments
+        return filepath, save_successful, segments, word_count, language
 
     @staticmethod
     def save_transcription_to_file(transcription, audio_filepath):

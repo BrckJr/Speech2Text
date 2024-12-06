@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const analysisButton = document.getElementById('get-analysis-btn');
         const audioFileDropdown = document.getElementById('audioFile-dropdown');
 
-        // Loading all files of a respective user at start
+        // Loading all files of a respective user at start and let it listen to updates during runtim
         loadAudioFiles();
         loadTranscriptionFiles();
 

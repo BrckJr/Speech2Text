@@ -1,21 +1,26 @@
+import os
+from datetime import datetime
+import wave
 import matplotlib
-# Use a non-interactive backend to avoid crashes of the program when matplotlib outside the main thread
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from src.utils import utils
+from src.model import transformer
 
+matplotlib.use('Agg') # use this to avoid crashes of the program when matplotlib outside the main thread
 
 class Analytics:
     """
     The Analytics class handles the analysis of an audio recording.
     """
-    def __init__(self, audio_filepath, recording_filepath, transcription_segments):
+    def __init__(self, audio_filepath, recording_filepath, transcription_segments, word_count, language):
         """
         Initializes the Analytics class.
         """
         self.audio_filepath = audio_filepath # Full file path to the audio file "src/static/output/..."
         self.recording_filepath = recording_filepath # Full file path to the transcription file "src/static/output/..."
-        self.transcription_segments = transcription_segments
+        self.transcription_segments = transcription_segments # List of tuples with word count per segment
+        self.word_count = word_count # Number of words in the audio file
+        self.language = language # Language of the audio recording and transcription
 
     def calculate_wpm(self, interval=5):
         """
@@ -130,10 +135,63 @@ class Analytics:
 
         Returns:
             tuple:
-                - str: a machine generated title for the recording.
+                - str: an AI generated title for the recording.
                 - str: the language used in the recording.
-                - ??: length of the recording in format min:sec
-                - ??: Date and time when the audio was recorded.
+                - float: length of the recording in format seconds
+                - datetime: Date and time when the audio was recorded.
                 - int: count of words in the recording
         """
-        pass
+
+        def get_wav_length(filepath):
+            # returns length of the audio file from the filepath
+            with wave.open(filepath, 'rb') as wav_file:
+                frames = wav_file.getnframes()
+                rate = wav_file.getframerate()
+                duration = frames / float(rate)
+            return duration
+
+        def get_file_creation_time(filepath):
+            # returns date and time when the audio file was stored
+            creation_time = os.path.getctime(filepath)
+            return datetime.fromtimestamp(creation_time).strftime('%Y-%m-%d %H:%M:%S')
+
+        audio_length = get_wav_length(self.audio_filepath)
+        saving_date_and_time = get_file_creation_time(self.audio_filepath)
+
+        # Get title from the transformer model
+        title = transformer.generate_summary(self.recording_filepath, 5, 10)
+
+        return title, self.language, audio_length, saving_date_and_time, self.word_count
+
+    def get_summary(self):
+        """
+        This method returns a summary of the recorded audio file.
+
+        The length of the summary is depending on the length of the recorded audio file.
+
+        Returns:
+            - str: an AI generated summary for the recording.
+        """
+
+        if self.word_count < 20:
+            # When the text only contains less than 20 words, return text itself
+            with open(self.recording_filepath, 'r') as file:
+                text = file.read()
+            return text
+        elif self.word_count < 100:
+            max_length = 30
+            min_length = 10
+        elif self.word_count < 300:
+            max_length = 60
+            min_length = 20
+        elif self.word_count < 500:
+            max_length = 100
+            min_length = 40
+        else:
+            max_length = 150
+            min_length = 50
+
+        # Get summary from the transformer model
+        summary = transformer.generate_summary(self.recording_filepath, min_length, max_length)
+
+        return summary

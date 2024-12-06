@@ -23,8 +23,14 @@ class AudioTranscription(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user_index.id'), nullable=False)  # Corresponding User ID
     audio_path = db.Column(db.String(200), nullable=False, unique=True)  # Unique path to the .wav file
     transcription_path = db.Column(db.String(200), nullable=True, unique=True)  # Unique path to the .txt transcription
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)  # Timestamp
+    created_at = db.Column(db.DateTime, nullable=False)  # Timestamp when the respective audio recording was created
     speech_speed_graphic_path = db.Column(db.String(200), nullable=True) # Path to the saved graphic from the speed analysis
+    title = db.Column(db.String(200), nullable=True) # AI generated title for the transcription
+    language = db.Column(db.String(200), nullable=True) # Language of the audio and transcription
+    audio_length = db.Column(db.Float, nullable=True) # Length of the transcription in seconds
+    word_count = db.Column(db.Integer, nullable=True) # Number of words in the respective transcription
+    summary = db.Column(db.String(3000), nullable=True) # AI generated summary of the transcription. Adapt size if necessary.
+
 
     def __repr__(self):
         """

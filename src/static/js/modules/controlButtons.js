@@ -88,9 +88,10 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
                             if (data.dropdown_value) {
                                  if (audioFileDropdown) {
                                     audioFileDropdown.value = data.dropdown_value; // Set the dropdown value
-                                    await setAnalytics()
                                 }
                             }
+                            // Refresh the analytics page with data from the selected file.
+                            await setAnalytics()
                         }
                     });
                 } else if (response.status === 401) {

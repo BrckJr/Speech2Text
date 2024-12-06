@@ -37,7 +37,7 @@
     "overview": "Übersicht (Thema, Länge, Sprache usw.)",
     "summary_of_speech": "Zusammenfassung der Rede",
     "sentiment_analysis": "Sentiment-Analyse",
-    "fluency": "Flüssigkeit (# Füllwörter, Pausen usw.)",
+    "fluency": "Flüssigkeit (Füllwörter, Pausen usw.)",
     "pitch_analysis": "Tonhöhe-Analyse",
     "speech_rate": "Sprechrate",
     "file_management": "Dateiverwaltung",

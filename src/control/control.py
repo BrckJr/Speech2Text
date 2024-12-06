@@ -153,7 +153,19 @@ def get_analytics():
 
         if target_database_entry:
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
-            return jsonify({'success': True, 'speech_speed_graphic_path': speech_speed_graphic_path }), 200
+            title = target_database_entry.title
+            language = target_database_entry.language
+            audio_length = target_database_entry.audio_length
+            word_count = target_database_entry.word_count
+            summary = target_database_entry.summary
+            return jsonify({'success': True,
+                            'speech_speed_graphic_path': speech_speed_graphic_path,
+                            'recording_title': title,
+                            'recording_language': language,
+                            'audio_length': audio_length,
+                            'word_count': word_count,
+                            'text_summary': summary
+                            }), 200
         else:
             return jsonify({'error': 'Requested audio file was not found in database'}), 404
 

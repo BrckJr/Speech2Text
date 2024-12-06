@@ -38,7 +38,7 @@
     "overview": "Overview (Topic, Length, Language, etc.)",
     "summary_of_speech": "Summary of Speech",
     "sentiment_analysis": "Sentiment Analysis",
-    "fluency": "Fluency (# Fill Words, Pauses, etc.)",
+    "fluency": "Fluency (Fill Words, Pauses, etc.)",
     "pitch_analysis": "Pitch Analysis",
     "speech_rate": "Speech Rate",
     "file_management": "File Management",

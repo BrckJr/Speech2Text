@@ -31,12 +31,12 @@ def stop_recording_and_save_files(transcriber):
         raise AudioStoringError("Error occurred during storage of audio file")
 
     # Transcribe the recording and save the transcription file
-    transcription_filepath, transcription_save_successful, segments = transcriber.transcribe_raw_audio(audio_filepath, True)
+    transcription_filepath, transcription_save_successful, segments, word_count, language = transcriber.transcribe_raw_audio(audio_filepath, True)
 
     if not transcription_save_successful:
         raise TranscriptionStoringError("Error occurred during storage of transcription file")
 
-    return audio_filepath, transcription_filepath, segments
+    return audio_filepath, transcription_filepath, segments, word_count, language
 
 def transcribe_and_analyse(transcriber, current_user, db):
     """
@@ -55,16 +55,22 @@ def transcribe_and_analyse(transcriber, current_user, db):
     try:
         # Attempt to stop recording and save the files
         try:
-            audio_filepath, transcription_filepath, segments = stop_recording_and_save_files(transcriber)
+            audio_filepath, transcription_filepath, segments, word_count, language = stop_recording_and_save_files(transcriber)
         except Exception as e:
             return {"success": False, "message": f"Failed to stop recording and save files due to error {e}."}, 500
 
-
         # Create a new analytics object to analyze the current audio
-        analytics = Analytics(audio_filepath, transcription_filepath, segments)
+        analytics = Analytics(audio_filepath, transcription_filepath, segments, word_count, language)
         try:
-            # Generate the speech speed graphic plot
+            # Generate the speech speed graphic plot and get the filepath
             speech_speed_graphic_path = analytics.generate_plot_wpm()
+
+            # Get the general info of the audio file
+            title, language, audio_length, created_at, word_count = analytics.get_general_info()
+
+            # Get the summary of the transcription
+            summary = analytics.get_summary()
+
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
 
@@ -74,7 +80,13 @@ def transcribe_and_analyse(transcriber, current_user, db):
             db=db,
             audio_filepath=audio_filepath,
             transcription_filepath=transcription_filepath,
-            speech_speed_graphic_path=speech_speed_graphic_path
+            created_at= created_at,
+            speech_speed_graphic_path=speech_speed_graphic_path,
+            title=title,
+            language=language,
+            audio_length=audio_length,
+            word_count= word_count,
+            summary=summary
         )
 
         return response, status_code, audio_filepath
@@ -82,8 +94,8 @@ def transcribe_and_analyse(transcriber, current_user, db):
     except Exception as e:
         return {"success": False, "message": f"An internal error during transcription and analysis. Error message: {e}."}, 500
 
-def save_info_to_database(current_user, db, audio_filepath, transcription_filepath,
-                          speech_speed_graphic_path=None):
+def save_info_to_database(current_user, db, audio_filepath, created_at, transcription_filepath,
+                        speech_speed_graphic_path, title, language, audio_length, word_count, summary ):
     """
     Saves audio and transcription information to the database if the user is authenticated.
 
@@ -91,8 +103,14 @@ def save_info_to_database(current_user, db, audio_filepath, transcription_filepa
         current_user (User): The currently logged-in user.
         db (SQLAlchemy): The database session object.
         audio_filepath (str): The full relative path to the saved audio file.
+        created_at (datetime): Timestamp at which the audio file was created.
         transcription_filepath (str): The full relative path to the saved transcription file.
         speech_speed_graphic_path (str): The full relative path to the saved graphic from speed analysis.
+        title (str): The AI generated title of the transcription.
+        language (str): The language of the transcription.
+        audio_length (float): Length of the audio file in seconds
+        word_count (int): The number of words in the transcription.
+        summary (str): The AI generated summary of the transcription.
 
     Returns:
         tuple: A response dictionary and an HTTP status code.
@@ -106,7 +124,13 @@ def save_info_to_database(current_user, db, audio_filepath, transcription_filepa
             user_id=current_user.id,  # Associate the recording with the user's ID
             audio_path=audio_filepath,  # Path to the audio file
             transcription_path=transcription_filepath,  # Path to the transcription file
-            speech_speed_graphic_path=speech_speed_graphic_path # Link to the stored graphic from speed analysis
+            created_at = created_at, # Timestamp when the respective audio recording was created
+            speech_speed_graphic_path = speech_speed_graphic_path,  # Link to the stored graphic from speed analysis
+            title = title, # AI generated title for the transcription
+            language = language, # Language of the audio and transcription
+            audio_length = audio_length, # Length of the transcription in seconds
+            word_count = word_count, # Number of words in the respective transcription
+            summary = summary # AI generated summary of the transcription. Adapt size if necessary.
         )
 
         try:
