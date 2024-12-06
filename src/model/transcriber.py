@@ -6,10 +6,15 @@ import threading
 import numpy as np
 import src.utils.utils as utils
 
-
 class RecordingError(Exception):
     """Custom exception for recording errors."""
     pass
+
+class CleanupError(Exception):
+    """Custom exception for cleanup errors."""
+    pass
+
+
 
 class Model:
     """
@@ -28,13 +33,13 @@ class Model:
 
         Args:
             whisper_model (str): The name of the Whisper model to use (e.g., "base", "large"). Defaults to "base".
-            Sample_rate (int): The audio sample rate in Hz. Defaults to 16000.
+            sample_rate (int): The audio sample rate in Hz. Default to 16'000.
 
         Attributes:
             self.transcription_model (whisper.Whisper): The loaded Whisper model for transcription.
             self.is_recording (bool): Indicates whether audio recording is active.
             self.temp_audio_data (list): Buffer for temporarily storing recorded audio data.
-            Sample_rate (int): The sample rate for audio recording.
+            sample_rate (int): The sample rate for audio recording.
         """
 
         # The model is running on CPU as Whisper shows problems with running on MPS,
@@ -125,17 +130,8 @@ class Model:
             filepath = self.save_raw_audio_to_file(self.temp_audio_data)
             self.temp_audio_data = []  # Reset recordings after storing the raw audio file
             return filepath, True
-        except RecordingError as e:
-            print(f"Recording error: {e}")
-            self.temp_audio_data = []  # Reset recordings
-            return None, False
-        except ValueError as err:
-            print(f"Error while concatenating audio: {err}")
-            self.temp_audio_data = []  # Reset recordings
-            return None, False
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            self.temp_audio_data = []  # Reset recordings
+        except Exception:
+            self.temp_audio_data = []
             return None, False
 
     def callback(self, indata, frames, time, status):
@@ -185,20 +181,14 @@ class Model:
         try:
             # Combine the chunks of raw audio data into a single numpy array
             audio_data = np.concatenate(raw_audio, axis=0)
-        except ValueError as err:
-            print(f"Error while concatenating audio: {err}")
+        except ValueError:
             return None
 
         # Save the audio data to the specified .wav file
         try:
             sf.write(audio_filepath, audio_data, self.sample_rate)
-            print(f"Audio saved to {audio_filepath}")
-            return audio_filepath  # No error, file saved successfully
-        except IOError as e:
-            print(f"Failed to save audio: {e}")
-            return None
-        except Exception as e:
-            print(f"Unexpected error: {e}")
+            return audio_filepath
+        except Exception:
             return None
 
     def transcribe_raw_audio(self, audio_filepath, get_segments):
@@ -265,10 +255,7 @@ class Model:
             with open(recording_filepath, 'w') as file:
                 file.write(transcription)
             save_successful = True
-
-            print(f"Transcription saved to {recording_filepath}")
-        except Exception as e:
-            print(f"Failed to save transcription: {e}")
+        except Exception:
             return None
 
         return recording_filepath, save_successful
@@ -293,7 +280,4 @@ class Model:
                     if os.path.isfile(file_path):
                         os.remove(file_path)
         except Exception as e:
-            print(f"Error during cleanup: {e}")
-        else:
-            print(f"Files of user {userID} deleted successfully.")
-
+            raise CleanupError("Error during cleanup")

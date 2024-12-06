@@ -57,7 +57,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
         try:
             audio_filepath, transcription_filepath, segments = stop_recording_and_save_files(transcriber)
         except Exception as e:
-            return {"success": False, "message": f"Failed to stop recording and save files due to error {e}"}, 500
+            return {"success": False, "message": f"Failed to stop recording and save files due to error {e}."}, 500
 
 
         # Create a new analytics object to analyze the current audio
@@ -65,8 +65,8 @@ def transcribe_and_analyse(transcriber, current_user, db):
         try:
             # Generate the speech speed graphic plot
             speech_speed_graphic_path = analytics.generate_plot_wpm()
-        except ValueError:
-            return {"success": False, "message": "Failed to generate analytics due to an internal error."}, 500
+        except ValueError as value_error:
+            return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
 
         # Save information to the database
         response, status_code = save_info_to_database(
@@ -80,7 +80,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
         return response, status_code, audio_filepath
 
     except Exception as e:
-        return {"success": False, "message": "An internal error occurred."}, 500
+        return {"success": False, "message": f"An internal error during transcription and analysis. Error message: {e}."}, 500
 
 def save_info_to_database(current_user, db, audio_filepath, transcription_filepath,
                           speech_speed_graphic_path=None):

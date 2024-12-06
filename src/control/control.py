@@ -90,8 +90,7 @@ def delete_files():
 
         return jsonify({"success": True, "message": "All files deleted"})
     except Exception as e:
-        print(f"Error during file deletion: {e}")
-        return jsonify({"success": False, "message": "Failed to delete files"}), 500
+        return jsonify({"success": False, "message": "Failed to delete all files"}), 500
 
 @transcription_bp.route('/list-audio-files', methods=['GET'])
 def list_audio_files():
@@ -110,7 +109,7 @@ def list_audio_files():
         return jsonify({'files': audio_files})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e), "message": "Error during loading of audio files in file lists."}), 500
 
 @transcription_bp.route('/list-transcription-files', methods=['GET'])
 def list_transcription_files():
@@ -129,7 +128,7 @@ def list_transcription_files():
         return jsonify({'files': transcription_files})
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e), "message": "Error during loading of audio files in file lists."}), 500
 
 @transcription_bp.route('/static/<path:filename>')
 def serve_file(filename):
@@ -156,9 +155,9 @@ def get_analytics():
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
             return jsonify({'success': True, 'speech_speed_graphic_path': speech_speed_graphic_path }), 200
         else:
-            return jsonify({'error': 'Recording not found in database'}), 404
+            return jsonify({'error': 'Requested audio file was not found in database'}), 404
 
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e), "message": "Error within execution of get analytics."}), 500
 
