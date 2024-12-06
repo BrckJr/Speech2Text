@@ -77,17 +77,35 @@ function showErrorModal(message) {
 }
 
 function updatePanels(speechSpeedGraphicPath, title, language, audio_length, word_count, summary) {
-    // Activate the text in the respective panel
+    // Activate the text in the overview panel
     document.getElementById('panel-topic').style.display = 'block';
     document.getElementById('panel-language').style.display = 'block';
     document.getElementById('panel-audio-length').style.display = 'block';
     document.getElementById('panel-word-count').style.display = 'block';
 
-    // Set the dynamic values in the panel
+    // Activate the text in the summary panel
+    document.getElementById('panel-summary').style.display = 'block';
+
+    // Format audio length
+    if (audio_length < 60) {
+        // Less than a minute, show seconds with two decimal places
+        audio_length = `${audio_length.toFixed(2)} seconds`;
+    } else {
+        // Convert to minutes and seconds
+        let minutes = Math.floor(audio_length / 60);
+        let seconds = (audio_length % 60).toFixed(2); // Keep two decimal places for seconds
+        audio_length = `${minutes} minutes ${seconds} seconds`;
+    }
+
+    // Set the dynamic values in the overview panel
     document.getElementById("topic").textContent = title;
     document.getElementById("language").textContent = language;
     document.getElementById("audio-length").textContent = audio_length;
     document.getElementById("word-count").textContent = word_count;
+
+    // Set the dynamic values in the summary panel
+    document.getElementById("transcription_summary").textContent = summary;
+
 
     if (speechSpeedGraphicPath) {
                 // Create an img element

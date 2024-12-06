@@ -34,7 +34,7 @@ export async function loadAudioFiles() {
             listItem.className = 'file-item';  // Add class to each list item
 
             const fileLink = document.createElement('a');
-            fileLink.href = `${filePath.replace('backend/', '')}`;  // Use the relative path "static/output/..."
+            fileLink.href = `${filePath.replace('src/', '')}`;  // Use the relative path "static/output/..."
             fileLink.textContent = filePath.split('/').pop();  // Display only the file name (not the full path)
             fileLink.target = '_blank';  // Ensure the link opens in a new tab
 
