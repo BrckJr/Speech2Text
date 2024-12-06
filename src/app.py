@@ -3,10 +3,10 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
 
-from backend.control.control import transcription_bp
-from backend.config import Config
-from backend.database import db
-from backend.auth.routes import auth_blueprint
+from src.control.control import transcription_bp
+from src.config import Config
+from src.database import db
+from src.auth.routes import auth_blueprint
 
 # Factory function to create the Flask app
 def create_app():
@@ -14,7 +14,7 @@ def create_app():
     app.config.from_object(Config)
 
     # Initialize extensions
-    db.init_app(app)  # Initializes the database extension (Ensure `db` is properly defined in `backend.database`)
+    db.init_app(app)  # Initializes the database extension (Ensure `db` is properly defined in `src.database`)
     Migrate(app, db)  # Initialize Flask-Migrate (Ensure migration files are properly set up)
     bcrypt = Bcrypt(app)  # Initialize Flask-Bcrypt (Ensure it's used in user authentication and registration logic)
 
@@ -25,7 +25,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        from backend.database.models import User  # Import within function to avoid circular imports
+        from src.database.models import User  # Import within function to avoid circular imports
         return db.session.get(User, int(user_id))  # Ensure `User` model has a `get` method that works with `db.session`
 
     # Register blueprints

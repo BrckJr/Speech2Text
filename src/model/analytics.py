@@ -1,4 +1,4 @@
-from backend.utils import utils
+from src.utils import utils
 import matplotlib.pyplot as plt
 
 class Analytics:
@@ -9,8 +9,8 @@ class Analytics:
         """
         Initializes the Analytics class.
         """
-        self.audio_filepath = audio_filepath # Full file path to the audio file "backend/static/output/..."
-        self.recording_filepath = recording_filepath # Full file path to the transcription file "backend/static/output/..."
+        self.audio_filepath = audio_filepath # Full file path to the audio file "src/static/output/..."
+        self.recording_filepath = recording_filepath # Full file path to the transcription file "src/static/output/..."
         self.transcription_segments = transcription_segments
 
     def calculate_wpm(self, interval=5):
@@ -60,7 +60,7 @@ class Analytics:
             str: Path to the stored speech speed graphic
         """
         # Extract only the filename of the audio recording including timestamp
-        audio_filename = self.audio_filepath.replace('backend/static/output/raw_audio/', '')[:-4]
+        audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
         # Generate the file path for the transcription file
         speed_graphics_filepath = utils.generate_file_path("speed_graphics", audio_filename)
 

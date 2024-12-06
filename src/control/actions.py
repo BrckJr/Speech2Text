@@ -1,7 +1,7 @@
 from sqlite3 import IntegrityError
-from backend.model.transcriber import Model
-from backend.model.analytics import Analytics
-from backend.database.models import AudioTranscription
+from src.model.transcriber import Model
+from src.model.analytics import Analytics
+from src.database.models import AudioTranscription
 
 # Custom error classes
 class TranscriptionStoringError(Exception): pass

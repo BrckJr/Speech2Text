@@ -19,7 +19,7 @@ def generate_file_path(dir_name, filename=None):
                         to relate these files to the underlying audio recording.
 
     Returns:
-        _ (str): A relative storage path depending on the type of file ("backend/static/output/...").
+        _ (str): A relative storage path depending on the type of file ("src/static/output/...").
     """
 
     timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
@@ -30,7 +30,7 @@ def generate_file_path(dir_name, filename=None):
     }
 
     filename = valid_filetypes.get(dir_name, f"corrupted_{timestamp}.txt")
-    directory_path = f"backend/static/output/{dir_name if dir_name in valid_filetypes else 'corrupted'}"
+    directory_path = f"src/static/output/{dir_name if dir_name in valid_filetypes else 'corrupted'}"
 
     generate_output_directory(directory_path)
 

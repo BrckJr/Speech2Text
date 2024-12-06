@@ -17,7 +17,7 @@ export async function setAnalytics() {
         // Store the current valid selection
         lastValidSelectedAudioFile = selectedAudioFile;
 
-        // Send the selected recording to the backend
+        // Send the selected recording to the src
         const response = await fetch('/get-analytics', {
             method: 'POST',
             headers: {

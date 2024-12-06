@@ -4,7 +4,7 @@ import sounddevice as sd
 import soundfile as sf
 import threading
 import numpy as np
-import backend.utils.utils as utils
+import src.utils.utils as utils
 
 
 class RecordingError(Exception):
@@ -256,7 +256,7 @@ class Model:
 
 
         # Extract only the filename of the audio recording including timestamp
-        audio_filename = audio_filepath.replace('backend/static/output/raw_audio/', '')[:-4]
+        audio_filename = audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
         # Generate the file path for the transcription file
         recording_filepath = utils.generate_file_path("transcription", audio_filename)
 

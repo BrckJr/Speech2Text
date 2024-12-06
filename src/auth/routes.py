@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, redirect, url_for, flash, session
 from flask_login import login_user, logout_user, login_required
 from flask_bcrypt import Bcrypt
 
-from backend.database.models import User, db
-from backend.auth.forms import RegistrationForm, LoginForm
+from src.database.models import User, db
+from src.auth.forms import RegistrationForm, LoginForm
 
 # Blueprint for authentication-related routes
 auth_blueprint = Blueprint('auth', __name__)

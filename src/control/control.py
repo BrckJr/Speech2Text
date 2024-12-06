@@ -1,10 +1,10 @@
 import os
 from flask import Blueprint, jsonify, send_from_directory, request, render_template
 from flask_login import login_required, current_user
-from backend.model.transcriber import Model
-from backend.database import db
-from backend.database.models import AudioTranscription
-from backend.control import actions
+from src.model.transcriber import Model
+from src.database import db
+from src.database.models import AudioTranscription
+from src.control import actions
 
 # Create a Blueprint for transcription routes
 transcription_bp = Blueprint('transcription', __name__)
@@ -13,8 +13,8 @@ transcription_bp = Blueprint('transcription', __name__)
 transcriber = Model()
 
 # Path to the stored raw audio files and transcriptions
-AUDIO_FOLDER = "backend/static/output/raw_audio"
-TRANSCRIPTION_FOLDER = "backend/static/output/transcription"
+AUDIO_FOLDER = "src/static/output/raw_audio"
+TRANSCRIPTION_FOLDER = "src/static/output/transcription"
 
 @transcription_bp.route('/dashboard')
 @login_required
