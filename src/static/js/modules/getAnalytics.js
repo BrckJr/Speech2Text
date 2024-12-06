@@ -38,7 +38,7 @@ export async function setAnalytics() {
             if (speechSpeedGraphicPath) {
                 // Create an img element
                 const imgElement = document.createElement('img');
-                imgElement.src = speechSpeedGraphicPath.replace('backend/', ''); // Set the src to the graphic path
+                imgElement.src = speechSpeedGraphicPath.replace('src/', ''); // Set the src to the graphic path
                 imgElement.alt = 'Speech Speed Analysis';
                 imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
                 imgElement.style.position = 'relative'; // Ensure it respects the layout flow

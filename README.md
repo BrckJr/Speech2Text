@@ -29,7 +29,9 @@ pip install -r requirements.txt
 pip3 install -r requirements.txt
 ```
 
-I recommend to set up a virtual environment for the project and install all the libraries and dependencies there.
+I recommend setting up a virtual environment for the project and install all the libraries and dependencies there.
+Use python@3.11 to set up the program, otherwise the Whisper package from OpenAI may fail as it currently only supports
+Python 3.8 to 3.11.
 
 # Usage
 You can run the program directly in your preferred IDE from the app.py file. 

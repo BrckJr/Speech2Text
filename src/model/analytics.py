@@ -1,5 +1,9 @@
-from src.utils import utils
+import matplotlib
+# Use a non-interactive backend to avoid crashes of the program when matplotlib outside the main thread
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from src.utils import utils
+
 
 class Analytics:
     """
@@ -67,7 +71,7 @@ class Analytics:
         time_wpm = self.calculate_wpm()
         times, wpms = zip(*time_wpm) if time_wpm else ([], [])
 
-        plt.figure(figsize=(10, 6), facecolor='white')
+        # plt.figure(figsize=(10, 6), facecolor='white')
 
         # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
         plt.axhspan(200, 250, color='red', alpha=0.1)
@@ -80,7 +84,7 @@ class Analytics:
         colors = ['red' if w < 100 or w > 200 else 'white' for w in wpms]
 
         # Plot each point individually with color based on the WPM range
-        plt.scatter(times, wpms, c=colors, s=50, edgecolor='white')
+        plt.scatter(times, wpms, c=colors, s=50, edgecolor='white', linewidths=1)
 
         # Plot each segment with an appropriate color (lines connecting the points)
         for i in range(1, len(times)):
@@ -92,8 +96,8 @@ class Analytics:
         plt.ylim(50, 250)
 
         # Add labels, grid, and legend
-        plt.xlabel("Time (seconds)", fontsize=16, fontweight='bold', color='#f1f1f1')
-        plt.ylabel("WPM", fontsize=16, fontweight='bold', color='#f1f1f1')
+        plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
+        plt.ylabel("WPM", fontsize=12, fontweight='bold', color='#f1f1f1')
         plt.grid(True, color='#f1f1f1')
 
         # Make the outer frame bolder and white
@@ -104,14 +108,15 @@ class Analytics:
             spine.set_color('#f1f1f1')  # Set frame color to white
 
         # Adjust the size and weight of tick labels (numbers on the axes)
-        plt.tick_params(axis='both', which='major', labelsize=12, width=2,
+        plt.tick_params(axis='both', which='major', labelsize=10, width=2,
                         colors='#f1f1f1')  # Tick marks and labels in white
-        plt.xticks(fontsize=12, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
-        plt.yticks(fontsize=12, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+        plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+        plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
         # Save and show the plot
         plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
-        plt.show()
+
+        plt.close()
 
         return speed_graphics_filepath
 
