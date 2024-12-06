@@ -151,15 +151,21 @@ class Analytics:
             return duration
 
         def get_file_creation_time(filepath):
-            # returns date and time when the audio file was stored
+            # Returns datetime object of the file creation time
             creation_time = os.path.getctime(filepath)
-            return datetime.fromtimestamp(creation_time).strftime('%Y-%m-%d %H:%M:%S')
+            return datetime.fromtimestamp(creation_time)  # Return complete datetime object
 
         audio_length = get_wav_length(self.audio_filepath)
         saving_date_and_time = get_file_creation_time(self.audio_filepath)
 
-        # Get title from the transformer model
-        title = transformer.generate_summary(self.recording_filepath, 5, 10)
+        # Check the length of transcription and return transcription itself if to few words
+        if self.word_count < 10:
+            # When the text only contains less than 20 words, return text itself
+            with open(self.recording_filepath, 'r') as file:
+                title = file.read()
+        else:
+            # Get title from the transformer model
+            title = transformer.generate_summary(self.recording_filepath, 5, 10)
 
         return title, self.language, audio_length, saving_date_and_time, self.word_count
 

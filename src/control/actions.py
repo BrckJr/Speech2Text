@@ -3,6 +3,8 @@ from src.model.transcriber import Model
 from src.model.analytics import Analytics
 from src.database.models import AudioTranscription
 
+from datetime import datetime
+
 # Custom error classes
 class TranscriptionStoringError(Exception): pass
 class AudioStoringError(Exception): pass
@@ -51,7 +53,6 @@ def transcribe_and_analyse(transcriber, current_user, db):
         tuple: A tuple containing a dictionary with success status and message, the HTTP status code and the full
                 audio filepath.
     """
-
     try:
         # Attempt to stop recording and save the files
         try:
@@ -70,9 +71,20 @@ def transcribe_and_analyse(transcriber, current_user, db):
 
             # Get the summary of the transcription
             summary = analytics.get_summary()
-
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
+
+        # Check types
+        print("user_id:", type(current_user.id))  # Assuming current_user.id is an integer
+        print("audio_path:", type(audio_filepath))  # Should be a string
+        print("transcription_path:", type(transcription_filepath))  # Should be a string
+        print("created_at:", type(datetime.utcnow()))  # Should be a datetime object
+        print("speech_speed_graphic_path:", type(speech_speed_graphic_path))  # Should be a string
+        print("title:", type(title))  # Should be a string
+        print("language:", type(language))  # Should be a string
+        print("audio_length:", type(audio_length))  # Should be a float
+        print("word_count:", type(word_count))  # Should be an integer
+        print("summary:", type(summary))  # Should be a string
 
         # Save information to the database
         response, status_code = save_info_to_database(
@@ -88,6 +100,8 @@ def transcribe_and_analyse(transcriber, current_user, db):
             word_count= word_count,
             summary=summary
         )
+
+
 
         return response, status_code, audio_filepath
 
@@ -115,6 +129,8 @@ def save_info_to_database(current_user, db, audio_filepath, created_at, transcri
     Returns:
         tuple: A response dictionary and an HTTP status code.
     """
+
+    print(f"No Problem when entering storing data")
 
     # Check if the current user is authenticated
     if current_user.is_authenticated:

@@ -99,7 +99,7 @@ function updatePanels(speechSpeedGraphicPath, title, language, audio_length, wor
                 imgElement.style.zIndex = '10'; // Ensure it appears above other elements
 
                 // Find the "Speech rate" panel in the grid
-                const speechRatePanel = document.querySelector('.analytics-panel[data-i18n="speech_rate"]');
+                const speechRatePanel = document.getElementById('speech-rate-panel');
                 if (speechRatePanel) {
                     // Clear any previous images and add the new image under the existing text
                     speechRatePanel.querySelectorAll('img').forEach(img => img.remove());

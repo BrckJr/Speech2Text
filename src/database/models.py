@@ -35,9 +35,9 @@ class AudioTranscription(db.Model):
     def __repr__(self):
         """
         Returns a string representation of the AudioTranscription object.
-        The string includes the ID, audio file path, and transcription file path.
+        The string includes the ID, audio file path, and the user_id.
         """
-        return f"<AudioRecording id={self.id}, audio_path={self.audio_path}, transcription_path={self.transcription_path}>"
+        return f"<AudioRecording id={self.id}, audio_path={self.audio_path}, user_id={self.user_id}>"
 
 class User(db.Model, UserMixin):
     """
