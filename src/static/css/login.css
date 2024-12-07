@@ -40,26 +40,26 @@
 /* Style of alert messages e.g. for not registered users */
 .alert-container {
     font-size: 16px;
-    color: #D21404;
+    color: #B22222;
     margin-bottom: 20px;
 }
 
 .alert {
-    color: #D21404;
+    color: #B22222;
 }
 
 .alert-success {
-    color: #008000;
+    color: #008A00;
     font-style: italic;
 }
 
 .alert-danger {
-    color: #D21404;
+    color: #B22222;
     font-style: italic;
 }
 
 .alert-info {
-    color: #ffffff;
+    color: #f1f1f1;
 }
 
 /* Button Styling */
@@ -74,19 +74,19 @@
 }
 
 .btn-primary {
-    background: #008000;
+    background: #008A00;
 
 /* Green for consistency */
     color: #f1f1f1;
 }
 
 .btn-primary:hover {
-    background: #006400; /* Darker green for hover state */
+    background: #00B000; /* Lighter green for hover state */
 }
 
 /* Link to Registration */
 a {
-    color: #FFFFFF; /* Orange for contrast */
+    color: #f1f1f1;
     text-decoration: none;
     font-weight: bold;
     font-style: italic;
