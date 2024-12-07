@@ -3,6 +3,9 @@ from datetime import datetime
 import wave
 import matplotlib
 import matplotlib.pyplot as plt
+import librosa
+import numpy as np
+from scipy.interpolate import interp1d
 from src.utils import utils
 from src.model import transformer
 
@@ -74,9 +77,17 @@ class Analytics:
         speed_graphics_filepath = utils.generate_file_path("speed_graphics", audio_filename)
 
         time_wpm = self.calculate_wpm()
+
         times, wpms = zip(*time_wpm) if time_wpm else ([], [])
 
-        # plt.figure(figsize=(10, 6), facecolor='white')
+        # If no valid data, handle gracefully with a placeholder
+        if not times or not wpms:
+            plt.figure()
+            plt.text(0.5, 0.5, 'No WPM data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
+            plt.axis('off')
+            plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
+            plt.close()
+            return speed_graphics_filepath
 
         # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
         plt.axhspan(200, 250, color='red', alpha=0.1)
@@ -85,15 +96,8 @@ class Analytics:
         # Add green shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
         plt.axhspan(100, 200, color='green', alpha=0.1)
 
-        # Prepare colors for WPM values based on bounds
-        colors = ['red' if w < 100 or w > 200 else '#f1f1f1' for w in wpms]
-
-        # Plot each point individually with color based on the WPM range
-        plt.scatter(times, wpms, c=colors, s=50, edgecolor=colors, linewidths=3)
-
         # Connecting the points with lines and applying the color scheme
-        plt.plot(times, wpms, color='#f1f1f1', linewidth=3)
-
+        plt.plot(times, wpms, color='#f1f1f1', linewidth=2)
 
         # Set y-axis limits
         plt.ylim(50, 250)
@@ -116,12 +120,96 @@ class Analytics:
         plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
         plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
-        # Save and show the plot
+        # Save the plot
         plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
 
         plt.close()
 
         return speed_graphics_filepath
+
+    def analyze_pitch(self):
+        """
+        Analyze pitch (fundamental frequency) and generate a pitch contour plot.
+
+        Returns:
+            float: Mean of the pitch
+            float: Standard deviation of the pitch
+            float: Range of the pitch frequencies
+            str: filepath to the plot of the pitch contour
+        """
+
+        # Extract only the filename of the audio recording including timestamp
+        audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
+        # Generate the file path for the transcription file
+        pitch_graphics_filepath = utils.generate_file_path("pitch_graphics", audio_filename)
+
+        # Load the audio signal
+        y, sr = librosa.load(self.audio_filepath)
+        # Estimate pitch using librosa's pyin
+        # f0: fundamental frequency over time
+        # voiced_flag: whether each time frame contains speech
+        f0, voiced_flag, voiced_time = librosa.pyin(y, fmin=50, fmax=600, sr=16000)
+
+        # Remove invalid pitch intervals (non-voiced or silence areas)
+        time = np.linspace(0, len(y) / sr, len(f0))  # Time values corresponding to each frame
+        valid_indices = voiced_flag & (f0 > 0)  # Only take voiced intervals with a valid pitch
+        filtered_time = time[valid_indices]
+        filtered_f0 = f0[valid_indices]
+
+        print(f"Filtered F0 {filtered_f0}, Filtered Time: {filtered_time}")
+
+        # If no valid pitch data is detected, replace filtered_f0 with an empty NumPy array
+        if filtered_f0.size == 0:
+            filtered_time = np.array([])  # Convert to an empty NumPy array
+            filtered_f0 = np.array([])  # Convert to an empty NumPy array
+
+        # Create summary statistics for the pitch only if valid data exists
+        mean_pitch = np.mean(filtered_f0) if filtered_f0.size > 0 else 0
+        std_pitch = np.std(filtered_f0) if filtered_f0.size > 0 else 0
+        min_pitch = np.min(filtered_f0) if filtered_f0.size > 0 else 0
+        max_pitch = np.max(filtered_f0) if filtered_f0.size > 0 else 0
+        pitch_range = max_pitch - min_pitch
+
+
+        # Plotting the pitch analysis graph only if there is data to plot
+        if filtered_time.size > 0 and filtered_f0.size > 0:
+            plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
+
+            # Set axis limits safely
+            plt.ylim(0, np.max(filtered_f0) * 1.1)
+
+            # Update labels and grid with consistent custom colors
+            plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
+            plt.ylabel("Pitch (Hz)", fontsize=12, fontweight='bold', color='#f1f1f1')
+            plt.grid(True, color='#f1f1f1')
+
+            # Make the outer frame bolder and white
+            ax = plt.gca()  # Get current axes
+            for spine in ax.spines.values():
+                spine.set_visible(True)
+                spine.set_linewidth(2)  # Make the frame bolder
+                spine.set_color('#f1f1f1')  # Set frame color to white
+
+            # Adjust the size and weight of tick labels (numbers on the axes)
+            plt.tick_params(axis='both', which='major', labelsize=10, width=2,
+                            colors='#f1f1f1')  # Tick marks and labels in white
+            plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+            plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+
+            plt.title("Pitch Analysis Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
+        else:
+            # No data to plot
+            plt.figure()
+            plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
+            plt.axis('off')  # Turn off the axes when no data is available
+
+
+        # Save the plot
+        plt.savefig(pitch_graphics_filepath, format="png", dpi=300, transparent=True)
+        plt.close()
+
+        print("Pitch statistics computed successfully.")
+        return mean_pitch, std_pitch, pitch_range, pitch_graphics_filepath
 
     def get_general_info(self):
         """

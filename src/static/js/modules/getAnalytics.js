@@ -34,6 +34,7 @@ export async function setAnalytics() {
         if (result.success) {
             // Extract all information from the response
             let speechSpeedGraphicPath = result.speech_speed_graphic_path;
+            let pitchGraphicPath = result.pitch_graphic_path;
             let title = result.recording_title;
             let language = result.recording_language;
             let audio_length = result.audio_length;
@@ -41,7 +42,7 @@ export async function setAnalytics() {
             let summary = result.text_summary;
 
             // Update the analytics panels with new information
-            updatePanels(speechSpeedGraphicPath, title, language, audio_length, word_count, summary)
+            updatePanels(speechSpeedGraphicPath, pitchGraphicPath, title, language, audio_length, word_count, summary)
 
         } else {
             console.error('Error analyzing recording:', result.error);
@@ -76,7 +77,7 @@ function showErrorModal(message) {
     };
 }
 
-function updatePanels(speechSpeedGraphicPath, title, language, audio_length, word_count, summary) {
+function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, title, language, audio_length, word_count, summary) {
     // Activate the text in the overview panel
     document.getElementById('panel-topic').style.display = 'block';
     document.getElementById('panel-language').style.display = 'block';
@@ -106,26 +107,51 @@ function updatePanels(speechSpeedGraphicPath, title, language, audio_length, wor
     // Set the dynamic values in the summary panel
     document.getElementById("transcription_summary").textContent = summary;
 
-
+    // Update graphic of speech speed
     if (speechSpeedGraphicPath) {
-                // Create an img element
-                const imgElement = document.createElement('img');
-                imgElement.src = speechSpeedGraphicPath.replace('src/', ''); // Set the src to the graphic path
-                imgElement.alt = 'Speech Speed Analysis';
-                imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
-                imgElement.style.position = 'relative'; // Ensure it respects the layout flow
-                imgElement.style.zIndex = '10'; // Ensure it appears above other elements
+        // Create an img element
+        const imgElement = document.createElement('img');
+        imgElement.src = speechSpeedGraphicPath.replace('src/', ''); // Set the src to the graphic path
+        imgElement.alt = 'Speech Speed Analysis';
+        imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
+        imgElement.style.position = 'relative'; // Ensure it respects the layout flow
+        imgElement.style.zIndex = '10'; // Ensure it appears above other elements
 
-                // Find the "Speech rate" panel in the grid
-                const speechRatePanel = document.getElementById('speech-rate-panel');
-                if (speechRatePanel) {
-                    // Clear any previous images and add the new image under the existing text
-                    speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
-                    speechRatePanel.appendChild(imgElement);
-                } else {
-                    console.error('Speech rate panel not found.');
-                }
-            } else {
-                console.error('No speech speed graphic path provided in response.');
-            }
+        // Find the "Speech rate" panel in the grid
+        const speechRatePanel = document.getElementById('speech-rate-panel');
+        if (speechRatePanel) {
+            // Clear any previous images and add the new image under the existing text
+            speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
+            speechRatePanel.appendChild(imgElement);
+        } else {
+            console.error('Speech rate panel not found.');
+        }
+    } else {
+        console.error('No speech speed graphic path provided in response.');
+    }
+
+
+    if (pitchGraphicPath) {
+        // Create an img element
+        const imgElement = document.createElement('img');
+        imgElement.src = pitchGraphicPath.replace('src/', ''); // Set the src to the graphic path
+        imgElement.alt = 'Pitch Analysis';
+        imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
+        imgElement.style.position = 'relative'; // Ensure it respects the layout flow
+        imgElement.style.zIndex = '10'; // Ensure it appears above other elements
+
+        // Find the "Speech rate" panel in the grid
+        const speechRatePanel = document.getElementById('pitch-panel');
+        if (speechRatePanel) {
+            // Clear any previous images and add the new image under the existing text
+            speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
+            speechRatePanel.appendChild(imgElement);
+        } else {
+            console.error('Pitch panel not found.');
+        }
+    } else {
+        console.error('No pitch graphic path provided in response.');
+    }
 }
+
+

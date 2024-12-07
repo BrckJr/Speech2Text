@@ -27,6 +27,7 @@ def generate_file_path(dir_name, filename=None):
         "raw_audio": f"audio_recording_{timestamp}.wav",
         "transcription": f"transcription_of_{filename}.txt",
         "speed_graphics": f"speed_graphics_of_{filename}.png",
+        "pitch_graphics": f"pitch_graphics_of_{filename}.png",
     }
 
     filename = valid_filetypes.get(dir_name, f"corrupted_{timestamp}.txt")

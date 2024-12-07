@@ -14,8 +14,6 @@ class CleanupError(Exception):
     """Custom exception for cleanup errors."""
     pass
 
-
-
 class Model:
     """
     The AudioModel class handles real-time audio recording, processing, and transcription.

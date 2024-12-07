@@ -42,7 +42,7 @@ def stop_recording_and_save_files(transcriber):
 
 def transcribe_and_analyse(transcriber, current_user, db):
     """
-    Transcribe audio, do analysis of the audio recording, and save the analysis to the database.
+    Transcribe audio, analyze the audio recording, and save the analysis to the database.
 
     Args:
         transcriber (Transcriber): An instance of the transcriber class to handle audio transcription.
@@ -50,7 +50,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
         db (Database): The database instance where information is stored.
 
     Returns:
-        tuple: A tuple containing a dictionary with success status and message, the HTTP status code and the full
+        tuple: A tuple containing a dictionary with success status and message, the HTTP status code, and the full
                 audio filepath.
     """
     try:
@@ -71,68 +71,68 @@ def transcribe_and_analyse(transcriber, current_user, db):
 
             # Get the summary of the transcription
             summary = analytics.get_summary()
+
+            # Get information about the pitch of the recording
+            mean_pitch, std_pitch, pitch_range, pitch_graphic_path = analytics.analyze_pitch()
+
+            print(f"Mean pitch: {mean_pitch}, Std deviation pitch: {std_pitch}, Pitch range: {pitch_range}")
+
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
 
+        # Create a dictionary of audio data to pass
+        audio_data = {
+            "current_user": current_user,
+            "db": db,
+            "audio_filepath": audio_filepath,
+            "transcription_filepath": transcription_filepath,
+            "created_at": created_at,
+            "speech_speed_graphic_path": speech_speed_graphic_path,
+            "pitch_graphic_path": pitch_graphic_path,
+            "title": title,
+            "language": language,
+            "audio_length": audio_length,
+            "word_count": word_count,
+            "summary": summary,
+        }
+
         # Save information to the database
-        response, status_code = save_info_to_database(
-            current_user=current_user,
-            db=db,
-            audio_filepath=audio_filepath,
-            transcription_filepath=transcription_filepath,
-            created_at= created_at,
-            speech_speed_graphic_path=speech_speed_graphic_path,
-            title=title,
-            language=language,
-            audio_length=audio_length,
-            word_count= word_count,
-            summary=summary
-        )
-
-
+        response, status_code = save_info_to_database(audio_data)
 
         return response, status_code, audio_filepath
 
     except Exception as e:
         return {"success": False, "message": f"An internal error during transcription and analysis. Error message: {e}."}, 500
 
-def save_info_to_database(current_user, db, audio_filepath, created_at, transcription_filepath,
-                        speech_speed_graphic_path, title, language, audio_length, word_count, summary ):
+
+def save_info_to_database(audio_data):
     """
     Saves audio and transcription information to the database if the user is authenticated.
 
     Args:
-        current_user (User): The currently logged-in user.
-        db (SQLAlchemy): The database session object.
-        audio_filepath (str): The full relative path to the saved audio file.
-        created_at (datetime): Timestamp at which the audio file was created.
-        transcription_filepath (str): The full relative path to the saved transcription file.
-        speech_speed_graphic_path (str): The full relative path to the saved graphic from speed analysis.
-        title (str): The AI generated title of the transcription.
-        language (str): The language of the transcription.
-        audio_length (float): Length of the audio file in seconds
-        word_count (int): The number of words in the transcription.
-        summary (str): The AI generated summary of the transcription.
+        audio_data (dict): Dictionary containing audio, transcription and analysis information.
 
     Returns:
         tuple: A response dictionary and an HTTP status code.
     """
-
     # Check if the current user is authenticated
-    if current_user.is_authenticated:
+    current_user = audio_data.get("current_user")
+    db = audio_data.get("db")
 
+    if current_user.is_authenticated:
         # Create a new AudioTranscription object with the given data
         audio_recording = AudioTranscription(
             user_id=current_user.id,  # Associate the recording with the user's ID
-            audio_path=audio_filepath,  # Path to the audio file
-            transcription_path=transcription_filepath,  # Path to the transcription file
-            created_at = created_at, # Timestamp when the respective audio recording was created
-            speech_speed_graphic_path = speech_speed_graphic_path,  # Link to the stored graphic from speed analysis
-            title = title, # AI generated title for the transcription
-            language = language, # Language of the audio and transcription
-            audio_length = audio_length, # Length of the transcription in seconds
-            word_count = word_count, # Number of words in the respective transcription
-            summary = summary # AI generated summary of the transcription. Adapt size if necessary.
+            audio_path=audio_data["audio_filepath"],  # Path to the audio file
+            transcription_path=audio_data["transcription_filepath"],  # Path to the transcription file
+            created_at=audio_data["created_at"],  # Timestamp when the respective audio recording was created
+            speech_speed_graphic_path=audio_data["speech_speed_graphic_path"],  # Link to the stored graphic from speed analysis
+            pitch_graphic_path=audio_data["pitch_graphic_path"],  # Link to the stored graphic from pitch analysis
+            title=audio_data["title"],  # AI-generated title for the transcription
+            language=audio_data["language"],  # Language of the audio and transcription
+            audio_length=audio_data["audio_length"],  # Length of the transcription in seconds
+            word_count=audio_data["word_count"],  # Number of words in the respective transcription
+            summary=audio_data["summary"]  # AI-generated summary of the transcription.
         )
 
         try:
@@ -146,10 +146,9 @@ def save_info_to_database(current_user, db, audio_filepath, created_at, transcri
 
         # Return a success response with the paths to the saved files
         return {
-            "audio_path": audio_filepath,
-            "transcription_path": transcription_filepath,
+            "audio_path": audio_data["audio_filepath"],
+            "transcription_path": audio_data["transcription_filepath"],
         }, 201  # HTTP 201 Created
 
     # If the user is not authenticated, return an error response
     return {"message": "User not authenticated"}, 401  # HTTP 401 Unauthorized
-
