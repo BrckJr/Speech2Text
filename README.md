@@ -29,7 +29,9 @@ pip install -r requirements.txt
 pip3 install -r requirements.txt
 ```
 
-I recommend to set up a virtual environment for the project and install all the libraries and dependencies there.
+I recommend setting up a virtual environment for the project and install all the libraries and dependencies there.
+Use python@3.11 to set up the program, otherwise the Whisper package from OpenAI may fail as it currently only supports
+Python 3.8 to 3.11.
 
 # Usage
 You can run the program directly in your preferred IDE from the app.py file. 
@@ -51,7 +53,7 @@ set PYTHONPATH=%cd%       # on Windows
 A third option is to run the program directly via Flask CLI with
 
 ```bash
-export FLASK_APP=backend/app.py
+export FLASK_APP=src/app.py
 export FLASK_ENV=development    # Optional: for debugging
 flask run
 ```
@@ -59,4 +61,5 @@ flask run
 
 Please be aware that the program was currently tested only on a MacOS system. There might be unexpected behavior
 on other operating systems. If you encounter such behavior, please report it to me.
+
 

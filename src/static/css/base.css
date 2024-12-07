@@ -1,0 +1,227 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensure consistent box sizing */
+}
+
+/* Ensure full height for html and body */
+html, body {
+    height: 100%; /* Full viewport height */
+    width: 100%; /* Full viewport width */
+    display: block;
+    overflow: auto; /* Allow scrolling */
+}
+
+/* Body styling */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center-align horizontally */
+    justify-content: flex-start; /* Align content to the top */
+    position: relative; /* Position for layered canvas */
+    background: #121212; /* Dark background for contrast */
+    color: #f1f1f1; /* Default light text color */
+    z-index: 1; /* Set above background */
+    margin: 0; /* Remove default body margin */
+    min-height: 100vh; /* Full viewport height */
+    overflow: auto; /* Allow scrolling */
+}
+
+/* Background Canvas */
+#backgroundCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Layer the canvas behind other elements */
+    pointer-events: none; /* Disable interaction with the canvas */
+    background: none;
+}
+
+/* Header Styling */
+.header {
+    position: relative; /* Keeps the header fixed at the top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Space between language switcher and logout */
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 1001; /* Set it above the container to show the user info when hovered on */
+}
+
+/* Adjust the container to start below the header */
+.container {
+    flex: 1; /* Allow the container to grow and fill available space */
+    max-width: 1200px;
+    z-index: 1000;
+    text-align: center; /* Optional: Center the text inside the container */
+}
+
+/* Language Switcher Buttons */
+.language-switcher {
+    display: flex;
+    gap: 5px;
+}
+
+.language-switcher button {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: text-decoration 0.3s ease;
+}
+
+.language-switcher button:hover {
+    text-decoration: underline;
+}
+
+.language-switcher button:not(:last-child) {
+    border-right: 1px solid #ccc; /* Divider between buttons */
+    padding-right: 15px;
+}
+
+.language-switcher button:not(:first-child) {
+    padding-left: 15px;
+}
+
+
+.btn-logout {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background-color: #B22222;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: #D21404;
+}
+
+/* Styling for main heading */
+h1 {
+    font-family: "Times New Roman", Times, serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 65px; /* Large font size for headings */
+    margin-bottom: 30px;
+}
+
+/* Styling for section headings */
+h2 {
+    text-align: left;
+    font-size: 32px; /* Medium font size for subheadings */
+    font-weight: bold;
+    margin: 20px;
+}
+
+/* Styling for subsection headings */
+h3 {
+    text-align: left;
+    font-size: 24px; /* Medium font size for subheadings */
+    font-weight: bold;
+    margin: 20px;
+
+}
+
+/* Styling for prompt headings */
+h10 {
+    text-align: center;
+    font-size: 24px; /* Medium font size for subheadings */
+    font-weight: bold;
+}
+
+p {
+    font-size: 16px;
+    margin: 20px;
+    text-align: justify;
+}
+
+/* Styling for modal / prompts */
+p1 {
+    font-size: 16px;
+}
+
+p_f {
+    font-size: 10px;
+    font-style: italic; /* Italicize the paragraph text */
+}
+
+/* Modal Styling */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Space between buttons */
+    justify-content: space-around;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+/* Footer */
+footer {
+    width: 100%;
+    padding: 10px 0;
+    color: #f1f1f1;
+    text-align: center;
+    font-size: 10px;
+    font-style: italic;
+    border-radius: 5px 5px 0 0; /* Rounded top corners */
+    z-index: 1000;
+}
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between email and button */
+    position: relative; /* Ensures child elements are positioned relative to this container */
+}
+
+.user-icon {
+    display: flex;
+    align-items: center; /* Centers the SVG vertically */
+    justify-content: center; /* Centers the SVG horizontally */
+    cursor: pointer;
+    width: 32px;
+    height: 32px; /* Matches the visual height of the button */
+    border: 1px solid #f1f1f1;
+    border-radius: 50%; /* Makes the icon circular */
+    box-sizing: border-box; /* Ensures borders are included in width/height */
+}
+
+.user-icon svg {
+    display: block; /* Removes any inline spacing issues */
+    width: 80%;
+    height: 80%; /* Scales the SVG to fit the icon container */
+}
+
+.info-panel {
+    display: none;
+    position: absolute; /* Positioned relative to .user-info-container */
+    top: 120%;
+    left: -100%;
+    background-color: #121212;
+    border: 1px solid #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+}
+
+.user-info-container:hover .info-panel {
+    display: block;
+}

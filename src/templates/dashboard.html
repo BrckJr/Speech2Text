@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Transcriber Interface{% endblock %}
+
+{% block data_page %}dashboard{% endblock %}
+
+{% block content %}
+<!-- Intro Section -->
+<div class="intro">
+    <h1>Presentable</h1>
+    <p data-i18n="intro_text">
+        Lorem ipsum dolor ...
+    </p>
+</div>
+
+<!-- Recording Audio -->
+<div class="record_audio">
+    <h2 data-i18n="audio_recording">Audio Recording</h2>
+    <p data-i18n="recording_instructions">
+        Press the start button to begin recording.<br>
+        Press the pause button to pause the recording.<br>
+        Finish the recording by pressing the stop button.
+    </p>
+    <div class="button-group">
+        <button class="control-btn" id="start" data-i18n="start_button">Start ▶️</button>
+        <button class="control-btn" id="pause" disabled data-i18n="pause_button">Pause ⏸️</button>
+        <button class="control-btn" id="stop" disabled data-i18n="stop_button">Stop ⏹️</button>
+    </div>
+</div>
+
+<!-- Analytics Section -->
+<div class="analytics">
+    <h2 data-i18n="analytics_section">Analytics</h2>
+
+    <p data-i18n="analytics_text">
+        Lorem ipsum dolor sit amet, ...
+    </p>
+
+    <!-- Select Recording Dropdown Menu -->
+    <div class="select-recording">
+        <label for="audioFile-dropdown" data-i18n="select_recording_label">Select a Recording:</label>
+        <select id="audioFile-dropdown">
+            <!-- Options will be populated dynamically -->
+        </select>
+        <!-- Button next to the dropdown -->
+        <button id="get-analysis-btn" class="btn" data-i18n="get_analysis_button">Select Recording</button>
+    </div>
+
+    <div class="analytics-panel-grid">
+
+        <!-- Panel for General Overview Information -->
+        <div class="analytics-panel" id="content-overview-panel">
+            <h3 data-i18n="overview">General Information</h3>
+            <p id="panel-topic" style="display: none;">Topic: <span id="topic"></span></p>
+            <p id="panel-language" style="display: none;">Language: <span id="language"></span></p>
+            <p id="panel-audio-length" style="display: none;">Audio Length: <span id="audio-length"></span></p>
+            <p id="panel-word-count" style="display: none;">Word Count: <span id="word-count"></span></p>
+        </div>
+
+        <!-- Panel for Summary of Content -->
+        <div class="analytics-panel" id="content-summary-panel" >
+            <h3 data-i18n="summary_of_speech">Summary of Speech</h3>
+            <p id="panel-summary" style="display: none;"> <span id="transcription_summary"></span></p>
+        </div>
+
+        <!-- Panel for Analysis of Speech Rate -->
+        <div class="analytics-panel" id="speech-rate-panel" >
+            <h3 data-i18n="speech_rate">Speech rate</h3>
+            <img src="" alt="" style="max-width: 100%;">
+        </div>
+
+        <!-- Panel for Analysis of Speech Fluency -->
+        <div class="analytics-panel" id="speech-fluency-panel" >
+            <h3 data-i18n="fluency">Fluency</h3>
+        </div>
+
+    </div>
+</div>
+
+<!-- File Management Section -->
+<div class="file_management">
+    <h2 data-i18n="file_management">File Management</h2>
+
+    <p data-i18n="file_management_text">
+        Lorem ipsum dolor sit amet, ...
+    </p>
+
+    <!-- Audio File Panel -->
+    <div class="panel" id="raw-audio-files">
+        <h3 data-i18n="raw_audio_files">Raw Audio Files</h3>
+        <div class="file-list"></div>
+    </div>
+
+    <!-- File Panel -->
+    <div class="panel" id="transcribed-files">
+        <h3 data-i18n="transcribed_files">Transcribed Files</h3>
+        <div class="file-list"></div>
+    </div>
+
+    <!-- Delete Button -->
+    <button class="delete-btn" id="delete_all" data-i18n="delete_all_files">Delete all Files 🗑️</button>
+</div>
+
+<!-- Modal for Stop Options -->
+<div id="stop-options-modal" class="modal">
+    <div class="modal-content">
+        <h10 data-i18n="file_saving">File Saving</h10>
+        <p1 data-i18n="select_option">Select one of the following options below.</p1>
+        <button id="save-audio-analyze" data-i18n="save_audio_analyze">Save Audio and Analyse</button>
+        <button id="delete-audio" data-i18n="discard_audio">Discard Audio</button>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-confirmation-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="delete_all_files_modal">Delete all Files</h10>
+        <p1 data-i18n="delete_confirmation_message">Are you sure you want to delete all files? <br>
+            This action cannot be undone.</p1>
+        <button id="confirm-delete" data-i18n="yes_delete_all">Yes, Delete All</button>
+        <button id="cancel-delete" data-i18n="cancel">Cancel</button>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="analysis-selection-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="analysis-selection_modal">Error</h10>
+        <p1 data-i18n="analysis-selection_modal_text">An error occurred, please try again. Maybe you did not choose a recording?</p1>
+        <button id="close-error-modal">OK</button>
+    </div>
+</div>
+
+{% endblock %}
