@@ -1,7 +1,7 @@
 /* Section Styling for Introduction */
 .intro {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with low opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -9,7 +9,7 @@
 /* Section Styling for Record Audio */
 .record_audio {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -17,7 +17,7 @@
 /* Section Styling for Analytics */
 .analytics {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -25,7 +25,7 @@
 /* Section Styling for File Management */
 .file_management {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 1); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -48,7 +48,7 @@
 }
 
 #start {
-    background: #008000; /* Dark green background */
+    background: #008A00; /* Dark green background */
     color: #f1f1f1;
 }
 
@@ -133,16 +133,18 @@
 
 /* Button styles for modal */
 #save-audio-analyze {
-    background: #455a64;
+    background: #007BFF;
     color: #f1f1f1;
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #save-audio-analyze:hover {
-    background: #607d8b;
+    background: #0056b3;
 }
 
 #delete-audio {
     background: #B22222;
     color: #f1f1f1;
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #delete-audio:hover {
     background: #D21404;
@@ -190,6 +192,7 @@
     border-radius: 5px; /* Rounded corners */
     cursor: pointer;
     height: 25px;      /* Set the height to match the dropdown */
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 
 /* Hover effect for the button */
@@ -217,17 +220,18 @@
 #confirm-delete {
     background: #B22222; /* Red for Delete */
     color: #f1f1f1;
+    transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #confirm-delete:hover {
     background: #D21404; /* Lighter red */
 }
 
 #cancel-delete {
-    background: #455a64; /* Grey-blue for Cancel */
+    background: #5a7184; /* Grey-blue for Cancel */
     color: #f1f1f1;
 }
 #cancel-delete:hover {
-    background: #607d8b; /* Lighter grey-blue */
+    background: #3d4f5c; /* Lighter grey-blue */
 }
 
 /* Delete Confirmation Modal Styling */
