@@ -25,42 +25,66 @@ class Analytics:
         self.word_count = word_count # Number of words in the audio file
         self.language = language # Language of the audio recording and transcription
 
-    def calculate_wpm(self, interval=5):
+    def calculate_wpm(self, step_size=1):
         """
-        Calculate words per minute (WPM) from Whisper transcription segments.
+        Calculate words per minute (WPM) using a sliding window approach.
 
         Args:
-            interval (int): Time interval in seconds for WPM calculation.
+            step_size (int): Step size for sliding the window in seconds.
 
         Returns:
-            list: A list of tuples (time, wpm) for each interval.
+            list: A list of tuples (time, wpm) for each window position.
+                  The time represents the center of the window.
         """
         if not self.transcription_segments:
             return []
 
+        def get_window_length():
+            # Set interval length depending on the audio length
+            audio_length = self.get_wav_length()
+            if audio_length < 60:
+                return 5  # Short recordings
+            elif audio_length < 600:
+                return 15  # Medium recordings
+            elif audio_length < 1800:
+                return 30  # Long recordings
+            else:
+                return 60  # Very long recordings
+
+        window_length = get_window_length()
+
+        total_audio_length = self.get_wav_length()
         time_wpm = []
         current_time = 0
-        current_words = []
 
-        for segment in self.transcription_segments:
-            start = segment["start"]
-            end = segment["end"]
-            words = segment["text"].split()
+        while current_time + window_length <= total_audio_length:
+            # Define the current window range
+            window_start = current_time
+            window_end = current_time + window_length
+            window_center = (window_start + window_end) / 2  # Timestamp for x-axis
+            words_in_window = []
 
-            # Add words to the current interval
-            current_words.extend(words)
-            # Check if we've passed the current interval
-            while start >= current_time + interval:
-                # Calculate WPM for the interval
-                wpm = (len(current_words) / interval) * 60
-                time_wpm.append((current_time, wpm))
-                current_words = []  # Reset for the next interval
-                current_time += interval
+            for segment in self.transcription_segments:
+                # Check if segment overlaps with the window
+                if segment["end"] >= window_start and segment["start"] <= window_end:
+                    # Calculate overlap duration
+                    segment_start = max(segment["start"], window_start)
+                    segment_end = min(segment["end"], window_end)
+                    overlap_duration = segment_end - segment_start
 
-        # Process any remaining words at the end
-        if current_words:
-            wpm = (len(current_words) / interval) * 60
-            time_wpm.append((current_time, wpm))
+                    # Estimate number of words in the overlap
+                    total_segment_duration = segment["end"] - segment["start"]
+                    if total_segment_duration > 0:
+                        words = segment["text"].split()
+                        words_in_overlap = int(len(words) * (overlap_duration / total_segment_duration))
+                        words_in_window.extend(words[:words_in_overlap])
+
+            # Calculate WPM for the current window
+            wpm = (len(words_in_window) / window_length) * 60
+            time_wpm.append((window_center, wpm))  # Use window_center for the timestamp
+
+            # Move the window forward
+            current_time += step_size
 
         return time_wpm
 
@@ -96,11 +120,15 @@ class Analytics:
         # Add green shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
         plt.axhspan(100, 200, color='green', alpha=0.1)
 
+        # Adding dots at the actual data points
+        # plt.scatter(times, wpms, color='#f1f1f1', linewidth=2)
+
         # Connecting the points with lines and applying the color scheme
         plt.plot(times, wpms, color='#f1f1f1', linewidth=2)
 
-        # Set y-axis limits
+        # Set x-axis and y-axis limits
         plt.ylim(50, 250)
+        plt.xlim(0, self.get_wav_length())
 
         # Add labels, grid, and legend
         plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
@@ -175,8 +203,9 @@ class Analytics:
         if filtered_time.size > 0 and filtered_f0.size > 0 and self.word_count > 0:
             plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
 
-            # Set axis limits safely
+            # Set x-axis and y-axis limits
             plt.ylim(0, np.max(filtered_f0) * 1.1)
+            plt.xlim(0, self.get_wav_length()*1.1)
 
             # Update labels and grid with consistent custom colors
             plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
@@ -227,20 +256,13 @@ class Analytics:
                 - int: count of words in the recording
         """
 
-        def get_wav_length(filepath):
-            # returns length of the audio file from the filepath
-            with wave.open(filepath, 'rb') as wav_file:
-                frames = wav_file.getnframes()
-                rate = wav_file.getframerate()
-                duration = frames / float(rate)
-            return duration
 
         def get_file_creation_time(filepath):
             # Returns datetime object of the file creation time
             creation_time = os.path.getctime(filepath)
             return datetime.fromtimestamp(creation_time)  # Return complete datetime object
 
-        audio_length = get_wav_length(self.audio_filepath)
+        audio_length = self.get_wav_length()
         saving_date_and_time = get_file_creation_time(self.audio_filepath)
 
         # Check the length of transcription and return transcription itself if to few words
@@ -286,3 +308,13 @@ class Analytics:
         summary = transformer.generate_summary(self.recording_filepath, min_length, max_length)
 
         return summary
+
+    def get_wav_length(self):
+        """
+        This method returns the length of the audio file from the filepath
+        """
+        with wave.open(self.audio_filepath, 'rb') as wav_file:
+            frames = wav_file.getnframes()
+            rate = wav_file.getframerate()
+            duration = frames / float(rate)
+        return duration
