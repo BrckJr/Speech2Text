@@ -9,7 +9,6 @@ from datetime import datetime
 class TranscriptionStoringError(Exception): pass
 class AudioStoringError(Exception): pass
 
-
 def stop_recording_and_save_files(transcriber):
     """
     Stop the audio recording, save the audio file, and transcribe it.
@@ -75,8 +74,6 @@ def transcribe_and_analyse(transcriber, current_user, db):
             # Get information about the pitch of the recording
             mean_pitch, std_pitch, pitch_range, pitch_graphic_path = analytics.analyze_pitch()
 
-            print(f"Mean pitch: {mean_pitch}, Std deviation pitch: {std_pitch}, Pitch range: {pitch_range}")
-
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
 
@@ -103,7 +100,6 @@ def transcribe_and_analyse(transcriber, current_user, db):
 
     except Exception as e:
         return {"success": False, "message": f"An internal error during transcription and analysis. Error message: {e}."}, 500
-
 
 def save_info_to_database(audio_data):
     """

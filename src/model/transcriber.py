@@ -264,7 +264,7 @@ class Model:
         return recording_filepath, save_successful
 
     @staticmethod
-    def delete_all_files(files_to_delete, userID):
+    def delete_all_files(files_to_delete):
         """
         Deleting files in output directory.
 
@@ -273,12 +273,11 @@ class Model:
 
         Args:
             files_to_delete (list of str): The list of audio files to delete for a specific user.
-            userID (int): The ID of the user for whom files should be deleted.
         """
         try:
             # Delete the files contained in the files_to_delete list
             for file in files_to_delete:
-                for attribute in ['audio_path', 'transcription_path', 'speech_speed_graphic_path']:
+                for attribute in ['audio_path', 'transcription_path', 'speech_speed_graphic_path', 'pitch_graphic_path']:
                     file_path = getattr(file, attribute, None)
                     if os.path.isfile(file_path):
                         os.remove(file_path)

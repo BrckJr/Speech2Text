@@ -120,6 +120,8 @@ class Analytics:
         plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
         plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
+        plt.title("Speed Analysis Over Time in Words per Minute", fontsize=14, fontweight='bold', color='#f1f1f1')
+
         # Save the plot
         plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
 
@@ -156,8 +158,6 @@ class Analytics:
         filtered_time = time[valid_indices]
         filtered_f0 = f0[valid_indices]
 
-        print(f"Filtered F0 {filtered_f0}, Filtered Time: {filtered_time}")
-
         # If no valid pitch data is detected, replace filtered_f0 with an empty NumPy array
         if filtered_f0.size == 0:
             filtered_time = np.array([])  # Convert to an empty NumPy array
@@ -172,7 +172,7 @@ class Analytics:
 
 
         # Plotting the pitch analysis graph only if there is data to plot
-        if filtered_time.size > 0 and filtered_f0.size > 0:
+        if filtered_time.size > 0 and filtered_f0.size > 0 and self.word_count > 0:
             plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
 
             # Set axis limits safely
@@ -208,7 +208,6 @@ class Analytics:
         plt.savefig(pitch_graphics_filepath, format="png", dpi=300, transparent=True)
         plt.close()
 
-        print("Pitch statistics computed successfully.")
         return mean_pitch, std_pitch, pitch_range, pitch_graphics_filepath
 
     def get_general_info(self):
