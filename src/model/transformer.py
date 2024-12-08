@@ -1,4 +1,6 @@
+import os
 from transformers import pipeline
+os.environ["TOKENIZERS_PARALLELISM"] = "false" # Avoid an error message for huggingface/tokenizer because of deadlock warning
 
 # Load the summarization pipeline
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
