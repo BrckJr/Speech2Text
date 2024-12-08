@@ -4,8 +4,8 @@ import wave
 import matplotlib
 import matplotlib.pyplot as plt
 import librosa
+from librosa import feature
 import numpy as np
-from scipy.interpolate import interp1d
 from src.utils import utils
 from src.model import transformer
 
@@ -24,6 +24,7 @@ class Analytics:
         self.transcription_segments = transcription_segments # List of tuples with word count per segment
         self.word_count = word_count # Number of words in the audio file
         self.language = language # Language of the audio recording and transcription
+        self.no_recording_content = False # Set to true if recording is empty
 
     def calculate_wpm(self, step_size=1):
         """
@@ -106,6 +107,7 @@ class Analytics:
 
         # If no valid data, handle gracefully with a placeholder
         if not times or not wpms:
+            self.no_recording_content = True
             plt.figure()
             plt.text(0.5, 0.5, 'No WPM data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
             plt.axis('off')
@@ -132,7 +134,7 @@ class Analytics:
 
         # Add labels, grid, and legend
         plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
-        plt.ylabel("WPM", fontsize=12, fontweight='bold', color='#f1f1f1')
+        plt.ylabel("Words per Minute", fontsize=12, fontweight='bold', color='#f1f1f1')
         plt.grid(True, color='#f1f1f1')
 
         # Make the outer frame bolder and white
@@ -148,7 +150,7 @@ class Analytics:
         plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
         plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
-        plt.title("Speed Analysis Over Time in Words per Minute", fontsize=14, fontweight='bold', color='#f1f1f1')
+        plt.title("Speaking Speed Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
 
         # Save the plot
         plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
@@ -200,7 +202,7 @@ class Analytics:
 
 
         # Plotting the pitch analysis graph only if there is data to plot
-        if filtered_time.size > 0 and filtered_f0.size > 0 and self.word_count > 0:
+        if filtered_time.size > 0 and filtered_f0.size > 0 and not self.no_recording_content:
             plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
 
             # Set x-axis and y-axis limits
@@ -225,7 +227,7 @@ class Analytics:
             plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
             plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
-            plt.title("Pitch Analysis Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
+            plt.title("Pitch Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
         else:
             # No data to plot
             plt.figure()
@@ -318,3 +320,71 @@ class Analytics:
             rate = wav_file.getframerate()
             duration = frames / float(rate)
         return duration
+
+    def analyze_energy(self):
+        """
+        Analyze the energy of the audio signal and generate an energy plot.
+
+        The energy is normalized such that the maximum energy level is 1.
+
+        Returns:
+            float: Average energy of the audio (normalized).
+            float: Standard deviation of the energy (normalized).
+            str: Path to the energy plot.
+        """
+        # Extract only the filename of the audio recording including timestamp
+        audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
+        # Generate the file path for the energy plot
+        energy_graphics_filepath = utils.generate_file_path("energy_graphics", audio_filename)
+
+        # Load the audio signal
+        y, sr = librosa.load(self.audio_filepath)
+
+        # Calculate the short-time energy (RMS)
+        frame_length = 2048
+        hop_length = 512
+        rms_energy = librosa.feature.rms(y=y, frame_length=frame_length, hop_length=hop_length)[0]
+        times = librosa.frames_to_time(np.arange(len(rms_energy)), sr=sr, hop_length=hop_length)
+
+        # Normalize the energy values to have a maximum of 1
+        normalized_rms_energy = rms_energy / np.max(rms_energy) if np.max(rms_energy) > 0 else rms_energy
+
+        # Compute statistics
+        average_energy = np.mean(normalized_rms_energy)
+        std_energy = np.std(normalized_rms_energy)
+
+        if not self.no_recording_content:
+            # Plot the energy graph
+            plt.figure()
+            plt.plot(times, normalized_rms_energy, color='#f1f1f1', linewidth=2)
+
+            # Update labels and grid with consistent custom colors
+            plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
+            plt.ylabel("Relative Energy", fontsize=12, fontweight='bold', color='#f1f1f1')
+            plt.grid(True, color='#f1f1f1')
+
+            # Make the outer frame bolder and white
+            ax = plt.gca()  # Get current axes
+            for spine in ax.spines.values():
+                spine.set_visible(True)
+                spine.set_linewidth(2)  # Make the frame bolder
+                spine.set_color('#f1f1f1')  # Set frame color to white
+
+            # Adjust the size and weight of tick labels (numbers on the axes)
+            plt.tick_params(axis='both', which='major', labelsize=10, width=2, colors='#f1f1f1')
+            plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+            plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+
+            plt.title("Normalized Energy Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
+        else:
+            # No data to plot
+            plt.figure()
+            plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
+            plt.axis('off')  # Turn off the axes when no data is available
+
+        # Save the plot
+        plt.savefig(energy_graphics_filepath, format="png", dpi=300, transparent=True)
+        plt.close()
+
+        return average_energy, std_energy, energy_graphics_filepath
+

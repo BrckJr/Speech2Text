@@ -1,9 +1,13 @@
+import os
 from sqlite3 import IntegrityError
-from src.model.transcriber import Model
 from src.model.analytics import Analytics
 from src.database.models import AudioTranscription
 
 from datetime import datetime
+
+class CleanupError(Exception):
+    """Custom exception for cleanup errors."""
+    pass
 
 # Custom error classes
 class TranscriptionStoringError(Exception): pass
@@ -74,6 +78,9 @@ def transcribe_and_analyse(transcriber, current_user, db):
             # Get information about the pitch of the recording
             mean_pitch, std_pitch, pitch_range, pitch_graphic_path = analytics.analyze_pitch()
 
+            # Get information about the energy level over time of the recording
+            average_energy, std_energy, energy_graphic_path = analytics.analyze_energy()
+
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
 
@@ -86,6 +93,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
             "created_at": created_at,
             "speech_speed_graphic_path": speech_speed_graphic_path,
             "pitch_graphic_path": pitch_graphic_path,
+            "energy_graphic_path": energy_graphic_path,
             "title": title,
             "language": language,
             "audio_length": audio_length,
@@ -124,6 +132,7 @@ def save_info_to_database(audio_data):
             created_at=audio_data["created_at"],  # Timestamp when the respective audio recording was created
             speech_speed_graphic_path=audio_data["speech_speed_graphic_path"],  # Link to the stored graphic from speed analysis
             pitch_graphic_path=audio_data["pitch_graphic_path"],  # Link to the stored graphic from pitch analysis
+            energy_graphic_path=audio_data["energy_graphic_path"],  # Link to the stored graphic from energy analysis
             title=audio_data["title"],  # AI-generated title for the transcription
             language=audio_data["language"],  # Language of the audio and transcription
             audio_length=audio_data["audio_length"],  # Length of the transcription in seconds
@@ -148,3 +157,31 @@ def save_info_to_database(audio_data):
 
     # If the user is not authenticated, return an error response
     return {"message": "User not authenticated"}, 401  # HTTP 401 Unauthorized
+
+def delete_all_files(files_to_delete):
+    """
+    Deleting files in output directory.
+
+    Cleans up the output directory by removing all existing files,
+    including all raw audio files and transcriptions for a specific user.
+
+    Args:
+        files_to_delete (list of str): The list of audio files to delete for a specific user.
+    """
+    try:
+        # Delete the files contained in the files_to_delete list
+        for file in files_to_delete:
+            for attribute in [
+                'audio_path',
+                'transcription_path',
+                'speech_speed_graphic_path',
+                'energy_graphic_path',
+                'pitch_graphic_path'
+            ]:
+                file_path = getattr(file, attribute, None)
+                print(f"Nex file {file_path}")
+                if os.path.isfile(file_path):
+                    print(f"Removed file {file_path}")
+                    os.remove(file_path)
+    except Exception as e:
+        raise CleanupError("Error during cleanup")

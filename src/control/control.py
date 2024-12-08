@@ -82,7 +82,7 @@ def delete_files():
         all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Delete files from the local filesystem
-        transcriber.delete_all_files(all_files)
+        actions.delete_all_files(all_files)
 
         # Clear database records for the current user only
         db.session.query(AudioTranscription).filter_by(user_id=current_user.id).delete()
@@ -154,6 +154,7 @@ def get_analytics():
         if target_database_entry:
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
             pitch_graphic_path = target_database_entry.pitch_graphic_path
+            energy_graphic_path = target_database_entry.energy_graphic_path
             title = target_database_entry.title
             language = target_database_entry.language
             audio_length = target_database_entry.audio_length
@@ -162,6 +163,7 @@ def get_analytics():
             return jsonify({'success': True,
                             'speech_speed_graphic_path': speech_speed_graphic_path,
                             'pitch_graphic_path': pitch_graphic_path,
+                            'energy_graphic_path': energy_graphic_path,
                             'recording_title': title,
                             'recording_language': language,
                             'audio_length': audio_length,

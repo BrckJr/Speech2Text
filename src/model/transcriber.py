@@ -10,10 +10,6 @@ class RecordingError(Exception):
     """Custom exception for recording errors."""
     pass
 
-class CleanupError(Exception):
-    """Custom exception for cleanup errors."""
-    pass
-
 class Model:
     """
     The AudioModel class handles real-time audio recording, processing, and transcription.
@@ -262,24 +258,3 @@ class Model:
             return None
 
         return recording_filepath, save_successful
-
-    @staticmethod
-    def delete_all_files(files_to_delete):
-        """
-        Deleting files in output directory.
-
-        Cleans up the output directory by removing all existing files,
-        including all raw audio files and transcriptions for a specific user.
-
-        Args:
-            files_to_delete (list of str): The list of audio files to delete for a specific user.
-        """
-        try:
-            # Delete the files contained in the files_to_delete list
-            for file in files_to_delete:
-                for attribute in ['audio_path', 'transcription_path', 'speech_speed_graphic_path', 'pitch_graphic_path']:
-                    file_path = getattr(file, attribute, None)
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
-        except Exception as e:
-            raise CleanupError("Error during cleanup")

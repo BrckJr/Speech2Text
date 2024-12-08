@@ -35,6 +35,7 @@ export async function setAnalytics() {
             // Extract all information from the response
             let speechSpeedGraphicPath = result.speech_speed_graphic_path;
             let pitchGraphicPath = result.pitch_graphic_path;
+            let energyGraphicPath = result.energy_graphic_path;
             let title = result.recording_title;
             let language = result.recording_language;
             let audio_length = result.audio_length;
@@ -42,7 +43,16 @@ export async function setAnalytics() {
             let summary = result.text_summary;
 
             // Update the analytics panels with new information
-            updatePanels(speechSpeedGraphicPath, pitchGraphicPath, title, language, audio_length, word_count, summary)
+            updatePanels(
+                speechSpeedGraphicPath,
+                pitchGraphicPath,
+                energyGraphicPath,
+                title,
+                language,
+                audio_length,
+                word_count,
+                summary
+            )
 
         } else {
             console.error('Error analyzing recording:', result.error);
@@ -77,7 +87,7 @@ function showErrorModal(message) {
     };
 }
 
-function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, title, language, audio_length, word_count, summary) {
+function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, energyGraphicPath, title, language, audio_length, word_count, summary) {
     // Activate the text in the overview panel
     document.getElementById('panel-topic').style.display = 'block';
     document.getElementById('panel-language').style.display = 'block';
@@ -151,6 +161,28 @@ function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, title, language,
         }
     } else {
         console.error('No pitch graphic path provided in response.');
+    }
+
+    if (energyGraphicPath) {
+        // Create an img element
+        const imgElement = document.createElement('img');
+        imgElement.src = energyGraphicPath.replace('src/', ''); // Set the src to the graphic path
+        imgElement.alt = 'Energy Analysis';
+        imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
+        imgElement.style.position = 'relative'; // Ensure it respects the layout flow
+        imgElement.style.zIndex = '10'; // Ensure it appears above other elements
+
+        // Find the "Speech rate" panel in the grid
+        const speechRatePanel = document.getElementById('energy-panel');
+        if (speechRatePanel) {
+            // Clear any previous images and add the new image under the existing text
+            speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
+            speechRatePanel.appendChild(imgElement);
+        } else {
+            console.error('Energy panel not found.');
+        }
+    } else {
+        console.error('No energy graphic path provided in response.');
     }
 }
 
