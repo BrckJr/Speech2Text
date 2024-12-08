@@ -1,4 +1,4 @@
-# Speech2Text
+# Speech Analysis
 
 This is a ongoing development project in which I experiment with transcription and analysis of spoken language.
 I am not entirely sure in which direction I will develop it next, therefore I list here what is currently included 
