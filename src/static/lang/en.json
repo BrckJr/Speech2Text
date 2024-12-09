@@ -11,7 +11,7 @@
     "model_settings": "Model Settings",
     "whisper_model": "Whisper (OpenAI)",
     "file_saving": "File Saving",
-    "select_option": "Select one of the following options below.",
+    "select_option": "Below, please enter a filename under which the recording shall be stored.",
     "save_audio_analyse": "Save Audio and Analyse",
     "save_audio_transcribe": "Save Audio and Transcribe",
     "discard_audio": "Discard Audio",

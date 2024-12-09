@@ -59,13 +59,25 @@ def stop_recording():
     """
     data = request.get_json()
     action = data.get('action')
+    filename = data.get('filename')
+    print(f"Inserted Filename: {filename}")
+
+    # Base filename and extension
+    base_name, extension = filename.rsplit('.', 1) if '.' in filename else (filename, '')
+
+    # Check for duplicates and create a unique filename
+    unique_filename = filename
+    counter = 1
+    while db.session.query(AudioTranscription).filter_by(audio_path=unique_filename).first():
+        unique_filename = f"{base_name} ({counter}){'.' + extension if extension else ''}"
+        counter += 1
 
     match action:
         case 'delete_audio':
             transcriber.stop_recording_audio(False)
             return '', 204  # 204 No Content
         case 'save_audio_and_analyze':
-            response, status_code, audio_filename = actions.transcribe_and_analyse(transcriber, current_user, db)
+            response, status_code, audio_filename = actions.transcribe_and_analyse(transcriber, current_user, db, unique_filename)
             return jsonify({"response": response, "dropdown_value": audio_filename}), status_code
         case _:
             return jsonify({"success": False, "message": "Action for stopping recording unknown."}), 500

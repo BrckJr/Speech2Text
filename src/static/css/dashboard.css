@@ -359,3 +359,27 @@
     position: relative;
     top: -10%;
 }
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 5px;
+}
+
+.form-label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.9); /* Matches dashboard panel styles */
+    margin-top: 5px;
+}
+
+

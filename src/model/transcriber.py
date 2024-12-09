@@ -62,12 +62,13 @@ class Model:
         else:
             print("Recording is not active. Cannot pause.")
 
-    def stop_recording_audio(self, save_audio):
+    def stop_recording_audio(self, save_audio, filename=None):
         """
         Stops the audio recording process and optionally saves the audio data.
 
         Args:
             save_audio (bool): Indicates whether audio data should be saved.
+            filename (str): The name of the audio file.
 
         Returns:
             tuple: (file path of saved audio, success flag)
@@ -81,7 +82,7 @@ class Model:
         try:
             if len(self.temp_audio_data) == 0:
                 raise RecordingError("Recording is too short.")
-            filepath = self.save_raw_audio_to_file(self.temp_audio_data)
+            filepath = self.save_raw_audio_to_file(self.temp_audio_data, filename)
             self.temp_audio_data = []
             return filepath, True
         except Exception:
@@ -121,7 +122,7 @@ class Model:
             print(f"Failed to handle device change: {e}")
 
 
-    def save_raw_audio_to_file(self, raw_audio):
+    def save_raw_audio_to_file(self, raw_audio, filename):
         """
         Saves raw audio data to a .wav file with a timestamped filename.
 
@@ -135,6 +136,7 @@ class Model:
         Args:
             raw_audio (list of numpy.ndarray): List of raw audio data chunks, where each
                 chunk is a NumPy array representing audio samples.
+            filename (str): The name of the audio file.
 
         Returns:
             tuple:
@@ -147,7 +149,8 @@ class Model:
         """
 
         # Get filepath for the new audio file
-        audio_filepath = utils.generate_file_path("raw_audio")
+        audio_filepath = utils.generate_file_path("raw_audio", filename)
+        print(f"Audio Filepath: {audio_filepath}")
 
         try:
             # Combine the chunks of raw audio data into a single numpy array

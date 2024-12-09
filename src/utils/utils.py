@@ -24,7 +24,7 @@ def generate_file_path(dir_name, filename=None):
 
     timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
     valid_filetypes = {
-        "raw_audio": f"audio_recording_{timestamp}.wav",
+        "raw_audio": f"{filename}.wav",
         "transcription": f"transcription_of_{filename}.txt",
         "speed_graphics": f"speed_graphics_of_{filename}.png",
         "pitch_graphics": f"pitch_graphics_of_{filename}.png",

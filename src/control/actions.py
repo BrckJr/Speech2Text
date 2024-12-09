@@ -16,13 +16,14 @@ class CleanupError(Exception):
 class TranscriptionStoringError(Exception): pass
 class AudioStoringError(Exception): pass
 
-def stop_recording_and_save_files(transcriber):
+def stop_recording_and_save_files(transcriber, filename):
     """
     Stop the audio recording, save the audio file, and transcribe it.
 
     Args:
         transcriber (Transcriber): An instance of the transcriber class responsible for stopping the recording
                                    and transcribing the audio.
+        filename (str): The name of the audio file.
 
     Returns:
         tuple: A tuple containing the full paths for the audio file and the transcription file,
@@ -33,7 +34,7 @@ def stop_recording_and_save_files(transcriber):
         TranscriptionStoringError: If an error occurs during the storage of the transcription file.
     """
     # Stop recording and save the audio file
-    audio_filepath, audio_save_successful = transcriber.stop_recording_audio(True)
+    audio_filepath, audio_save_successful = transcriber.stop_recording_audio(True, filename)
 
     if not audio_save_successful:
         raise AudioStoringError("Error occurred during storage of audio file")
@@ -46,7 +47,7 @@ def stop_recording_and_save_files(transcriber):
 
     return audio_filepath, transcription_filepath, segments, word_count, language
 
-def transcribe_and_analyse(transcriber, current_user, db):
+def transcribe_and_analyse(transcriber, current_user, db, filename):
     """
     Transcribe audio, analyze the audio recording, and save the analysis to the database.
 
@@ -54,6 +55,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
         transcriber (Transcriber): An instance of the transcriber class to handle audio transcription.
         current_user (User): The current user requesting the transcription and analysis.
         db (Database): The database instance where information is stored.
+        filename (str): The name of the audio file.
 
     Returns:
         tuple: A tuple containing a dictionary with success status and message, the HTTP status code, and the full
@@ -62,7 +64,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
     try:
         # Attempt to stop recording and save the files
         try:
-            audio_filepath, transcription_filepath, segments, word_count, language = stop_recording_and_save_files(transcriber)
+            audio_filepath, transcription_filepath, segments, word_count, language = stop_recording_and_save_files(transcriber, filename)
         except Exception as e:
             return {"success": False, "message": f"Failed to stop recording and save files due to error {e}."}, 500
 
@@ -189,9 +191,7 @@ def delete_all_files(files_to_delete):
                 'improved_text_path'
             ]:
                 file_path = getattr(file, attribute, None)
-                print(f"Nex file {file_path}")
                 if os.path.isfile(file_path):
-                    print(f"Removed file {file_path}")
                     os.remove(file_path)
     except Exception as e:
         raise CleanupError("Error during cleanup")

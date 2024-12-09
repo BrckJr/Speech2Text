@@ -119,7 +119,10 @@
 <div id="stop-options-modal" class="modal">
     <div class="modal-content">
         <h10 data-i18n="file_saving">File Saving</h10>
-        <p1 data-i18n="select_option">Select one of the following options below.</p1>
+        <div class="form-group">
+            <label for="filename" data-i18n="enter_filename" class="form-label">Enter Filename to store Audio Recording:</label>
+            <input type="text" id="filename" class="form-control" placeholder="Enter file name" />
+        </div>
         <button id="save-audio-analyze" data-i18n="save_audio_analyze">Save Audio and Analyse</button>
         <button id="delete-audio" data-i18n="discard_audio">Discard Audio</button>
     </div>

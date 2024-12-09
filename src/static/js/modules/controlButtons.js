@@ -60,13 +60,20 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
 
     // Function to handle the selected stop action (save or delete)
     function handleStopAction(action) {
+        const filename = document.getElementById('filename') ? document.getElementById('filename').value.trim() : '';
+
+        if (action === 'save_audio_and_analyze' && !filename) {
+            alert('Please enter a valid filename.');
+            return;
+        }
+
         // Send POST request to stop the process and perform the selected action
         fetch('/stop', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ action }), // Send selected action as JSON body
+            body: JSON.stringify({ action, filename }), // Send selected action and filename as JSON body
         })
             .then(response => {
                 if (response.status === 204) {
@@ -79,7 +86,7 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
                         await loadAudioFiles();
                         await loadTranscriptionFiles();
 
-                        updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop000);
+                        updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
 
                         // If save-audio-analyze is selected, trigger the update of the analytics section
                         // by setting the dropdown value and triggering the setAnalytics() from getAnalytics.js
@@ -91,7 +98,7 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
                                 }
                             }
                             // Refresh the analytics page with data from the selected file.
-                            await setAnalytics()
+                            await setAnalytics();
                         }
                     });
                 } else if (response.status === 401) {
