@@ -15,12 +15,12 @@ class Analytics:
     """
     The Analytics class handles the analysis of an audio recording.
     """
-    def __init__(self, audio_filepath, recording_filepath, transcription_segments, word_count, language):
+    def __init__(self, audio_filepath, transcription_filepath, transcription_segments, word_count, language):
         """
         Initializes the Analytics class.
         """
         self.audio_filepath = audio_filepath # Full file path to the audio file "src/static/output/..."
-        self.recording_filepath = recording_filepath # Full file path to the transcription file "src/static/output/..."
+        self.transcription_filepath = transcription_filepath # Full file path to the transcription file "src/static/output/..."
         self.transcription_segments = transcription_segments # List of tuples with word count per segment
         self.word_count = word_count # Number of words in the audio file
         self.language = language # Language of the audio recording and transcription
@@ -270,11 +270,11 @@ class Analytics:
         # Check the length of transcription and return transcription itself if to few words
         if self.word_count < 10:
             # When the text only contains less than 20 words, return text itself
-            with open(self.recording_filepath, 'r') as file:
+            with open(self.transcription_filepath, 'r') as file:
                 title = file.read()
         else:
             # Get title from the transformer model
-            title = transformer.generate_summary(self.recording_filepath, 5, 10)
+            title = transformer.generate_summary(self.transcription_filepath, 5, 10)
 
         return title, self.language, audio_length, saving_date_and_time, self.word_count
 
@@ -290,7 +290,7 @@ class Analytics:
 
         if self.word_count < 20:
             # When the text only contains less than 20 words, return text itself
-            with open(self.recording_filepath, 'r') as file:
+            with open(self.transcription_filepath, 'r') as file:
                 text = file.read()
             return text
         elif self.word_count < 100:
@@ -307,7 +307,7 @@ class Analytics:
             min_length = 50
 
         # Get summary from the transformer model
-        summary = transformer.generate_summary(self.recording_filepath, min_length, max_length)
+        summary = transformer.generate_summary(self.transcription_filepath, min_length, max_length)
 
         return summary
 
@@ -353,6 +353,8 @@ class Analytics:
         average_energy = np.mean(normalized_rms_energy)
         std_energy = np.std(normalized_rms_energy)
 
+        print(f"Recording has content? {self.no_recording_content}")
+
         if not self.no_recording_content:
             # Plot the energy graph
             plt.figure()
@@ -387,4 +389,35 @@ class Analytics:
         plt.close()
 
         return average_energy, std_energy, energy_graphics_filepath
+
+    def improve_text(self):
+        """
+        Improves grammar, clarity, and readability.
+
+        Returns:
+            str: Improved text for the speech
+            bool: True if save was successful, False otherwise
+        """
+        save_successful = False
+
+        # Extract only the filename of the audio recording including timestamp
+        audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
+        # Generate the file path for the energy plot
+        improved_text_filepath = utils.generate_file_path("improved_text", audio_filename)
+
+        try:
+            improved_text = transformer.improve_text(self.transcription_filepath)
+        except Exception as e:
+            improved_text = f"Model was not able to improved text because of following error: {str(e)}"
+
+        # Save the improved text to the file
+        try:
+            with open(improved_text_filepath, 'w') as file:
+                file.write(improved_text)
+            save_successful = True
+        except Exception:
+            return None
+
+        return improved_text_filepath, save_successful
+
 

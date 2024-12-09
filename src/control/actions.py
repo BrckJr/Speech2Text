@@ -5,6 +5,9 @@ from src.database.models import AudioTranscription
 
 from datetime import datetime
 
+from src.model.transformer import improve_text
+
+
 class CleanupError(Exception):
     """Custom exception for cleanup errors."""
     pass
@@ -81,6 +84,9 @@ def transcribe_and_analyse(transcriber, current_user, db):
             # Get information about the energy level over time of the recording
             average_energy, std_energy, energy_graphic_path = analytics.analyze_energy()
 
+            # Get filepath of the improved text
+            improved_text_path, save_successful = analytics.improve_text()
+
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
 
@@ -94,6 +100,7 @@ def transcribe_and_analyse(transcriber, current_user, db):
             "speech_speed_graphic_path": speech_speed_graphic_path,
             "pitch_graphic_path": pitch_graphic_path,
             "energy_graphic_path": energy_graphic_path,
+            "improved_text_path": improved_text_path,
             "title": title,
             "language": language,
             "audio_length": audio_length,
@@ -133,6 +140,7 @@ def save_info_to_database(audio_data):
             speech_speed_graphic_path=audio_data["speech_speed_graphic_path"],  # Link to the stored graphic from speed analysis
             pitch_graphic_path=audio_data["pitch_graphic_path"],  # Link to the stored graphic from pitch analysis
             energy_graphic_path=audio_data["energy_graphic_path"],  # Link to the stored graphic from energy analysis
+            improved_text_path=audio_data["improved_text_path"],  # Link to the stored improved text
             title=audio_data["title"],  # AI-generated title for the transcription
             language=audio_data["language"],  # Language of the audio and transcription
             audio_length=audio_data["audio_length"],  # Length of the transcription in seconds
@@ -176,7 +184,8 @@ def delete_all_files(files_to_delete):
                 'transcription_path',
                 'speech_speed_graphic_path',
                 'energy_graphic_path',
-                'pitch_graphic_path'
+                'pitch_graphic_path',
+                'improved_text_path'
             ]:
                 file_path = getattr(file, attribute, None)
                 print(f"Nex file {file_path}")

@@ -36,6 +36,7 @@ export async function setAnalytics() {
             let speechSpeedGraphicPath = result.speech_speed_graphic_path;
             let pitchGraphicPath = result.pitch_graphic_path;
             let energyGraphicPath = result.energy_graphic_path;
+            let improved_text_path = result.improved_text_path;
             let title = result.recording_title;
             let language = result.recording_language;
             let audio_length = result.audio_length;
@@ -43,10 +44,11 @@ export async function setAnalytics() {
             let summary = result.text_summary;
 
             // Update the analytics panels with new information
-            updatePanels(
+            await updatePanels(
                 speechSpeedGraphicPath,
                 pitchGraphicPath,
                 energyGraphicPath,
+                improved_text_path,
                 title,
                 language,
                 audio_length,
@@ -87,7 +89,11 @@ function showErrorModal(message) {
     };
 }
 
-function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, energyGraphicPath, title, language, audio_length, word_count, summary) {
+async function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, energyGraphicPath, improved_text_path, title, language, audio_length, word_count, summary) {
+    // Get the improved text from local storage and display it in the panel
+    console.log(improved_text_path)
+    loadImprovedText(improved_text_path);
+
     // Activate the text in the overview panel
     document.getElementById('panel-topic').style.display = 'block';
     document.getElementById('panel-language').style.display = 'block';
@@ -184,6 +190,38 @@ function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, energyGraphicPat
     } else {
         console.error('No energy graphic path provided in response.');
     }
+}
+
+function loadImprovedText(textFilePath) {
+  if (textFilePath) {
+    textFilePath = textFilePath.replace('src', '')
+    fetch(textFilePath)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Failed to load file: ${response.statusText}`);
+        }
+        return response.text();
+      })
+      .then(textContent => {
+        // Find the panel in the DOM
+        const textPanel = document.getElementById('panel-improved-text');
+        if (textPanel) {
+            // Activate the panel
+            document.getElementById('panel-improved-text').style.display = 'block';
+
+            // Clear out any existing content and add the new content
+            textPanel.innerText = textContent; // Render text content
+            console.log(textContent)
+        } else {
+          console.error('Text panel not found.');
+        }
+      })
+      .catch(error => {
+        console.error('Error loading the text file:', error);
+      });
+  } else {
+    console.error('No valid text file path provided.');
+  }
 }
 
 

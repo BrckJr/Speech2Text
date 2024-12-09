@@ -29,6 +29,7 @@ def generate_file_path(dir_name, filename=None):
         "speed_graphics": f"speed_graphics_of_{filename}.png",
         "pitch_graphics": f"pitch_graphics_of_{filename}.png",
         "energy_graphics": f"energy_graphics_of_{filename}.png",
+        "improved_text": f"improved_text_of_{filename}.txt",
     }
 
     filename = valid_filetypes.get(dir_name, f"corrupted_{timestamp}.txt")

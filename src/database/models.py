@@ -27,6 +27,7 @@ class AudioTranscription(db.Model):
     speech_speed_graphic_path = db.Column(db.String(200), nullable=True) # Path to the saved graphic from the speed analysis
     pitch_graphic_path = db.Column(db.String(200), nullable=True) # Path to the saved graphic from the pitch analysis
     energy_graphic_path = db.Column(db.String(200), nullable=True) # Path to the saved graphic from the energy analysis
+    improved_text_path = db.Column(db.String(200), nullable=True) # Path to the improved text
     title = db.Column(db.String(200), nullable=True) # AI generated title for the transcription
     language = db.Column(db.String(200), nullable=True) # Language of the audio and transcription
     audio_length = db.Column(db.Float, nullable=True) # Length of the transcription in seconds
