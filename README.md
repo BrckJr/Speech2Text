@@ -57,7 +57,7 @@ set PYTHONPATH=%cd%       # on Windows
 A third option is to run the program directly via Flask CLI with
 
 ```bash
-export FLASK_APP=src/app.py
+export FLASK_APP=src.app:create_app
 export FLASK_ENV=development    # Optional: for debugging
 flask run
 ```

@@ -13,3 +13,4 @@ matplotlib~=3.9.3
 openai-whisper
 transformers~=4.47.0
 librosa~=0.10.2.post1
+email-validator
