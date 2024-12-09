@@ -307,13 +307,33 @@
 }
 
 
-/* Grid Layout for Panels */
-.analytics-panel-grid {
+/* Grid Layout for Panels Overview and Summary */
+.analytics-panel-grid1 {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2 equal-width columns */
     gap: 20px; /* Spacing between panels */
     justify-items: stretch; /* Make sure all panels stretch to fill the available space */
     padding: 0 20px; /* Pad left and right boundary */
+    margin-bottom: 20px; /* Margin at bottom to next analytics panel */
+}
+
+/* Grid Layout for Panels Three Graphics */
+.analytics-panel-grid2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 equal-width columns */
+    gap: 20px; /* Spacing between panels */
+    justify-items: stretch; /* Make sure all panels stretch to fill the available space */
+    padding: 0 20px; /* Pad left and right boundary */
+    margin-bottom: 20px; /* Margin at bottom to next analytics panel */
+}
+
+/* Grid Layout for Panels Improved Text */
+.analytics-panel-grid3 {
+    display: grid;
+    gap: 20px; /* Spacing between panels */
+    justify-items: stretch; /* Make sure all panels stretch to fill the available space */
+    padding: 0 20px; /* Pad left and right boundary */
+    margin-bottom: 20px; /* Margin at bottom to next analytics panel */
 }
 
 /* Panel Styling */

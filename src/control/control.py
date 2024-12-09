@@ -155,6 +155,7 @@ def get_analytics():
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
             pitch_graphic_path = target_database_entry.pitch_graphic_path
             energy_graphic_path = target_database_entry.energy_graphic_path
+            improved_text_path = target_database_entry.improved_text_path
             title = target_database_entry.title
             language = target_database_entry.language
             audio_length = target_database_entry.audio_length
@@ -164,6 +165,7 @@ def get_analytics():
                             'speech_speed_graphic_path': speech_speed_graphic_path,
                             'pitch_graphic_path': pitch_graphic_path,
                             'energy_graphic_path': energy_graphic_path,
+                            'improved_text_path': improved_text_path,
                             'recording_title': title,
                             'recording_language': language,
                             'audio_length': audio_length,

@@ -353,6 +353,8 @@ class Analytics:
         average_energy = np.mean(normalized_rms_energy)
         std_energy = np.std(normalized_rms_energy)
 
+        print(f"Recording has content? {self.no_recording_content}")
+
         if not self.no_recording_content:
             # Plot the energy graph
             plt.figure()
@@ -401,9 +403,12 @@ class Analytics:
         # Extract only the filename of the audio recording including timestamp
         audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
         # Generate the file path for the energy plot
-        improved_text_filepath = utils.generate_file_path("energy_graphics", audio_filename)
+        improved_text_filepath = utils.generate_file_path("improved_text", audio_filename)
 
-        improved_text = transformer.improve_text(self.transcription_filepath)
+        try:
+            improved_text = transformer.improve_text(self.transcription_filepath)
+        except Exception as e:
+            improved_text = f"Model was not able to improved text because of following error: {str(e)}"
 
         # Save the improved text to the file
         try:

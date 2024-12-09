@@ -1,72 +1,59 @@
 import os
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-os.environ["TOKENIZERS_PARALLELISM"] = "false" # Avoid an error message for huggingface/tokenizer because of deadlock warning
+from transformers import pipeline
 
-# Load the GPT-J Model and Tokenizer
-model_name = "EleutherAI/gpt-neo-1.3B"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
+os.environ["TOKENIZERS_PARALLELISM"] = "false"  # Avoid deadlock warnings
 
-# Load the summarization pipeline
+# Load the summarization pipeline using the same pre-trained model
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-sentiment_analyzer = pipeline("sentiment-analysis")
+
+# IMPLEMENT A TRANSLATION OF THE SPEECH INTO ANOTHER LANGUAGE
 
 def generate_summary(filepath, min_length, max_length):
     """
-    This method provides a summary of the file with the provided filepath.
-
-    To make the summary, the transformer library from Hugging Face is used. The length of the summary will be in
-    between the min_length and max_length respectively to be able to generate headings as well as actual summaries
-    of individual length.
-
+    Generates a summary of the given text file between min_length and max_length.
     Args:
-        filepath: Text file which should be summarized
-        min_length: Minimum number of the length the summary should have
-        max_length: Maximum number of the length the summary should have
+        filepath (str): Path to the file to summarize.
+        min_length (int): Minimum number of words in the summary.
+        max_length (int): Maximum number of words in the summary.
 
     Returns:
-        str: The summary of the file with the requested length
+        str: Generated summary text.
     """
-
-    # Load textfile to for which he summary is requested
+    # Load text from the file
     with open(filepath, 'r') as file:
         text = file.read()
 
-    # Generate a short summary which will act as the heading
+    # Generate a summary (use the pipeline with defined min and max lengths)
     summary = summarizer(text, max_length=max_length, min_length=min_length, do_sample=False)
 
-    # Return the summary text (heading)
+    # Return the summary text
     return summary[0]['summary_text'].strip()
 
 def improve_text(filepath: str) -> str:
     """
-    Sends the input text to GPT-J to improve grammar, clarity, and readability.
+    Improves grammar, clarity, and coherence of the entire file text using BART.
+
+    It basically just takes the transcription, feeds it one time through the BART model and takes the
+    output as the improved text.
+    It uses the same model as the summary tool to be sure the text stays approximately the same.
 
     Args:
-        filepath (str): Text file which should be improved
+        filepath (str): Path to the file to process and improve.
 
     Returns:
-        str: Improved text
-
+        str: Improved full text as a single string.
     """
-    # Load textfile to for which he summary is requested
+    # Load text from the file
     with open(filepath, 'r') as file:
         text = file.read()
 
-    # Prompt construction to improve grammar, clarity, and readability
-    prompt_text = "Improve the following text for grammar, clarity, and coherence:\n\n" + text
-
-    # Tokenize input
-    input_ids = tokenizer(prompt_text, return_tensors="pt").input_ids
-
-    # Generate output from GPT-J
-    output = model.generate(
-        input_ids,
-        max_length=len(input_ids[0]) + 200,  # Generate additional context
-        do_sample=True,  # Random sampling for variation
-        temperature=0.7,  # Adjust temperature for creativity
+    # Use the summarization pipeline to rewrite the full text to improve clarity and grammar
+    improved_text = summarizer(
+        text,
+        max_length=len(text.split()) + 50,  # Allow the output to grow longer to capture rewritten improvements
+        min_length=len(text.split()) - 50,
+        do_sample=False
     )
 
-    # Decode the output text
-    improved_text = tokenizer.decode(output[0], skip_special_tokens=True)
-    return improved_text
+    # Return the improved, rewritten text
+    return improved_text[0]['summary_text'].strip()
