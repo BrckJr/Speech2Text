@@ -183,6 +183,7 @@ def delete_all_files(files_to_delete):
                 'audio_path',
                 'transcription_path',
                 'speech_speed_graphic_path',
+                'improved_text_path',
                 'energy_graphic_path',
                 'pitch_graphic_path',
                 'improved_text_path'
