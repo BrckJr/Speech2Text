@@ -150,8 +150,6 @@ class Model:
 
         # Get filepath for the new audio file
         audio_filepath = utils.generate_file_path("raw_audio", filename)
-        print(f"Audio Filepath: {audio_filepath}")
-
         try:
             # Combine the chunks of raw audio data into a single numpy array
             audio_data = np.concatenate(raw_audio, axis=0)

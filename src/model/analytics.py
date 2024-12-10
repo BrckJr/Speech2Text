@@ -353,8 +353,6 @@ class Analytics:
         average_energy = np.mean(normalized_rms_energy)
         std_energy = np.std(normalized_rms_energy)
 
-        print(f"Recording has content? {self.no_recording_content}")
-
         if not self.no_recording_content:
             # Plot the energy graph
             plt.figure()

@@ -329,7 +329,6 @@
 .file-item .delete-btn {
     background: none;
     border: none;
-    font-size: 12px;
     cursor: pointer;
     margin: 0 10px; /* Space between the delete button and link */
 }
@@ -339,8 +338,7 @@
 .transcription-link,
 .improved-text-link {
     text-decoration: none;
-    color: #007bff;
-    padding: 2px 4px;
+    color: #f1f1f1;
 }
 
 .audio-link:hover,
@@ -351,7 +349,7 @@
 }
 
 .date-time {
-    font-size: 12px;
+    font-size: 14px;
     color: #f1f1f1;
 }
 

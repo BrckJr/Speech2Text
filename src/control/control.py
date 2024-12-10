@@ -60,17 +60,19 @@ def stop_recording():
     data = request.get_json()
     action = data.get('action')
     filename = data.get('filename')
-    print(f"Inserted Filename: {filename}")
 
     # Base filename and extension
     base_name, extension = filename.rsplit('.', 1) if '.' in filename else (filename, '')
 
     # Check for duplicates and create a unique filename
     unique_filename = filename
+    filter_in_database = f"src/static/output/raw_audio/{filename}.wav"
+
     counter = 1
-    while db.session.query(AudioTranscription).filter_by(audio_path=unique_filename).first():
+    while db.session.query(AudioTranscription).filter_by(audio_path=filter_in_database).first():
         unique_filename = f"{base_name} ({counter}){'.' + extension if extension else ''}"
         counter += 1
+        filter_in_database = f"src/static/output/raw_audio/{unique_filename}.wav"
 
     match action:
         case 'delete_audio':

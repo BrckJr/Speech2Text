@@ -2,41 +2,55 @@ let fileToDeletePath = '';
 
 export function showDeleteConfirmationModal(filePath) {
     const modal = document.getElementById('delete-single-confirmation-modal');
-    modal.style.display = 'block';
-    fileToDeletePath = filePath;
+    if (modal) { // Only proceed if the modal exists
+        modal.style.display = 'block';
+        fileToDeletePath = filePath;
+    }
 }
 
 function closeModal() {
     const modal = document.getElementById('delete-single-confirmation-modal');
-    modal.style.display = 'none';
+    if (modal) { // Only proceed if the modal exists
+        modal.style.display = 'none';
+    }
 }
 
-document.getElementById('confirm-delete-single').onclick = async () => {
-    if (!fileToDeletePath) return;
+// Initialize event listeners only if the required DOM elements exist
+document.addEventListener('DOMContentLoaded', () => {
+    const confirmDeleteButton = document.getElementById('confirm-delete-single');
+    const cancelDeleteButton = document.getElementById('cancel-delete-single');
 
-    try {
-        const response = await fetch('/delete-file', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ filePath: fileToDeletePath }),
-        });
+    if (confirmDeleteButton) {
+        confirmDeleteButton.onclick = async () => {
+            if (!fileToDeletePath) return;
 
-        const result = await response.json();
-        if (result.success) {
-            location.reload();
-        } else {
-            alert('Failed to delete file');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('An error occurred');
+            try {
+                const response = await fetch('/delete-file', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filePath: fileToDeletePath }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    location.reload();
+                } else {
+                    alert('Failed to delete file');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
+            }
+
+            closeModal();
+        };
     }
 
-    closeModal();
-};
-
-document.getElementById('cancel-delete-single').onclick = () => {
-    closeModal();
-};
+    if (cancelDeleteButton) {
+        cancelDeleteButton.onclick = () => {
+            closeModal();
+        };
+    }
+});
