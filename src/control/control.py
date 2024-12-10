@@ -94,7 +94,7 @@ def delete_files():
         all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
         # Delete files from the local filesystem
-        actions.delete_all_files(all_files)
+        actions.delete_files(all_files)
 
         # Clear database records for the current user only
         db.session.query(AudioTranscription).filter_by(user_id=current_user.id).delete()
@@ -103,6 +103,36 @@ def delete_files():
         return jsonify({"success": True, "message": "All files deleted"})
     except Exception as e:
         return jsonify({"success": False, "message": "Failed to delete all files"}), 500
+
+@transcription_bp.route('/delete-file', methods=['POST'])
+def delete_file():
+    """
+    Deletes all audio and transcription files for the authenticated user.
+
+    This removes both the files from the file system and the corresponding database records.
+    """
+    try:
+        data = request.json
+        audio_filepath = data.get('filePath')
+        if not audio_filepath:
+            return jsonify({'success': False, 'error': 'File path is required'}), 400
+
+        print(f"Inserted Filepath: {audio_filepath}")
+
+        if os.path.exists(audio_filepath):
+            # Query all records from the database connected to the selected audio recording
+            all_files = AudioTranscription.query.filter_by(audio_path=audio_filepath).all()
+            # Delete files from the local filesystem
+            actions.delete_files(all_files)
+            # Clear database records for the current file
+            db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).delete()
+            db.session.commit()
+            return jsonify({'success': True})
+        else:
+            return jsonify({'success': False, 'error': 'File not found'}), 404
+    except Exception as e:
+        return jsonify({"success": False, "message": "Failed to delete file"}), 500
+
 
 @transcription_bp.route('/list-audio-files', methods=['GET'])
 def list_audio_files():

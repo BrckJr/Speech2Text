@@ -200,8 +200,25 @@
     background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Delete Confirmation Modal Styling */
+/* Delete All Confirmation Modal Styling */
 #delete-confirmation-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    background: rgba(51, 51, 51); /* Dark grey with slight transparency */
+    color: #f1f1f1; /* Light text color */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
+    z-index: 1000; /* Ensure it appears on top */
+    text-align: center; /* Center align modal content */
+}
+
+/* Delete Confirmation Modal Styling */
+#delete-single-confirmation-modal {
     display: none;
     position: fixed;
     top: 50%;
@@ -231,6 +248,23 @@
     color: #f1f1f1;
 }
 #cancel-delete:hover {
+    background: #3d4f5c; /* Lighter grey-blue */
+}
+
+#confirm-delete-single {
+    background: #B22222; /* Red for Delete */
+    color: #f1f1f1;
+    transition: background 0.3s ease; /* Smooth transition on hover */
+}
+#confirm-delete-single:hover {
+    background: #D21404; /* Lighter red */
+}
+
+#cancel-delete-single {
+    background: #5a7184; /* Grey-blue for Cancel */
+    color: #f1f1f1;
+}
+#cancel-delete-single:hover {
     background: #3d4f5c; /* Lighter grey-blue */
 }
 
@@ -288,6 +322,7 @@
 
 /* File List Item Styling */
 .file-item {
+    display: flex;
     font-size: 14px; /* Adjust font size for list items */
     color: #f1f1f1; /* Light grey color for file items */
     margin: 5px 0; /* Add some margin between the items */
@@ -304,6 +339,15 @@
 .file-item a:hover {
     color: #0056b3; /* Darker color on hover */
     text-decoration: underline; /* Underline on hover */
+}
+
+/* Style the delete button */
+.file-item .delete-btn {
+    background: none;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    margin-right: 10px; /* Space between the delete button and link */
 }
 
 

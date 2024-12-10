@@ -105,7 +105,7 @@
         <div class="file-list"></div>
     </div>
 
-    <!-- File Panel -->
+    <!-- Transcription File Panel -->
     <div class="panel" id="transcribed-files">
         <h3 data-i18n="transcribed_files">Transcribed Files</h3>
         <div class="file-list"></div>
@@ -128,7 +128,18 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
+<!-- Delete Single Confirmation Modal -->
+<div id="delete-single-confirmation-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="delete_single_files_modal">Delete this File</h10>
+        <p1 data-i18n="delete_single_confirmation_message">Are you sure you want to delete this recording and all related files? <br>
+            This action cannot be undone.</p1>
+        <button id="confirm-delete-single" data-i18n="yes_delete_single">Yes, Delete</button>
+        <button id="cancel-delete-single" data-i18n="cancel">Cancel</button>
+    </div>
+</div>
+
+<!-- Delete All Confirmation Modal -->
 <div id="delete-confirmation-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <h10 data-i18n="delete_all_files_modal">Delete all Files</h10>

@@ -168,12 +168,13 @@ def save_info_to_database(audio_data):
     # If the user is not authenticated, return an error response
     return {"message": "User not authenticated"}, 401  # HTTP 401 Unauthorized
 
-def delete_all_files(files_to_delete):
+def delete_files(files_to_delete):
     """
     Deleting files in output directory.
 
-    Cleans up the output directory by removing all existing files,
-    including all raw audio files and transcriptions for a specific user.
+    Cleans up the output directory by removing existing files,
+    including all raw audio files, transcriptions, etc. for a specific user
+    which are included in the files_to_delete list.
 
     Args:
         files_to_delete (list of str): The list of audio files to delete for a specific user.

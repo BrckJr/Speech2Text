@@ -1,6 +1,7 @@
+import { showDeleteConfirmationModal } from './deleteSingleFile.js'
+
 // Function to load and display audio files and populate dropdown menu
 // noinspection DuplicatedCode
-
 export async function loadAudioFiles() {
     try {
         // Fetch the list of audio files from the server
@@ -29,28 +30,39 @@ export async function loadAudioFiles() {
 
         // Loop through the list of audio file paths and create clickable links
         data.files.forEach(filePath => {
-            // Create a clickable link for each audio file
+            // Create a container for each file entry
             const listItem = document.createElement('div');
-            listItem.className = 'file-item';  // Add class to each list item
+            listItem.className = 'file-item';
+            listItem.style.display = 'flex'; // Align elements side by side
 
+            // Create the audio file link
             const fileLink = document.createElement('a');
-            fileLink.href = `${filePath.replace('src/', '')}`;  // Use the relative path "static/output/..."
-            fileLink.textContent = filePath.split('/').pop();  // Display only the file name (not the full path)
-            fileLink.target = '_blank';  // Ensure the link opens in a new tab
+            fileLink.href = `${filePath.replace('src/', '')}`;
+            fileLink.textContent = filePath.split('/').pop();
+            fileLink.target = '_blank';
+            fileLink.style.flexGrow = '1';
 
-            listItem.appendChild(fileLink); // Append the link to the list item
-            fileList.appendChild(listItem); // Add the list item to the file list container
+            // Create the delete button
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'delete-btn';
+            deleteButton.textContent = '🗑️';
+
+            // Set up event listener for the delete button
+            deleteButton.onclick = () => showDeleteConfirmationModal(filePath);
+
+            // Append elements
+            listItem.appendChild(deleteButton);
+            listItem.appendChild(fileLink);
+            fileList.appendChild(listItem);
 
             // Create an option element for the dropdown
             const option = document.createElement('option');
             option.value = filePath;
-            option.textContent = filePath.split('/').pop(); // Display file name in the dropdown
+            option.textContent = filePath.split('/').pop();
 
-            // Append the option to the dropdown
             dropdown.appendChild(option);
         });
     } catch (err) {
-        // Log any errors that occur during the fetch or processing
         console.error('Error loading audio files:', err);
     }
 }
