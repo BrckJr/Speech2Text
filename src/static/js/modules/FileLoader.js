@@ -1,9 +1,9 @@
 import { showDeleteConfirmationModal } from './deleteSingleFile.js';
 
-// Function to load and display audio and transcription files and populate dropdown menu
+// Function to load and display audio, transcription, improved text, and date-time files
 export async function loadFileList() {
     try {
-        // Fetch the list of audio and transcription files from the server
+        // Fetch the list of audio, transcription, improved text files, and date-time from the server
         const response = await fetch('/list-files');
         const data = await response.json();
 
@@ -27,16 +27,22 @@ export async function loadFileList() {
         defaultOption.textContent = '-';
         dropdown.appendChild(defaultOption);
 
-        // Ensure both lists have the same length (assumes data correspondence is guaranteed)
-        const { audio_files, transcription_files } = data;
-        if (audio_files.length !== transcription_files.length) {
-            console.error('Mismatch between audio files and transcription files.');
+        // Ensure all lists have the same length
+        const { audio_files, transcription_files, improved_text_files, date_times } = data;
+        if (
+            audio_files.length !== transcription_files.length ||
+            audio_files.length !== improved_text_files.length ||
+            audio_files.length !== date_times.length
+        ) {
+            console.error('Mismatch between audio, transcription, improved text files, and date-times.');
             return;
         }
 
         // Loop through the lists and dynamically generate file rows
         audio_files.forEach((audioPath, index) => {
             const transcriptionPath = transcription_files[index];
+            const improvedTextPath = improved_text_files[index];
+            const dateTime = date_times[index];
 
             // Create a container for each file entry (using CSS Grid)
             const listItem = document.createElement('div');
@@ -62,12 +68,26 @@ export async function loadFileList() {
             transcriptionLink.textContent = transcriptionPath.split('/').pop();
             transcriptionLink.target = '_blank';
 
-            // Append elements in their respective positions
+            // Create the improved text file link
+            const improvedTextLink = document.createElement('a');
+            improvedTextLink.className = 'improved-text-link';
+            improvedTextLink.href = `${improvedTextPath.replace('src/', '')}`;
+            improvedTextLink.textContent = improvedTextPath.split('/').pop();
+            improvedTextLink.target = '_blank';
+
+            // Create a span element for date/time
+            const dateTimeElement = document.createElement('span');
+            dateTimeElement.className = 'date-time';
+            dateTimeElement.textContent = dateTime;
+
+            // Append elements to the listItem
             listItem.appendChild(deleteButton);
             listItem.appendChild(audioLink);
             listItem.appendChild(transcriptionLink);
+            listItem.appendChild(improvedTextLink);
+            listItem.appendChild(dateTimeElement);
 
-            // Append to fileList
+            // Append the entire item to the file list
             fileList.appendChild(listItem);
 
             // Add audio option to the dropdown

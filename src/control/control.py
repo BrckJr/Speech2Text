@@ -133,7 +133,6 @@ def delete_file():
     except Exception as e:
         return jsonify({"success": False, "message": "Failed to delete file"}), 500
 
-
 @transcription_bp.route('/list-files', methods=['GET'])
 def list_files():
     """
@@ -149,11 +148,19 @@ def list_files():
         audio_files = [recording.audio_path for recording in audio_recordings]
 
         # Create a list of transcription file paths
-        transcription_files = [recording.transcription_path for recording in audio_recordings]
+        transcription_files = [recording.transcription_path for recording in audio_recordings]#
+
+        # Create a list of improved text file paths
+        improved_text_files = [recording.improved_text_path for recording in audio_recordings]
+
+        # Create a list of times when files where stored
+        date_times = [recording.created_at for recording in audio_recordings]
 
         return jsonify({
             'audio_files': audio_files,
-            'transcription_files': transcription_files
+            'transcription_files': transcription_files,
+            'improved_text_files': improved_text_files,
+            'date_times': date_times
         })
 
     except Exception as e:

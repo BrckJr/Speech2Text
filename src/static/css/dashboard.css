@@ -313,7 +313,7 @@
     font-size: 14px;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: 50px 2fr 2fr; /* Define 3 columns with respective widths */
+    grid-template-columns: 50px auto auto auto auto; /* Set each column width to fit its content */
     gap: 5px 5px; /* Vertical & horizontal gaps between items */
     justify-items: start;
     align-items: center;
@@ -334,22 +334,25 @@
     margin: 0 10px; /* Space between the delete button and link */
 }
 
-/* Audio link styling - always in the second column */
-.audio-link {
+/* File item links */
+.audio-link,
+.transcription-link,
+.improved-text-link {
     text-decoration: none;
     color: #007bff;
+    padding: 2px 4px;
 }
 
-/* Transcription link styling - always in the third column */
-.transcription-link {
-    text-decoration: none;
-    color: #007bff;
-}
-
-/* Link hover */
-.file-item a:hover {
-    color: #0056b3;
+.audio-link:hover,
+.transcription-link:hover,
+.improved-text-link:hover {
     text-decoration: underline;
+    color: #0056b3;
+}
+
+.date-time {
+    font-size: 12px;
+    color: #f1f1f1;
 }
 
 /* Grid Layout for Panels Overview and Summary */
