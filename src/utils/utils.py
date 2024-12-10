@@ -42,6 +42,8 @@ def generate_file_path(dir_name, filename=None):
 
     return os.path.join(directory_path, filename)
 
+
+# DELETE THIS METHODS IF NO LONGER NEEDED
 def get_sorted_files(dir_path):
     """
     Retrieves and sorts files in a directory by their timestamps embedded in filenames.

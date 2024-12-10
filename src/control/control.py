@@ -134,43 +134,30 @@ def delete_file():
         return jsonify({"success": False, "message": "Failed to delete file"}), 500
 
 
-@transcription_bp.route('/list-audio-files', methods=['GET'])
-def list_audio_files():
+@transcription_bp.route('/list-files', methods=['GET'])
+def list_files():
     """
-    Lists all audio file paths for the authenticated user.
+    Lists all audio and transcription file paths for the authenticated user.
 
-    Queries the database for the user's audio recordings and returns their full file paths in JSON format.
+    Queries the database for the user's audio recordings and transcriptions, returning their full file paths in JSON format.
     """
     try:
         # Query the database for all audio recordings of the current user
         audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
 
-        # Create a list of audio file paths with the front part removed to make the files accessible
+        # Create a list of audio file paths
         audio_files = [recording.audio_path for recording in audio_recordings]
 
-        return jsonify({'files': audio_files})
-
-    except Exception as e:
-        return jsonify({'error': str(e), "message": "Error during loading of audio files in file lists."}), 500
-
-@transcription_bp.route('/list-transcription-files', methods=['GET'])
-def list_transcription_files():
-    """
-    Lists all transcription file paths for the authenticated user.
-
-    Queries the database for the user's transcription files and returns their paths in JSON format.
-    """
-    try:
-        # Query the database for all transcription records
-        audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
-
-        # Create a list of transcription file paths with the front part removed to make the files accessible
+        # Create a list of transcription file paths
         transcription_files = [recording.transcription_path for recording in audio_recordings]
 
-        return jsonify({'files': transcription_files})
+        return jsonify({
+            'audio_files': audio_files,
+            'transcription_files': transcription_files
+        })
 
     except Exception as e:
-        return jsonify({'error': str(e), "message": "Error during loading of audio files in file lists."}), 500
+        return jsonify({'error': str(e), "message": "Error during loading of file lists."}), 500
 
 @transcription_bp.route('/static/<path:filename>')
 def serve_file(filename):

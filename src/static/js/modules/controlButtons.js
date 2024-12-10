@@ -1,5 +1,4 @@
-import { loadAudioFiles } from './audioFileLoader.js';
-import { loadTranscriptionFiles } from './transcriptionFileLoader.js';
+import { loadFileList } from './FileLoader.js';
 import { setAnalytics } from './getAnalytics.js'
 
 // Function to set up control buttons (Start, Pause, Stop) with event listeners
@@ -83,8 +82,7 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
                     return response.json().then(async data => {
                         // Refresh the audio files list and wait until it is finished to be able to
                         // select the value in the 'save_audio_and_analyze' action
-                        await loadAudioFiles();
-                        await loadTranscriptionFiles();
+                        await loadFileList();
 
                         updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
 

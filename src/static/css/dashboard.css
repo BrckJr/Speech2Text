@@ -305,51 +305,52 @@
 
 /* File List Styling */
 .file-list {
-    height: 90%; /* Use the remaining space */
-    min-height: 90px; /* Ensure the file list container is always visible */
-    max-height: 150px; /* Do not scale the file lists a lot */
-    border: 1px solid #ccc; /* Light grey border */
+    height: 90%;
+    min-height: 90px;
+    max-height: 150px;
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
-    overflow-y: auto; /* Enable scroll when content exceeds height */
-    display: flex;
-    flex-direction: column; /* Stack file items vertically */
-    justify-content: flex-start; /* Align items to the top */
-    align-items: flex-start; /* Align items to the left */
-    text-align: left; /* Align text to the left */
-    color: #333; /* Set the text color (dark grey as an example) */
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 50px 2fr 2fr; /* Define 3 columns with respective widths */
+    gap: 5px 5px; /* Vertical & horizontal gaps between items */
+    justify-items: start;
+    align-items: center;
 }
 
-/* File List Item Styling */
+/* Individual file row item styling */
 .file-item {
-    display: flex;
-    font-size: 14px; /* Adjust font size for list items */
-    color: #f1f1f1; /* Light grey color for file items */
-    margin: 5px 0; /* Add some margin between the items */
-    padding: 0 5px; /* Add some padding in x direction */
+    display: contents; /* Let children flow into grid cells */
 }
 
-/* Link Styling */
-.file-item a {
-    color: #007bff; /* Link color */
-    text-decoration: none; /* Remove underline */
-    display: block; /* Make the link block-level to span the full width */
-}
-
-.file-item a:hover {
-    color: #0056b3; /* Darker color on hover */
-    text-decoration: underline; /* Underline on hover */
-}
-
+/* Delete button - always in the first column */
 /* Style the delete button */
 .file-item .delete-btn {
     background: none;
     border: none;
     font-size: 12px;
     cursor: pointer;
-    margin-right: 10px; /* Space between the delete button and link */
+    margin: 0 10px; /* Space between the delete button and link */
 }
 
+/* Audio link styling - always in the second column */
+.audio-link {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Transcription link styling - always in the third column */
+.transcription-link {
+    text-decoration: none;
+    color: #007bff;
+}
+
+/* Link hover */
+.file-item a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
 
 /* Grid Layout for Panels Overview and Summary */
 .analytics-panel-grid1 {

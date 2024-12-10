@@ -1,5 +1,4 @@
-import { loadAudioFiles } from './modules/audioFileLoader.js';
-import { loadTranscriptionFiles } from './modules/transcriptionFileLoader.js';
+import { loadFileList } from './modules/FileLoader.js';
 import { setupControlButtons } from './modules/controlButtons.js';
 import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
@@ -30,8 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const audioFileDropdown = document.getElementById('audioFile-dropdown');
 
         // Loading all files of a respective user at start and let it listen to updates during runtim
-        loadAudioFiles();
-        loadTranscriptionFiles();
+        loadFileList();
 
         // Logic for control, delete and recording analysis buttons
         setupAnalysisButton(analysisButton);
