@@ -115,7 +115,17 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
     }
 
     // Attach modal trigger to Stop button
-    stopButton.addEventListener('click', () => {
+    stopButton.addEventListener('click', async () => {
+        // Before showing Modal, pause the recording
+        await fetch('/pause', {method: 'POST'})
+            .then(response => response.json())
+            .then(data => {
+                // console.log(data.message);  // Log server response message
+                updateButtonStates(true, true, true); // Enable Start and Stop, disable Pause
+            })
+            .catch(error => console.error('Error:', error)); // Handle any errors
+
+
         showStopOptionsModal();  // Show stop options modal when Stop is clicked
     });
 }
