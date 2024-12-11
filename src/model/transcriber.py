@@ -58,7 +58,6 @@ class Model:
         """
         if self.is_recording:
             self.is_recording = False
-            print("Recording paused.")
         else:
             print("Recording is not active. Cannot pause.")
 

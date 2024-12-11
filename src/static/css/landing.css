@@ -1,7 +1,7 @@
 /* Section Styling for Introduction */
 .intro {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with low opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with little opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -9,7 +9,7 @@
 /* Section Styling for get_started */
 .get_started {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with little opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -17,7 +17,7 @@
 /* Section Styling for Sample Analytics */
 .analytics {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with little opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -26,7 +26,7 @@
 #get-started-btn {
     font-size: 14px;
     padding: 10px 20px; /* Adjust padding to match dropdown height */
-    background-color: #007BFF; /* Blue background */
+    background-color: #008A00; /* Green background */
     color: white;
     border: none;
     border-radius: 5px; /* Rounded corners */
@@ -36,7 +36,7 @@
 
 /* Hover effect for the button */
 #get-started-btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #00B000; /* Lighter green on hover */
 }
 
 /* Panels Styling */
@@ -79,7 +79,7 @@
 
 /* Panel Styling */
 .analytics-panel-landing {
-    border: 1px solid #ccc; /* Light grey border */
+    border: 1px solid white; /* Light grey border */
     border-radius: 5px;
     text-align: center;
     color: white;
@@ -102,4 +102,4 @@
 /* Indentation for wrapped lines inside each item */
 .analytics-list li p {
     text-indent: 20px; /* Indentation for the continuation of text in multi-line items */
-}
+}pa

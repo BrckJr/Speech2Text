@@ -8,33 +8,60 @@
 <!-- Intro Section -->
 <div class="intro">
     <h1>Presentable</h1>
-    <p data-i18n="intro_text">
-        Lorem ipsum dolor ...
-    </p>
 </div>
 
 <!-- Recording Audio -->
 <div class="record_audio">
-    <h2 data-i18n="audio_recording">Audio Recording</h2>
-    <p data-i18n="recording_instructions">
-        Press the start button to begin recording.<br>
-        Press the pause button to pause the recording.<br>
-        Finish the recording by pressing the stop button.
+    <h2>Audio Recording</h2>
+    <p>
+        To start your training, press the start button to begin recording. To pause the recording,
+        press the pause button. Once you finished with the recording, press the stop button and insert
+        a filename to save the recording and start the analysis. Please be aware that once you stopped the
+        recording, you cannot resume it again. Depending on the length of the recording, it may take a few moments
+        to store the audio file and analyze its content.
     </p>
     <div class="button-group">
         <button class="control-btn" id="start" data-i18n="start_button">Start ▶️</button>
         <button class="control-btn" id="pause" disabled data-i18n="pause_button">Pause ⏸️</button>
         <button class="control-btn" id="stop" disabled data-i18n="stop_button">Stop ⏹️</button>
     </div>
+
+    <canvas id="visualizer"></canvas>
 </div>
 
 <!-- Analytics Section -->
 <div class="analytics">
     <h2 data-i18n="analytics_section">Analytics</h2>
 
-    <p data-i18n="analytics_text">
-        Lorem ipsum dolor sit amet, ...
+    <p>
+        In presentations, it’s often the way you speak that determines whether your audience finds the content engaging or not.
+        That’s why your recording is analyzed based on the following clear and measurable aspects:
     </p>
+    <ol class="analytics-list">
+        <li> <p_bf>General Information:</p_bf> This includes an AI generated headline for your speech, the language of your
+            recording as well as the length and word count in your recording.
+        </li>
+        <li><p_bf>Summary of the Speech:</p_bf>  AI generated summary of your speech. If the AI model captures the essence
+            of your speech, it is also likely that your audience may capture it.
+        </li>
+        <li><p_bf>Speech Rate:</p_bf>  The graph shows your speech rate over time for your whole recording. The speech rate
+            is measured in words per minute. There are also upper and lower bounds marked in the graph,
+            giving you an orientation in which bounds your speech rate should be to avoid being too slow or too fast.
+        </li>
+        <li><p_bf>Pitch Analysis:</p_bf>  The graph shows the pitch you have during your speech. Usually, it is a good sign to have
+            high amplitude of your pitch throughout the speech as this means you are varying in your pitch.
+            In contrast, boring speeches usually have a small amplitude.
+        </li>
+        <li><p_bf>Energy Analysis:</p_bf>  The graph shows the relative energy level over time. This resembles your speech energy
+            during the recording, i.e., in parts where you speak louder, the energy level will be higher.
+            The relative level is measured in regard to the loudest section of your recording.
+        </li>
+        <li><p_bf>Suggestion for Speech Improvement:</p_bf>  This will provide an AI generated suggestion of how you can improve
+            your speech to be more fluent and professional. Please check this suggestion before using it as the AI
+            model may make mistakes.
+        </li>
+    </ol>
+
 
     <!-- Select Recording Dropdown Menu -->
     <div class="select-recording">
@@ -93,15 +120,16 @@
 
 <!-- File Management Section -->
 <div class="file_management">
-    <h2 data-i18n="file_management">File Management</h2>
+    <h2>File Management</h2>
 
-    <p data-i18n="file_management_text">
-        Lorem ipsum dolor sit amet, ...
+    <p>
+        Below, you find an overview of all your recordings. You can also take a look at the
+        transcription of your recording and open the suggestion for the improved text.
+        Here you can also download single recordings or all your files at once. Please be aware that as soon as you
+        delete a single audio recording, all connected files and analysis will be deleted as well.
     </p>
-
     <!-- Audio File Panel -->
     <div class="panel" id="raw-audio-files">
-        <h3 data-i18n="raw_audio_files">Raw Audio Files</h3>
         <div class="file-list"></div>
     </div>
 

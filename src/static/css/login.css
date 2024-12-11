@@ -11,7 +11,7 @@
 /* Center Section Styling */
 .center {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with 95% opacity */
     padding: 30px 20px;
     width: 400px;
     max-width: 90%; /* Ensure it looks good on smaller screens */
@@ -19,7 +19,7 @@
 
 /* Form Styling */
 .form-group {
-    margin-bottom: 20px;
+    margin: 20px;
 }
 
 .form-label {
@@ -32,7 +32,7 @@
     width: 100%;
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.9); /* Matches dashboard panel styles */
 }
@@ -59,7 +59,7 @@
 }
 
 .alert-info {
-    color: #f1f1f1;
+    color: white;
 }
 
 /* Button Styling */
@@ -77,7 +77,7 @@
     background: #008A00;
 
 /* Green for consistency */
-    color: #f1f1f1;
+    color: white;
 }
 
 .btn-primary:hover {
@@ -86,7 +86,8 @@
 
 /* Link to Registration */
 a {
-    color: #f1f1f1;
+    font-size: 12px;
+    color: white;
     text-decoration: none;
     font-weight: bold;
     font-style: italic;
@@ -98,16 +99,19 @@ a:hover {
 
 /* Overwrite base.css */
 p {
-    font-size: 16px;
-    margin: 5px;
+    font-size: 12px;
     text-align: center;
+    margin: 0;
+    line-height: 1.0;
 }
 
-/* Overwrite base.css */
-/* Styling for section headings */
-h2 {
-    text-align: center;
-    font-size: 32px; /* Medium font size for subheadings */
+/* Styling for heading and text */
+h_l {
+    font-family: Verdana, sans-serif;
+    position: relative;
+    text-align: left;
+    font-size: 36px; /* Medium font size for subheadings */
     font-weight: bold;
     margin: 20px;
 }
+
