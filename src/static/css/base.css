@@ -15,18 +15,19 @@ html, body {
 
 /* Body styling */
 body {
-    font-family: Arial, sans-serif;
+    font-family: Verdana, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center; /* Center-align horizontally */
     justify-content: flex-start; /* Align content to the top */
     position: relative; /* Position for layered canvas */
     background: #121212; /* Dark background for contrast */
-    color: #f1f1f1; /* Default light text color */
+    color: white; /* Default light text color */
     z-index: 1; /* Set above background */
     margin: 0; /* Remove default body margin */
     min-height: 100vh; /* Full viewport height */
     overflow: auto; /* Allow scrolling */
+    line-height: 1.3; /* Increases the space between lines */
 }
 
 /* Background Canvas */
@@ -144,6 +145,11 @@ p {
     font-size: 16px;
     margin: 20px;
     text-align: justify;
+}
+
+p_bf {
+    font-size: 16px;
+    font-weight: bold;
 }
 
 /* Styling for modal / prompts */

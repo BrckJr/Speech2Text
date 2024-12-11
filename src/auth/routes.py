@@ -11,6 +11,15 @@ auth_blueprint = Blueprint('auth', __name__)
 # Instance of Bcrypt for hashing passwords
 bcrypt = Bcrypt()
 
+
+@auth_blueprint.route('/')
+def landing():
+    """
+    Displays a public landing page as the first entry point for the website.
+    """
+    return render_template('landing.html', page_name='landing')
+
+
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     """
@@ -72,6 +81,7 @@ def login():
     # Render the login page with the form
     return render_template('login.html', form=form, page_name='login')  # Render the login template
 
+
 @auth_blueprint.route('/logout', methods=['POST'])
 @login_required
 def logout():
@@ -82,5 +92,4 @@ def logout():
     """
     logout_user()  # Log out the current user
     session.pop('_flashes', None)  # Clear any stored flash messages
-    # Optionally, you could add a message like: flash('You have been logged out successfully.', 'info')
-    return redirect(url_for('auth.login'))  # Redirect to the login page
+    return redirect(url_for('auth.landing'))  # Redirect to the login page

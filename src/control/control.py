@@ -25,8 +25,7 @@ def dashboard():
     Retrieves the list of audio transcription records from the database
     for the authenticated user and renders them in the 'dashboard' template.
     """
-    user_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
-    return render_template('dashboard.html', page_name='dashboard', files=user_files)
+    return render_template('dashboard.html', page_name='dashboard')
 
 @transcription_bp.route('/start', methods=['POST'])
 def start_recording():
