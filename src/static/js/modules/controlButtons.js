@@ -57,7 +57,6 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
         };
     }
 
-    // Function to handle the selected stop action (save or delete)
     function handleStopAction(action) {
         const filename = document.getElementById('filename') ? document.getElementById('filename').value.trim() : '';
 
@@ -66,52 +65,56 @@ export function setupControlButtons(startButton, pauseButton, stopButton, audioF
             return;
         }
 
+        // Show loading overlay
+        showLoadingOverlay();
+
         // Send POST request to stop the process and perform the selected action
         fetch('/stop', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ action, filename }), // Send selected action and filename as JSON body
+            body: JSON.stringify({ action, filename }),
         })
             .then(response => {
+                hideLoadingOverlay(); // Hide overlay after response is received
+
                 if (response.status === 204) {
                     updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
                 } else if (response.status === 201) {
-                    // Action was 'save_audio_and_analyse'
                     return response.json().then(async data => {
-                        // Refresh the audio files list and wait until it is finished to be able to
-                        // select the value in the 'save_audio_and_analyze' action
                         await loadFileList();
+                        updateButtonStates(false, true, true);
 
-                        updateButtonStates(false, true, true); // Enable Start, disable Pause and Stop
-
-                        // If save-audio-analyze is selected, trigger the update of the analytics section
-                        // by setting the dropdown value and triggering the setAnalytics() from getAnalytics.js
                         if (action === 'save_audio_and_analyze') {
-                            // If the response carries the dropdown_value, set the dropdown value
-                            if (data.dropdown_value) {
-                                 if (audioFileDropdown) {
-                                    audioFileDropdown.value = data.dropdown_value; // Set the dropdown value
-                                }
+                            if (data.dropdown_value && audioFileDropdown) {
+                                audioFileDropdown.value = data.dropdown_value;
                             }
-                            // Refresh the analytics page with data from the selected file.
                             await setAnalytics();
                         }
                     });
                 } else if (response.status === 401) {
-                    // Handle case when user is not authenticated
                     alert('You are not authorized to perform this action.');
                 } else {
-                    // Handle any other error responses
                     console.error('Failed to perform action. Status:', response.status);
                     alert('An error occurred while stopping the recording. Please try again.');
                 }
             })
             .catch(error => {
+                hideLoadingOverlay(); // Hide overlay even if there's an error
                 console.error('Error:', error);
                 alert('An unexpected error occurred. Please try again.');
             });
+    }
+
+    function showLoadingOverlay() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.display = 'flex'; // Show overlay
+    }
+
+    function hideLoadingOverlay() {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.style.display = 'none'; // Hide overlay
     }
 
     // Attach modal trigger to Stop button
