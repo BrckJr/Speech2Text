@@ -11,7 +11,7 @@
 /* Center Section Styling */
 .center {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with 90% opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with 95% opacity */
     padding: 30px 20px;
     width: 400px;
     max-width: 90%; /* Ensure it looks good on smaller screens */

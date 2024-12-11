@@ -1,7 +1,7 @@
 /* Section Styling for Introduction */
 .intro {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with low opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with low opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -9,7 +9,7 @@
 /* Section Styling for Record Audio */
 .record_audio {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with no opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -17,7 +17,7 @@
 /* Section Styling for Analytics */
 .analytics {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with no opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -25,7 +25,7 @@
 /* Section Styling for File Management */
 .file_management {
     border-radius: 5px;
-    background: rgba(51, 51, 51, 0.9); /* Dark grey with no opacity */
+    background: rgba(51, 51, 51, 0.95); /* Dark grey with no opacity */
     padding: 30px 20px;
     margin: auto auto 30px auto;
 }
@@ -126,7 +126,7 @@
     color: white; /* White text color */
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
+    box-shadow: 0 20px 24px #121212; /* Subtle shadow */
     z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
 }
@@ -212,7 +212,7 @@
     color: white; /* White text color */
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
+    box-shadow: 0 20px 24px #121212; /* Subtle shadow */
     z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
 }
@@ -229,7 +229,7 @@
     color: white; /* White text color */
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
+    box-shadow: 0 20px 24px #121212; /* Subtle shadow */
     z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
 }
@@ -280,7 +280,7 @@
     color: white; /* white text color */
     padding: 20px;
     border-radius: 5px;
-    box-shadow: 0 14px 20px #121212; /* Subtle shadow */
+    box-shadow: 0 20px 24px #121212; /* Subtle shadow */
     z-index: 1000; /* Ensure it appears on top */
     text-align: center; /* Center align modal content */
 }
@@ -298,7 +298,7 @@
 .panel {
     /* background: rgba(51, 51, 51);  Dark grey with 85% opacity */
     border-radius: 5px; /* Rounded corners */
-    padding: 20px;
+    margin: 20px;
     overflow-y: auto; /* Allow vertical scrolling if content overflows */
     min-height: 100px; /* Minimum height for panels */
 }
@@ -391,6 +391,24 @@
     min-height: 150px; /* Set minimum height for panels */
 }
 
+.analytics-list {
+    list-style-type: disc; /* Bullet points */
+    margin: 20px; /* 20px margin around the list */
+    padding-left: 20px; /* Indentation for bullets */
+    color: white;
+}
+
+.analytics-list li {
+    text-align: justify; /* Align text to the left */
+    padding-left: 20px; /* Indentation for the text of each item */
+    margin-bottom: 20px; /* Optional: space between list items */
+}
+
+/* Indentation for wrapped lines inside each item */
+.analytics-list li p {
+    text-indent: 20px; /* Indentation for the continuation of text in multi-line items */
+}
+
 /* Style the canvas to fit the speedometer inside the panel */
 #canvas_wpm_speedo {
     display: block;
@@ -474,3 +492,10 @@
     }
 }
 
+#visualizer {
+    width: 500px;
+    height: 120px; /* Set a fixed height or adjust it as per your design */
+    background-color: #1a1a1a; /* Dark background for contrast */
+    border: 1px solid white; /* Optional border around the canvas */
+    border-radius: 5px; /* Rounded corners */
+}
