@@ -45,7 +45,7 @@ def index():
         return render_template('dashboard.html', page_name='dashboard')  # Ensure `dashboard.html` exists in `templates`
 
     # If not logged in, redirect to the login page
-    return redirect(url_for('auth.login'))  # Login route (change if it's a different route)
+    return redirect(url_for('auth.landing_page'))  # Redirect to public landing page
 
 if __name__ == "__main__":
     app.run(debug=True)  # Note: Avoid using debug mode in production!

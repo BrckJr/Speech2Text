@@ -12,6 +12,8 @@
             <link rel="stylesheet" href="/static/css/login.css">
         {% elif page_name == "register" %}
             <link rel="stylesheet" href="/static/css/register.css">
+        {% elif page_name == "landing" %}
+            <link rel="stylesheet" href="/static/css/landing.css">
         {% endif %}
     {% endblock %}
     <script type="module" src="{{ url_for('static', filename='js/app.js') }}"></script>
@@ -30,7 +32,7 @@
         </div>
 
         <!-- User Info and Logout Button -->
-        {% if page_name != "login" and page_name != "register" %}
+        {% if page_name != "login" and page_name != "register" and page_name != "landing" %}
             <div class="user-info-container">
                 <div class="user-icon">
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="black">
