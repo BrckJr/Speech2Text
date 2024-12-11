@@ -49,17 +49,17 @@
 
 #start {
     background: #008A00; /* Dark green background */
-    color: #f1f1f1;
+    color: white;
 }
 
 #pause {
     background: #FFA500; /* Orange background */
-    color: #f1f1f1;
+    color: white;
 }
 
 #stop {
     background: #B22222; /* Red background */
-    color: #f1f1f1;
+    color: white;
 }
 
 /* Disabled Button Styles */
@@ -101,7 +101,7 @@
 #delete_all {
     padding: 10px 40px;
     background: #007BFF; /* Blue-grey background */
-    color: #f1f1f1;
+    color: white;
     font-size: 16px;
     border: none;
     border-radius: 5px;
@@ -123,7 +123,7 @@
     transform: translate(-50%, -50%);
     width: 360px;
     background: rgba(51, 51, 51); /* Dark grey with slight transparency */
-    color: #f1f1f1; /* Light text color */
+    color: white; /* White text color */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 14px 20px #121212; /* Subtle shadow */
@@ -134,7 +134,7 @@
 /* Button styles for modal */
 #save-audio-analyze {
     background: #007BFF;
-    color: #f1f1f1;
+    color: white;
     transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #save-audio-analyze:hover {
@@ -143,7 +143,7 @@
 
 #delete-audio {
     background: #B22222;
-    color: #f1f1f1;
+    color: white;
     transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #delete-audio:hover {
@@ -173,9 +173,9 @@
     width: auto;       /* Allow the width to scale based on content */
     padding: 3px 10px; /* Adjust padding to match button height */
     font-size: 14px;   /* Adjust font size */
-    border: 1px solid #f1f1f1; /* Border for the dropdown */
+    border: 1px solid white; /* Border for the dropdown */
     border-radius: 5px; /* Rounded corners */
-    background-color: #f1f1f1; /* Light background color */
+    background-color: white; /* Light background color */
     display: inline-block; /* Ensure it aligns with the label */
     height: 25px;      /* Set a fixed height to match button size */
     line-height: 20px; /* Ensure text is centered vertically */
@@ -209,7 +209,7 @@
     transform: translate(-50%, -50%);
     width: 360px;
     background: rgba(51, 51, 51); /* Dark grey with slight transparency */
-    color: #f1f1f1; /* Light text color */
+    color: white; /* White text color */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 14px 20px #121212; /* Subtle shadow */
@@ -226,7 +226,7 @@
     transform: translate(-50%, -50%);
     width: 360px;
     background: rgba(51, 51, 51); /* Dark grey with slight transparency */
-    color: #f1f1f1; /* Light text color */
+    color: white; /* White text color */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 14px 20px #121212; /* Subtle shadow */
@@ -236,7 +236,7 @@
 
 #confirm-delete {
     background: #B22222; /* Red for Delete */
-    color: #f1f1f1;
+    color: white;
     transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #confirm-delete:hover {
@@ -245,7 +245,7 @@
 
 #cancel-delete {
     background: #5a7184; /* Grey-blue for Cancel */
-    color: #f1f1f1;
+    color: white;
 }
 #cancel-delete:hover {
     background: #3d4f5c; /* Lighter grey-blue */
@@ -253,7 +253,7 @@
 
 #confirm-delete-single {
     background: #B22222; /* Red for Delete */
-    color: #f1f1f1;
+    color: white;
     transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #confirm-delete-single:hover {
@@ -262,7 +262,7 @@
 
 #cancel-delete-single {
     background: #5a7184; /* Grey-blue for Cancel */
-    color: #f1f1f1;
+    color: white;
 }
 #cancel-delete-single:hover {
     background: #3d4f5c; /* Lighter grey-blue */
@@ -277,7 +277,7 @@
     transform: translate(-50%, -50%);
     width: 360px;
     background: rgba(51, 51, 51); /* Dark grey with slight transparency */
-    color: #f1f1f1; /* Light text color */
+    color: white; /* white text color */
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 14px 20px #121212; /* Subtle shadow */
@@ -287,7 +287,7 @@
 
 #close-error-modal {
     background: #007BFF; /* Grey-blue for Cancel */
-    color: #f1f1f1;
+    color: white;
 }
 
 #close-error-modal:hover {
@@ -308,7 +308,7 @@
     height: 90%;
     min-height: 90px;
     max-height: 150px;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 5px;
     font-size: 14px;
     overflow-y: auto;
@@ -338,7 +338,7 @@
 .transcription-link,
 .improved-text-link {
     text-decoration: none;
-    color: #f1f1f1;
+    color: white;
 }
 
 .audio-link:hover,
@@ -350,7 +350,7 @@
 
 .date-time {
     font-size: 14px;
-    color: #f1f1f1;
+    color: white;
 }
 
 /* Grid Layout for Panels Overview and Summary */
@@ -384,7 +384,7 @@
 
 /* Panel Styling */
 .analytics-panel {
-    border: 1px solid #ccc; /* Light grey border */
+    border: 1px solid white; /* Light grey border */
     border-radius: 5px;
     text-align: center;
     color: white;
@@ -422,7 +422,7 @@
     width: 100%;
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 5px;
     background: rgba(255, 255, 255, 0.9); /* Matches dashboard panel styles */
     margin-top: 5px;
@@ -445,7 +445,7 @@
 /* Loader container for better alignment */
 .loader-container {
     text-align: center;
-    color: #fff;
+    color: white;
     font-family: Arial, sans-serif;
 }
 

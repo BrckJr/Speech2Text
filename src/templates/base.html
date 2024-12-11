@@ -31,7 +31,7 @@
             <button id="btn_es">es</button>
         </div>
 
-        <!-- User Info and Logout Button -->
+        <!-- User Info and Logout Button for Dashboard-->
         {% if page_name != "login" and page_name != "register" and page_name != "landing" %}
             <div class="user-info-container">
                 <div class="user-icon">
@@ -39,16 +39,29 @@
                         <circle cx="12" cy="9" r="5" stroke=#f4f4f4 stroke-width="1.5" fill="black"></circle>
                         <path d="M4,20c0-4,4-6,8-6s8,2,8,6" stroke=#f4f4f4 stroke-width="1.5" fill=black></path>
                     </svg>
-                </div>
-                <div class="info-panel">
-                    <p><strong>Name:</strong> {{ current_user.username }}</p>
-                    <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    <div class="info-panel">
+                        <p><strong>Name:</strong> {{ current_user.username }}</p>
+                        <p><strong>Email:</strong> {{ current_user.email }}</p>
+                    </div>
                 </div>
                 <form method="POST" action="{{ url_for('auth.logout') }}">
                     <button type="submit" class="btn btn-logout" data-i18n="logout_button">Logout</button>
                 </form>
             </div>
         {% endif %}
+
+        <!-- Login Button for Landing Page -->
+        {% if page_name == "landing" %}
+            <div class="user-info-container">
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <button type="submit" class="btn-login">Register</button>
+                </form>
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <button type="submit" class="btn-login">Login</button>
+                </form>
+            </div>
+        {% endif %}
+
     </header>
 
     <!-- Canvas for dynamic wave background -->

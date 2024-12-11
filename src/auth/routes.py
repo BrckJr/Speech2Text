@@ -70,7 +70,7 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)  # Log the user in
             flash('Login successful!', 'success')
-            return redirect(url_for('index'))  # Redirect to the main page after login
+            return redirect(url_for('transcription.dashboard'))  # Redirect to the main page after login
         else:
             flash('Login failed. Please check your credentials.', 'danger')
 
