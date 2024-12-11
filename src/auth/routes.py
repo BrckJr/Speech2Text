@@ -43,7 +43,7 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        flash('Your account has been created! Please log in.', 'success')
+        flash('Account created successfully! Please log in.', 'success')
         return redirect(url_for('auth.login'))  # Redirect to login after successful registration
 
     # Check if the email format is invalid
@@ -74,12 +74,8 @@ def login():
         else:
             flash('Login failed. Please check your credentials.', 'danger')
 
-    # Check if the email format is invalid
-    if form.email.errors:
-        flash(f"Invalid email address. Please provide a valid one.", 'danger')
-
-    # Render the login page with the form
-    return render_template('login.html', form=form, page_name='login')  # Render the login template
+    # Render the login page only for GET or invalid POST requests
+    return render_template('login.html', form=form, page_name='login')
 
 
 @auth_blueprint.route('/logout', methods=['POST'])

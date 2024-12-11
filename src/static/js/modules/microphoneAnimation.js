@@ -84,7 +84,7 @@ export function setupMicrophoneAnimation(canvas, startButton, pauseButton, stopB
     }
 
     function stopRecording() {
-        if (!isRecording) return;  // If not recording, no need to stop
+        if (!isRecording) return; // If not recording, no need to stop
 
         isRecording = false;
         isPaused = false; // Reset the paused state
@@ -95,15 +95,22 @@ export function setupMicrophoneAnimation(canvas, startButton, pauseButton, stopB
         historyBuffer = new Array(totalSamples).fill(0);
         dataArray = new Uint8Array(analyser.frequencyBinCount); // Reset the data array
 
-        // Optionally stop the audio context and media stream here to release resources
+        // Stop the audio context
         if (audioContext) {
             audioContext.close().then(() => {
                 console.log('Audio context closed');
             });
         }
 
+        // Stop the media stream
+        if (source && source.mediaStream) {
+            source.mediaStream.getTracks().forEach(track => track.stop());
+            console.log('Media stream tracks stopped');
+        }
+
         updateButtonStates(false, false, true); // Disable Start and Pause, Enable Stop
     }
+
 
     // Button states update function
     function updateButtonStates(startState, pauseState, stopState) {
