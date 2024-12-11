@@ -116,11 +116,8 @@ class Analytics:
             return speed_graphics_filepath
 
         # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
-        plt.axhspan(200, 250, color='red', alpha=0.1)
-        plt.axhspan(50, 100, color='red', alpha=0.1)
-
-        # Add green shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
-        plt.axhspan(100, 200, color='green', alpha=0.1)
+        plt.axhspan(160, 250, color='red', alpha=0.1)
+        plt.axhspan(50, 120, color='red', alpha=0.1)
 
         # Adding dots at the actual data points
         # plt.scatter(times, wpms, color='#f1f1f1', linewidth=2)
@@ -207,7 +204,7 @@ class Analytics:
 
             # Set x-axis and y-axis limits
             plt.ylim(0, np.max(filtered_f0) * 1.1)
-            plt.xlim(0, self.get_wav_length()*1.1)
+            plt.xlim(40, self.get_wav_length()*1.1)
 
             # Update labels and grid with consistent custom colors
             plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
