@@ -3,41 +3,30 @@ from sqlite3 import IntegrityError
 from src.model.analytics import Analytics
 from src.database.models import AudioTranscription
 
-from datetime import datetime
-
-from src.model.transformer import improve_text
-
-
 class CleanupError(Exception):
     """Custom exception for cleanup errors."""
     pass
 
 # Custom error classes
 class TranscriptionStoringError(Exception): pass
-class AudioStoringError(Exception): pass
 
-def stop_recording_and_save_files(transcriber, filename):
+def transcribe(transcriber, audio_filepath):
     """
     Stop the audio recording, save the audio file, and transcribe it.
 
     Args:
         transcriber (Transcriber): An instance of the transcriber class responsible for stopping the recording
                                    and transcribing the audio.
-        filename (str): The name of the audio file.
+        audio_filepath (str): The path to the audio file.
+
 
     Returns:
-        tuple: A tuple containing the full paths for the audio file and the transcription file,
+        tuple: A tuple containing the full paths for the transcription file,
                 as well as the transcription segments.
 
     Raises:
-        AudioStoringError: If an error occurs during the storage of the audio file.
         TranscriptionStoringError: If an error occurs during the storage of the transcription file.
     """
-    # Stop recording and save the audio file
-    audio_filepath, audio_save_successful = transcriber.stop_recording_audio(True, filename)
-
-    if not audio_save_successful:
-        raise AudioStoringError("Error occurred during storage of audio file")
 
     # Transcribe the recording and save the transcription file
     transcription_filepath, transcription_save_successful, segments, word_count, language = transcriber.transcribe_raw_audio(audio_filepath, True)
@@ -45,9 +34,9 @@ def stop_recording_and_save_files(transcriber, filename):
     if not transcription_save_successful:
         raise TranscriptionStoringError("Error occurred during storage of transcription file")
 
-    return audio_filepath, transcription_filepath, segments, word_count, language
+    return transcription_filepath, segments, word_count, language
 
-def transcribe_and_analyse(transcriber, current_user, db, filename):
+def transcribe_and_analyse(transcriber, current_user, db, audio_filepath):
     """
     Transcribe audio, analyze the audio recording, and save the analysis to the database.
 
@@ -55,7 +44,7 @@ def transcribe_and_analyse(transcriber, current_user, db, filename):
         transcriber (Transcriber): An instance of the transcriber class to handle audio transcription.
         current_user (User): The current user requesting the transcription and analysis.
         db (Database): The database instance where information is stored.
-        filename (str): The name of the audio file.
+        audio_filepath (str): The path to the audio file.
 
     Returns:
         tuple: A tuple containing a dictionary with success status and message, the HTTP status code, and the full
@@ -64,12 +53,13 @@ def transcribe_and_analyse(transcriber, current_user, db, filename):
     try:
         # Attempt to stop recording and save the files
         try:
-            audio_filepath, transcription_filepath, segments, word_count, language = stop_recording_and_save_files(transcriber, filename)
+            transcription_filepath, segments, word_count, language = transcribe(transcriber, audio_filepath)
         except Exception as e:
             return {"success": False, "message": f"Failed to stop recording and save files due to error {e}."}, 500
 
         # Create a new analytics object to analyze the current audio
         analytics = Analytics(audio_filepath, transcription_filepath, segments, word_count, language)
+
         try:
             # Generate the speech speed graphic plot and get the filepath
             speech_speed_graphic_path = analytics.generate_plot_wpm()
@@ -88,9 +78,9 @@ def transcribe_and_analyse(transcriber, current_user, db, filename):
 
             # Get filepath of the improved text
             improved_text_path, save_successful = analytics.improve_text()
-
         except ValueError as value_error:
             return {"success": False, "message": f"Failed to generate analytics due to error {value_error}."}, 500
+
 
         # Create a dictionary of audio data to pass
         audio_data = {
@@ -113,7 +103,7 @@ def transcribe_and_analyse(transcriber, current_user, db, filename):
         # Save information to the database
         response, status_code = save_info_to_database(audio_data)
 
-        return response, status_code, audio_filepath
+        return response, status_code
 
     except Exception as e:
         return {"success": False, "message": f"An internal error during transcription and analysis. Error message: {e}."}, 500

@@ -4,8 +4,8 @@ import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 import { setupLangSwitcherButtons } from './modules/langSwitcher.js';
 import { setupAnalysisButton } from './modules/getAnalytics.js';
-import { animateSpeedometer } from './modules/speedometer.js';
 import { setupMicrophoneAnimation } from './modules/microphoneAnimation.js';
+import { setupAudioRecording } from './modules/audioRecorder.js';
 
 // Function to display webpage
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,12 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Loading all files of a respective user at start and let it listen to updates during runtime
         loadFileList();
 
-        // Logic for control, delete and recording analysis buttons
+        // Logic for all buttons
         setupAnalysisButton(analysisButton);
-        setupControlButtons(startButton, pauseButton, stopButton, audioFileDropdown);
         setupDeleteButton(deleteButton);
-
-        // Setup microphone animation
+        setupAudioRecording(startButton, pauseButton, stopButton, audioFileDropdown);
         setupMicrophoneAnimation(recordingAnimationCanvas, startButton, pauseButton, stopButton);
     }
 });

@@ -101,58 +101,62 @@ class Analytics:
         # Generate the file path for the transcription file
         speed_graphics_filepath = utils.generate_file_path("speed_graphics", audio_filename)
 
-        time_wpm = self.calculate_wpm()
+        try:
+            time_wpm = self.calculate_wpm()
 
-        times, wpms = zip(*time_wpm) if time_wpm else ([], [])
+            times, wpms = zip(*time_wpm) if time_wpm else ([], [])
 
-        # If no valid data, handle gracefully with a placeholder
-        if not times or not wpms:
-            self.no_recording_content = True
-            plt.figure()
-            plt.text(0.5, 0.5, 'No WPM data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
-            plt.axis('off')
+            # If no valid data, handle gracefully with a placeholder
+            if not times or not wpms:
+                self.no_recording_content = True
+                plt.figure()
+                plt.text(0.5, 0.5, 'No WPM data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
+                plt.axis('off')
+                plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
+                plt.close()
+                return speed_graphics_filepath
+
+            # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
+            plt.axhspan(160, 250, color='red', alpha=0.1)
+            plt.axhspan(50, 120, color='red', alpha=0.1)
+
+            # Adding dots at the actual data points
+            # plt.scatter(times, wpms, color='#f1f1f1', linewidth=2)
+
+            # Connecting the points with lines and applying the color scheme
+            plt.plot(times, wpms, color='#f1f1f1', linewidth=2)
+
+            # Set x-axis and y-axis limits
+            plt.ylim(50, 250)
+            plt.xlim(0, self.get_wav_length())
+
+            # Add labels, grid, and legend
+            plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
+            plt.ylabel("Words per Minute", fontsize=12, fontweight='bold', color='#f1f1f1')
+            plt.grid(True, color='#f1f1f1')
+
+            # Make the outer frame bolder and white
+            ax = plt.gca()  # Get current axes
+            for spine in ax.spines.values():
+                spine.set_visible(True)
+                spine.set_linewidth(2)  # Make the frame bolder
+                spine.set_color('#f1f1f1')  # Set frame color to white
+
+            # Adjust the size and weight of tick labels (numbers on the axes)
+            plt.tick_params(axis='both', which='major', labelsize=10, width=2,
+                            colors='#f1f1f1')  # Tick marks and labels in white
+            plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+            plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+
+            plt.title("Speaking Speed Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
+
+            # Save the plot
             plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
+
             plt.close()
-            return speed_graphics_filepath
 
-        # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
-        plt.axhspan(160, 250, color='red', alpha=0.1)
-        plt.axhspan(50, 120, color='red', alpha=0.1)
-
-        # Adding dots at the actual data points
-        # plt.scatter(times, wpms, color='#f1f1f1', linewidth=2)
-
-        # Connecting the points with lines and applying the color scheme
-        plt.plot(times, wpms, color='#f1f1f1', linewidth=2)
-
-        # Set x-axis and y-axis limits
-        plt.ylim(50, 250)
-        plt.xlim(0, self.get_wav_length())
-
-        # Add labels, grid, and legend
-        plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
-        plt.ylabel("Words per Minute", fontsize=12, fontweight='bold', color='#f1f1f1')
-        plt.grid(True, color='#f1f1f1')
-
-        # Make the outer frame bolder and white
-        ax = plt.gca()  # Get current axes
-        for spine in ax.spines.values():
-            spine.set_visible(True)
-            spine.set_linewidth(2)  # Make the frame bolder
-            spine.set_color('#f1f1f1')  # Set frame color to white
-
-        # Adjust the size and weight of tick labels (numbers on the axes)
-        plt.tick_params(axis='both', which='major', labelsize=10, width=2,
-                        colors='#f1f1f1')  # Tick marks and labels in white
-        plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
-        plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
-
-        plt.title("Speaking Speed Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
-
-        # Save the plot
-        plt.savefig(speed_graphics_filepath, format="png", dpi=300, transparent=True)
-
-        plt.close()
+        except Exception as e:
+            print(f"Exception: {e}")
 
         return speed_graphics_filepath
 
