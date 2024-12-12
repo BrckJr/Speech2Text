@@ -42,6 +42,13 @@ def generate_file_path(dir_name, filename=None):
 
     return os.path.join(directory_path, filename)
 
+def get_default_audio_filename():
+    """
+    Returns a default filename for audio file including current timestamp.
+    """
+
+    timestamp = datetime.now().strftime("%Y-%m-%dT%H-%M-%S")
+    return f"audio_recording_{timestamp}"
 
 # DELETE THIS METHODS IF NO LONGER NEEDED
 def get_sorted_files(dir_path):

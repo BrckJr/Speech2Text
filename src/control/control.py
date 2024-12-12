@@ -5,6 +5,9 @@ from src.model.transcriber import Model
 from src.database import db
 from src.database.models import AudioTranscription
 from src.control import actions
+from pydub import AudioSegment
+from flask import jsonify, request
+import utils.utils as utils
 
 # Create a Blueprint for transcription routes
 transcription_bp = Blueprint('transcription', __name__)
@@ -13,8 +16,8 @@ transcription_bp = Blueprint('transcription', __name__)
 transcriber = Model()
 
 # Path to the stored raw audio files and transcriptions
-AUDIO_FOLDER = "src/static/output/raw_audio"
-TRANSCRIPTION_FOLDER = "src/static/output/transcription"
+AUDIO_FOLDER = "src/static/output/raw_audio/"
+TRANSCRIPTION_FOLDER = "src/static/output/transcription/"
 
 @transcription_bp.route('/dashboard')
 @login_required
@@ -27,61 +30,62 @@ def dashboard():
     """
     return render_template('dashboard.html', page_name='dashboard')
 
-@transcription_bp.route('/start', methods=['POST'])
-def start_recording():
+@transcription_bp.route('/store_and_analyze', methods=['POST'])
+def store_and_analyze():
     """
-    Starts audio recording.
-
-    Calls the 'start_recording_audio' method of the transcriber model to begin recording.
+    Endpoint for storing and analyzing the audio file
     """
-    transcriber.start_recording_audio()
-    return jsonify({"message": "Recording started"})
+    # Check if the request has the file part
+    if 'audio' not in request.files:
+        return jsonify({"error": "Invalid Audio File or Name"}), 422
 
-@transcription_bp.route('/pause', methods=['POST'])
-def pause_recording():
-    """
-    Pauses the current audio recording.
+    file = request.files['audio']
+    filename = file.filename
 
-    Calls the 'pause_recording_audio' method of the transcriber model to pause recording.
-    """
-    transcriber.pause_recording_audio()
-    return jsonify({"message": "Recording paused"})
-
-@transcription_bp.route('/stop', methods=['POST'])
-def stop_recording():
-    """
-    Stops the audio recording and handles various actions based on the request.
-
-    The function stops the recording, and depending on the user's choice, transcribes it only
-    or transcribes it and analyzes it.
-
-    """
-    data = request.get_json()
-    action = data.get('action')
-    filename = data.get('filename')
+    if filename == '':
+        filename = utils.get_default_audio_filename() # generate default filename
 
     # Base filename and extension
     base_name, extension = filename.rsplit('.', 1) if '.' in filename else (filename, '')
 
-    # Check for duplicates and create a unique filename
+    # Generate a unique filename
     unique_filename = filename
-    filter_in_database = f"src/static/output/raw_audio/{filename}.wav"
+    audio_filepath = f"src/static/output/raw_audio/{filename}.wav"
 
     counter = 1
-    while db.session.query(AudioTranscription).filter_by(audio_path=filter_in_database).first():
-        unique_filename = f"{base_name} ({counter}){'.' + extension if extension else ''}"
+    while db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first():
+        unique_filename = f"{base_name}({counter}){'.' + extension if extension else ''}"
         counter += 1
-        filter_in_database = f"src/static/output/raw_audio/{unique_filename}.wav"
+        audio_filepath = f"src/static/output/raw_audio/{unique_filename}.wav"
 
-    match action:
-        case 'delete_audio':
-            transcriber.stop_recording_audio(False)
-            return '', 204  # 204 No Content
-        case 'save_audio_and_analyze':
-            response, status_code, audio_filename = actions.transcribe_and_analyse(transcriber, current_user, db, unique_filename)
-            return jsonify({"response": response, "dropdown_value": audio_filename}), status_code
-        case _:
-            return jsonify({"success": False, "message": "Action for stopping recording unknown."}), 500
+    # Save the file temporarily before processing
+    temp_filepath = f"src/static/output/raw_audio/temp_{unique_filename}.wav"
+    try:
+        file.save(temp_filepath)
+
+        # Convert the file to .wav if it's not already a .wav
+        if extension.lower() not in ['wav']:
+            try:
+                audio = AudioSegment.from_file(temp_filepath)
+                audio.export(audio_filepath, format="wav")
+                os.remove(temp_filepath)  # Remove the temporary file
+            except Exception as e:
+                return jsonify({"error": "Unsupported audio format or conversion failed"}), 404
+        else:
+            # If already a .wav file, just move it
+            os.rename(temp_filepath, audio_filepath)
+
+        # Trigger analysis of the audio file
+        response, status_code = actions.transcribe_and_analyse(transcriber, current_user, db, audio_filepath)
+
+        # Return success response
+        return jsonify({"response": response, "dropdown_value": audio_filepath}), status_code
+
+    except Exception as e:
+        print(f"Error saving file: {e}")
+        return jsonify({"error": "Failed to save file"}), 500
+
+
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
 def delete_files():
