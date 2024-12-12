@@ -95,15 +95,15 @@ body {
     padding: 8px 16px;
     font-size: 14px;
     color: white;
-    background-color: #B22222;
-    border: none;
+    background-color: black;
+    border: 1px solid white;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease;
 }
 
 .btn-logout:hover {
-    background-color: #D21404;
+    background-color: rgba(51, 51, 51, 0.95);
 }
 
 .btn-login {

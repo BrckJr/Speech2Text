@@ -142,12 +142,12 @@
 }
 
 #delete-audio {
-    background: #B22222;
+    background: #5a7184;
     color: white;
     transition: background 0.3s ease; /* Smooth transition on hover */
 }
 #delete-audio:hover {
-    background: #D21404;
+    background: #3d4f5c;
 }
 
 /* Container for the "Select a Recording" dropdown aligned to the left */
