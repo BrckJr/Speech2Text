@@ -3,10 +3,20 @@ from transformers import pipeline
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"  # Avoid deadlock warnings
 
-# Load the summarization pipeline using the same pre-trained model
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+# Comparison of models for sustainability-demo text:
+# Model         | Headline Quality | Summary Quality | Text Improvement Quality | Time for Analysis
+# --------------|------------------|-----------------|--------------------------|-------------------
+# T5            |          -       |        o        |             --           |   227.05 seconds
+# BART          |          -       |        o        |             -            |    91.44 seconds
 
-# IMPLEMENT A TRANSLATION OF THE SPEECH INTO ANOTHER LANGUAGE
+
+models = {
+    'T5': 'google-t5/t5-large',
+    'BART': 'facebook/bart-large-cnn',
+}
+
+# Use one of the above-mentioned pretrained models as the pipeline
+summarizer = pipeline("summarization", model=models['BART'])
 
 def generate_summary(filepath, min_length, max_length):
     """

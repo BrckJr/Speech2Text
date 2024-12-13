@@ -17,7 +17,7 @@ export async function setAnalytics() {
         // Store the current valid selection
         lastValidSelectedAudioFile = selectedAudioFile;
 
-        // Send the selected recording to the src
+        // Send the selected recording to the server
         const response = await fetch('/get-analytics', {
             method: 'POST',
             headers: {
@@ -32,29 +32,22 @@ export async function setAnalytics() {
         const result = await response.json();
 
         if (result.success) {
-            // Extract all information from the response
-            let speechSpeedGraphicPath = result.speech_speed_graphic_path;
-            let pitchGraphicPath = result.pitch_graphic_path;
-            let energyGraphicPath = result.energy_graphic_path;
-            let improved_text_path = result.improved_text_path;
-            let title = result.recording_title;
-            let language = result.recording_language;
-            let audio_length = result.audio_length;
-            let word_count = result.word_count;
-            let summary = result.text_summary;
+            // Extract all information into a dictionary
+            const params = {
+                created_at: result.created_at,
+                speechSpeedGraphicPath: result.speech_speed_graphic_path,
+                pitchGraphicPath: result.pitch_graphic_path,
+                energyGraphicPath: result.energy_graphic_path,
+                improved_text_path: result.improved_text_path,
+                title: result.recording_title,
+                language: result.recording_language,
+                audio_length: result.audio_length,
+                word_count: result.word_count,
+                summary: result.text_summary
+            };
 
             // Update the analytics panels with new information
-            await updatePanels(
-                speechSpeedGraphicPath,
-                pitchGraphicPath,
-                energyGraphicPath,
-                improved_text_path,
-                title,
-                language,
-                audio_length,
-                word_count,
-                summary
-            )
+            await updatePanels(params);
 
         } else {
             console.error('Error analyzing recording:', result.error);
@@ -65,7 +58,6 @@ export async function setAnalytics() {
         showErrorModal();
     }
 }
-
 
 // Function to setup the event listener for the "Get Analysis" button
 export function setupAnalysisButton(analysisButton) {
@@ -89,9 +81,22 @@ function showErrorModal(message) {
     };
 }
 
-async function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, energyGraphicPath, improved_text_path, title, language, audio_length, word_count, summary) {
+async function updatePanels(params) {
+    const {
+        created_at,
+        speechSpeedGraphicPath,
+        pitchGraphicPath,
+        energyGraphicPath,
+        improved_text_path,
+        title,
+        language,
+        audio_length,
+        word_count,
+        summary
+    } = params;
+
     // Get the improved text from local storage and display it in the panel
-    console.log(improved_text_path)
+    console.log(improved_text_path);
     loadImprovedText(improved_text_path);
 
     // Activate the text in the overview panel
@@ -99,129 +104,91 @@ async function updatePanels(speechSpeedGraphicPath, pitchGraphicPath, energyGrap
     document.getElementById('panel-language').style.display = 'block';
     document.getElementById('panel-audio-length').style.display = 'block';
     document.getElementById('panel-word-count').style.display = 'block';
+    document.getElementById('panel-created-at').style.display = 'block';
 
     // Activate the text in the summary panel
     document.getElementById('panel-summary').style.display = 'block';
 
     // Format audio length
+    let formattedAudioLength;
     if (audio_length < 60) {
         // Less than a minute, show seconds with two decimal places
-        audio_length = `${audio_length.toFixed(2)} seconds`;
+        formattedAudioLength = `${audio_length.toFixed(2)} seconds`;
     } else {
         // Convert to minutes and seconds
         let minutes = Math.floor(audio_length / 60);
         let seconds = (audio_length % 60).toFixed(2); // Keep two decimal places for seconds
-        audio_length = `${minutes} minutes ${seconds} seconds`;
+        formattedAudioLength = `${minutes} minutes ${seconds} seconds`;
     }
 
     // Set the dynamic values in the overview panel
     document.getElementById("topic").textContent = title;
     document.getElementById("language").textContent = language;
-    document.getElementById("audio-length").textContent = audio_length;
+    document.getElementById("audio-length").textContent = formattedAudioLength;
     document.getElementById("word-count").textContent = word_count;
+    document.getElementById("created-at").textContent = created_at;
 
     // Set the dynamic values in the summary panel
     document.getElementById("transcription_summary").textContent = summary;
 
-    // Update graphic of speech speed
-    if (speechSpeedGraphicPath) {
+    // Update graphics dynamically
+    updateGraphic('speech-rate-panel', speechSpeedGraphicPath, 'Speech Speed Analysis');
+    updateGraphic('pitch-panel', pitchGraphicPath, 'Pitch Analysis');
+    updateGraphic('energy-panel', energyGraphicPath, 'Energy Analysis');
+}
+
+function updateGraphic(panelId, graphicPath, altText) {
+    if (graphicPath) {
         // Create an img element
         const imgElement = document.createElement('img');
-        imgElement.src = speechSpeedGraphicPath.replace('src/', ''); // Set the src to the graphic path
-        imgElement.alt = 'Speech Speed Analysis';
+        imgElement.src = graphicPath.replace('src/', ''); // Set the src to the graphic path
+        imgElement.alt = altText;
         imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
         imgElement.style.position = 'relative'; // Ensure it respects the layout flow
         imgElement.style.zIndex = '10'; // Ensure it appears above other elements
 
-        // Find the "Speech rate" panel in the grid
-        const speechRatePanel = document.getElementById('speech-rate-panel');
-        if (speechRatePanel) {
+        // Find the panel in the grid
+        const panel = document.getElementById(panelId);
+        if (panel) {
             // Clear any previous images and add the new image under the existing text
-            speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
-            speechRatePanel.appendChild(imgElement);
+            panel.querySelectorAll('img').forEach(img => img.remove());
+            panel.appendChild(imgElement);
         } else {
-            console.error('Speech rate panel not found.');
+            console.error(`${panelId} not found.`);
         }
     } else {
-        console.error('No speech speed graphic path provided in response.');
-    }
-
-
-    if (pitchGraphicPath) {
-        // Create an img element
-        const imgElement = document.createElement('img');
-        imgElement.src = pitchGraphicPath.replace('src/', ''); // Set the src to the graphic path
-        imgElement.alt = 'Pitch Analysis';
-        imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
-        imgElement.style.position = 'relative'; // Ensure it respects the layout flow
-        imgElement.style.zIndex = '10'; // Ensure it appears above other elements
-
-        // Find the "Speech rate" panel in the grid
-        const speechRatePanel = document.getElementById('pitch-panel');
-        if (speechRatePanel) {
-            // Clear any previous images and add the new image under the existing text
-            speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
-            speechRatePanel.appendChild(imgElement);
-        } else {
-            console.error('Pitch panel not found.');
-        }
-    } else {
-        console.error('No pitch graphic path provided in response.');
-    }
-
-    if (energyGraphicPath) {
-        // Create an img element
-        const imgElement = document.createElement('img');
-        imgElement.src = energyGraphicPath.replace('src/', ''); // Set the src to the graphic path
-        imgElement.alt = 'Energy Analysis';
-        imgElement.style.maxWidth = '100%'; // Ensure it fits within the panel
-        imgElement.style.position = 'relative'; // Ensure it respects the layout flow
-        imgElement.style.zIndex = '10'; // Ensure it appears above other elements
-
-        // Find the "Speech rate" panel in the grid
-        const speechRatePanel = document.getElementById('energy-panel');
-        if (speechRatePanel) {
-            // Clear any previous images and add the new image under the existing text
-            speechRatePanel.querySelectorAll('img').forEach(img => img.remove());
-            speechRatePanel.appendChild(imgElement);
-        } else {
-            console.error('Energy panel not found.');
-        }
-    } else {
-        console.error('No energy graphic path provided in response.');
+        console.error(`No graphic path provided for ${altText}.`);
     }
 }
 
 function loadImprovedText(textFilePath) {
-  if (textFilePath) {
-    textFilePath = textFilePath.replace('src', '')
-    fetch(textFilePath)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Failed to load file: ${response.statusText}`);
-        }
-        return response.text();
-      })
-      .then(textContent => {
-        // Find the panel in the DOM
-        const textPanel = document.getElementById('panel-improved-text');
-        if (textPanel) {
-            // Activate the panel
-            document.getElementById('panel-improved-text').style.display = 'block';
+    if (textFilePath) {
+        textFilePath = textFilePath.replace('src', '');
+        fetch(textFilePath)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Failed to load file: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(textContent => {
+                // Find the panel in the DOM
+                const textPanel = document.getElementById('panel-improved-text');
+                if (textPanel) {
+                    // Activate the panel
+                    document.getElementById('panel-improved-text').style.display = 'block';
 
-            // Clear out any existing content and add the new content
-            textPanel.innerText = textContent; // Render text content
-            console.log(textContent)
-        } else {
-          console.error('Text panel not found.');
-        }
-      })
-      .catch(error => {
-        console.error('Error loading the text file:', error);
-      });
-  } else {
-    console.error('No valid text file path provided.');
-  }
+                    // Clear out any existing content and add the new content
+                    textPanel.innerText = textContent; // Render text content
+                    console.log(textContent);
+                } else {
+                    console.error('Text panel not found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error loading the text file:', error);
+            });
+    } else {
+        console.error('No valid text file path provided.');
+    }
 }
-
-

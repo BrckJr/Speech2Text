@@ -1,5 +1,4 @@
 import { loadFileList } from './modules/FileLoader.js';
-import { setupControlButtons } from './modules/controlButtons.js';
 import { setupDeleteButton } from './modules/deleteFiles.js';
 import { setupCanvas } from './modules/backgroundCanvas.js';
 import { setupLangSwitcherButtons } from './modules/langSwitcher.js';

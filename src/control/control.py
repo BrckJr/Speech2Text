@@ -8,6 +8,7 @@ from src.control import actions
 from pydub import AudioSegment
 from flask import jsonify, request
 import utils.utils as utils
+import time
 
 # Create a Blueprint for transcription routes
 transcription_bp = Blueprint('transcription', __name__)
@@ -30,11 +31,14 @@ def dashboard():
     """
     return render_template('dashboard.html', page_name='dashboard')
 
+
 @transcription_bp.route('/store_and_analyze', methods=['POST'])
 def store_and_analyze():
     """
     Endpoint for storing and analyzing the audio file
     """
+    # start_time = time.time()  # Start the timer
+
     # Check if the request has the file part
     if 'audio' not in request.files:
         return jsonify({"error": "Invalid Audio File or Name"}), 422
@@ -43,7 +47,7 @@ def store_and_analyze():
     filename = file.filename
 
     if filename == '':
-        filename = utils.get_default_audio_filename() # generate default filename
+        filename = utils.get_default_audio_filename()  # generate default filename
 
     # Base filename and extension
     base_name, extension = filename.rsplit('.', 1) if '.' in filename else (filename, '')
@@ -78,13 +82,18 @@ def store_and_analyze():
         # Trigger analysis of the audio file
         response, status_code = actions.transcribe_and_analyse(transcriber, current_user, db, audio_filepath)
 
+        # End the timer and calculate elapsed time
+        # elapsed_time = time.time() - start_time
+        # print(f"Execution time for store_and_analyze: {elapsed_time:.2f} seconds")
+
         # Return success response
         return jsonify({"response": response, "dropdown_value": audio_filepath}), status_code
 
     except Exception as e:
         print(f"Error saving file: {e}")
+        # elapsed_time = time.time() - start_time
+        # print(f"Execution time for store_and_analyze (failed): {elapsed_time:.2f} seconds")
         return jsonify({"error": "Failed to save file"}), 500
-
 
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
@@ -193,6 +202,7 @@ def get_analytics():
         target_database_entry = db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first()
 
         if target_database_entry:
+            created_at = target_database_entry.created_at
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
             pitch_graphic_path = target_database_entry.pitch_graphic_path
             energy_graphic_path = target_database_entry.energy_graphic_path
@@ -203,6 +213,7 @@ def get_analytics():
             word_count = target_database_entry.word_count
             summary = target_database_entry.summary
             return jsonify({'success': True,
+                            'created_at': created_at,
                             'speech_speed_graphic_path': speech_speed_graphic_path,
                             'pitch_graphic_path': pitch_graphic_path,
                             'energy_graphic_path': energy_graphic_path,

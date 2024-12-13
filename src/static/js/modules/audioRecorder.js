@@ -37,7 +37,13 @@ export function setupAudioRecording(startButton, pauseButton, stopButton, audioF
     // Helper function to stop recording and handle actions via modal
     const stopRecording = () => {
         if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
+            // Stop the media recorder
             mediaRecorder.stop();
+
+            // Stop the microphone stream
+            if (mediaRecorder.stream) {
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
 
             mediaRecorder.onstop = () => {
                 // Combine audio chunks into a single Blob

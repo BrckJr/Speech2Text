@@ -270,12 +270,12 @@ class Analytics:
 
         # Check the length of transcription and return transcription itself if to few words
         if self.word_count < 10:
-            # When the text only contains less than 20 words, return text itself
+            # When the text only contains less than 10 words, return text itself
             with open(self.transcription_filepath, 'r') as file:
                 title = file.read()
         else:
             # Get title from the transformer model
-            title = transformer.generate_summary(self.transcription_filepath, 5, 10)
+            title = transformer.generate_summary(self.transcription_filepath, 2, 10)
 
         return title, self.language, audio_length, saving_date_and_time, self.word_count
 
@@ -289,16 +289,16 @@ class Analytics:
             - str: an AI generated summary for the recording.
         """
 
-        if self.word_count < 20:
+        if self.word_count < 50:
             # When the text only contains less than 20 words, return text itself
             with open(self.transcription_filepath, 'r') as file:
                 text = file.read()
             return text
         elif self.word_count < 100:
-            max_length = 30
+            max_length = 50
             min_length = 10
         elif self.word_count < 300:
-            max_length = 60
+            max_length = 80
             min_length = 20
         elif self.word_count < 500:
             max_length = 100
