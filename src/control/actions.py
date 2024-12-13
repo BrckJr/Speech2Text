@@ -7,30 +7,35 @@ class CleanupError(Exception):
     """Custom exception for cleanup errors."""
     pass
 
-# Custom error classes
-class TranscriptionStoringError(Exception): pass
+class TranscriptionStoringError(Exception):
+    """Custom exception for transcription storing errors."""
+    pass
 
 def transcribe(transcriber, audio_filepath):
     """
-    Stop the audio recording, save the audio file, and transcribe it.
+    Trigger transcription the given audio file and save the transcription.
 
     Args:
-        transcriber (Transcriber): An instance of the transcriber class responsible for stopping the recording
-                                   and transcribing the audio.
-        audio_filepath (str): The path to the audio file.
-
+        transcriber (Transcriber): An instance of the transcriber class responsible for handling audio transcription.
+        audio_filepath (str): The path to the audio file to be transcribed.
 
     Returns:
-        tuple: A tuple containing the full paths for the transcription file,
-                as well as the transcription segments.
+        tuple: A tuple containing:
+            - transcription_filepath (str): Path to the saved transcription file.
+            - segments (list): List of transcription segments.
+            - word_count (int): Total word count of the transcription.
+            - language (str): Detected language of the transcription.
 
     Raises:
         TranscriptionStoringError: If an error occurs during the storage of the transcription file.
     """
 
     # Transcribe the recording and save the transcription file
-    transcription_filepath, transcription_save_successful, segments, word_count, language = transcriber.transcribe_raw_audio(audio_filepath, True)
+    transcription_filepath, transcription_save_successful, segments, word_count, language = (
+        transcriber.transcribe_raw_audio(audio_filepath)
+    )
 
+    # Raise an error if the transcription file could not be saved
     if not transcription_save_successful:
         raise TranscriptionStoringError("Error occurred during storage of transcription file")
 
@@ -38,17 +43,18 @@ def transcribe(transcriber, audio_filepath):
 
 def transcribe_and_analyse(transcriber, current_user, db, audio_filepath):
     """
-    Transcribe audio, analyze the audio recording, and save the analysis to the database.
+    Trigger transcription of audio, analysis of the recording, and saving of analysis results to the database.
 
     Args:
         transcriber (Transcriber): An instance of the transcriber class to handle audio transcription.
-        current_user (User): The current user requesting the transcription and analysis.
-        db (Database): The database instance where information is stored.
-        audio_filepath (str): The path to the audio file.
+        current_user (User): The user requesting transcription and analysis.
+        db (Database): The database instance to store analysis results.
+        audio_filepath (str): The path to the audio file to be analyzed.
 
     Returns:
-        tuple: A tuple containing a dictionary with success status and message, the HTTP status code, and the full
-                audio filepath.
+        tuple: A tuple containing:
+            - response (dict): Dictionary with success status and message.
+            - status_code (int): HTTP status code indicating success or failure.
     """
     try:
         # Attempt to stop recording and save the files
@@ -164,7 +170,7 @@ def delete_files(files_to_delete):
 
     Cleans up the output directory by removing existing files,
     including all raw audio files, transcriptions, etc. for a specific user
-    which are included in the files_to_delete list.
+    included in the files_to_delete list.
 
     Args:
         files_to_delete (list of str): The list of audio files to delete for a specific user.
@@ -184,5 +190,5 @@ def delete_files(files_to_delete):
                 file_path = getattr(file, attribute, None)
                 if os.path.isfile(file_path):
                     os.remove(file_path)
-    except Exception as e:
+    except Exception:
         raise CleanupError("Error during cleanup")

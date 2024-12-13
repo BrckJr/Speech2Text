@@ -13,18 +13,37 @@ matplotlib.use('Agg') # use this to avoid crashes of the program when matplotlib
 
 class Analytics:
     """
-    The Analytics class handles the analysis of an audio recording.
+    The Analytics class performs analysis on an audio recording and its associated transcription.
+
+    This class encapsulates the metadata and methods required for analyzing audio files.
     """
+
     def __init__(self, audio_filepath, transcription_filepath, transcription_segments, word_count, language):
         """
-        Initializes the Analytics class.
+        Initializes the Analytics class with the necessary file paths and metadata.
+
+        Args:
+            audio_filepath (str): The full file path to the audio file (e.g., "src/static/output/audio.wav").
+            transcription_filepath (str): The full file path to the transcription file (e.g., "src/static/output/transcription.txt").
+            transcription_segments (list of tuples): A list of tuples representing transcription segments.
+                Each tuple contains segment details such as word count per segment.
+            word_count (int): The total number of words in the transcription.
+            language (str): The detected language of the audio recording and transcription.
+
+        Attributes:
+            audio_filepath (str): Stores the path to the audio file.
+            transcription_filepath (str): Stores the path to the transcription file.
+            transcription_segments (list of tuples): Stores the transcription segments.
+            word_count (int): Stores the word count of the transcription.
+            language (str): Stores the detected language.
+            no_recording_content (bool): Indicates whether the recording contains no usable content. Defaults to `False`.
         """
-        self.audio_filepath = audio_filepath # Full file path to the audio file "src/static/output/..."
-        self.transcription_filepath = transcription_filepath # Full file path to the transcription file "src/static/output/..."
-        self.transcription_segments = transcription_segments # List of tuples with word count per segment
-        self.word_count = word_count # Number of words in the audio file
-        self.language = language # Language of the audio recording and transcription
-        self.no_recording_content = False # Set to true if recording is empty
+        self.audio_filepath = audio_filepath
+        self.transcription_filepath = transcription_filepath
+        self.transcription_segments = transcription_segments
+        self.word_count = word_count
+        self.language = language
+        self.no_recording_content = False
 
     def calculate_wpm(self, step_size=1):
         """
@@ -164,6 +183,9 @@ class Analytics:
         """
         Analyze pitch (fundamental frequency) and generate a pitch contour plot.
 
+        This method analyzes the pitch of the audio file with librosa's pyin library
+        and generates a contour plot over time. The contour plot is stored in the respective output directory
+
         Returns:
             float: Mean of the pitch
             float: Standard deviation of the pitch
@@ -201,7 +223,6 @@ class Analytics:
         max_pitch = np.max(filtered_f0) if filtered_f0.size > 0 else 0
         pitch_range = max_pitch - min_pitch
 
-
         # Plotting the pitch analysis graph only if there is data to plot
         if filtered_time.size > 0 and filtered_f0.size > 0 and not self.no_recording_content:
             plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
@@ -235,7 +256,6 @@ class Analytics:
             plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
             plt.axis('off')  # Turn off the axes when no data is available
 
-
         # Save the plot
         plt.savefig(pitch_graphics_filepath, format="png", dpi=300, transparent=True)
         plt.close()
@@ -246,9 +266,9 @@ class Analytics:
         """
         This method returns general information about the recorded audio file
 
-        For the given audio file, this method returns information about language, length,
+        For the respective audio file referenced in the attributes of a given instance,
+        this method returns information about language, length,
         topic, recording date and time, count of words, etc.
-
 
         Returns:
             tuple:
@@ -274,21 +294,23 @@ class Analytics:
             with open(self.transcription_filepath, 'r') as file:
                 title = file.read()
         else:
-            # Get title from the transformer model
-            title = transformer.generate_summary(self.transcription_filepath, 2, 10)
+            # Get title from the transformer model with a min length of 1 word and a max of 10 words
+            title = transformer.generate_summary(self.transcription_filepath, 1, 10)
 
         return title, self.language, audio_length, saving_date_and_time, self.word_count
 
     def get_summary(self):
         """
-        This method returns a summary of the recorded audio file.
+        This method returns a summary of the recorded audio file referenced in the attributes of a given instance.
 
         The length of the summary is depending on the length of the recorded audio file.
+        The length will increase proportionally with the length of the recorded audio.
 
         Returns:
             - str: an AI generated summary for the recording.
         """
 
+        # Set the correct min and max length for the summary
         if self.word_count < 50:
             # When the text only contains less than 20 words, return text itself
             with open(self.transcription_filepath, 'r') as file:
@@ -391,10 +413,13 @@ class Analytics:
 
     def improve_text(self):
         """
-        Improves grammar, clarity, and readability.
+        Improves grammar, clarity, and readability of the transcription file.
+
+        This method returns a filepath to a textfile with a suggestion of an improved speech.
+        The suggestion is generated via an AI model and might contain errors.
 
         Returns:
-            str: Improved text for the speech
+            str: Filepath to the improved text for the speech
             bool: True if save was successful, False otherwise
         """
         save_successful = False

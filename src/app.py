@@ -40,12 +40,12 @@ app = create_app()
 # Default route for serving the HTML
 @app.route('/')
 def index():
-    # If the user is authenticated, show the main page (or dashboard)
+    # If the user is authenticated, show the dashboard
     if current_user.is_authenticated:
-        return render_template('dashboard.html', page_name='dashboard')  # Ensure `dashboard.html` exists in `templates`
+        return render_template('dashboard.html', page_name='dashboard')
 
-    # If not logged in, redirect to the login page
-    return redirect(url_for('auth.landing_page'))  # Redirect to public landing page
+    # If not logged in, redirect to the public landing page
+    return redirect(url_for('auth.landing_page'))
 
 if __name__ == "__main__":
-    app.run(debug=True)  # Note: Avoid using debug mode in production!
+    app.run(debug=True)  # NOTE: Avoid using debug mode in production!

@@ -1,5 +1,0 @@
-Comparison of models for sustainability-demo text:
-Model | Headline Quality | Summary Quality | Text Improvement Quality | Time for Analysis
---------------|------------------|-----------------|--------------------------|-------------------
-T5            |          -       |        o        |             --           |   227.05 seconds
-BART          |          -       |        o        |             -            |    91.44 seconds

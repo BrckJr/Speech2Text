@@ -7,7 +7,7 @@ from src.database.models import AudioTranscription
 from src.control import actions
 from pydub import AudioSegment
 from flask import jsonify, request
-import utils.utils as utils
+import src.utils.utils as utils
 import time
 
 # Create a Blueprint for transcription routes
@@ -24,18 +24,17 @@ TRANSCRIPTION_FOLDER = "src/static/output/transcription/"
 @login_required
 def dashboard():
     """
-    Displays the user's dashboard with all their uploaded audio files.
-
-    Retrieves the list of audio transcription records from the database
-    for the authenticated user and renders them in the 'dashboard' template.
+    Endpoint for displaying the main dashboard
     """
     return render_template('dashboard.html', page_name='dashboard')
-
 
 @transcription_bp.route('/store_and_analyze', methods=['POST'])
 def store_and_analyze():
     """
-    Endpoint for storing and analyzing the audio file
+    Endpoint for storing and analyzing the audio files.
+
+    Triggers the storage of the audio, analysis of the audio and storing of information in
+    from the action file.
     """
     # start_time = time.time()  # Start the timer
 
@@ -54,16 +53,16 @@ def store_and_analyze():
 
     # Generate a unique filename
     unique_filename = filename
-    audio_filepath = f"src/static/output/raw_audio/{filename}.wav"
+    audio_filepath = f"{AUDIO_FOLDER}{filename}.wav"
 
     counter = 1
     while db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first():
         unique_filename = f"{base_name}({counter}){'.' + extension if extension else ''}"
+        audio_filepath = f"{AUDIO_FOLDER}{unique_filename}.wav"
         counter += 1
-        audio_filepath = f"src/static/output/raw_audio/{unique_filename}.wav"
 
     # Save the file temporarily before processing
-    temp_filepath = f"src/static/output/raw_audio/temp_{unique_filename}.wav"
+    temp_filepath = f"{AUDIO_FOLDER}temp_{unique_filename}.wav"
     try:
         file.save(temp_filepath)
 
@@ -73,7 +72,7 @@ def store_and_analyze():
                 audio = AudioSegment.from_file(temp_filepath)
                 audio.export(audio_filepath, format="wav")
                 os.remove(temp_filepath)  # Remove the temporary file
-            except Exception as e:
+            except Exception:
                 return jsonify({"error": "Unsupported audio format or conversion failed"}), 404
         else:
             # If already a .wav file, just move it
@@ -95,13 +94,10 @@ def store_and_analyze():
         # print(f"Execution time for store_and_analyze (failed): {elapsed_time:.2f} seconds")
         return jsonify({"error": "Failed to save file"}), 500
 
-
 @transcription_bp.route('/delete-all-files', methods=['POST'])
 def delete_files():
     """
-    Deletes all audio and transcription files for the authenticated user.
-
-    This removes both the files from the file system and the corresponding database records.
+    Endpoint for deletion of ALL files for the currently authenticated user.
     """
     try:
         # Query all records from the database of the current user
@@ -115,15 +111,16 @@ def delete_files():
         db.session.commit()
 
         return jsonify({"success": True, "message": "All files deleted"})
-    except Exception as e:
+    except Exception:
         return jsonify({"success": False, "message": "Failed to delete all files"}), 500
 
 @transcription_bp.route('/delete-file', methods=['POST'])
 def delete_file():
     """
-    Deletes all audio and transcription files for the authenticated user.
+    Endpoint for deletion of a single recording and all connected files.
 
-    This removes both the files from the file system and the corresponding database records.
+    The method receives the audio_filepath from the frontend, retrieves paths to all connected files from the
+    database and deletes them in the file system as well as the respective row in the database.
     """
     try:
         data = request.json
@@ -150,7 +147,7 @@ def delete_file():
 @transcription_bp.route('/list-files', methods=['GET'])
 def list_files():
     """
-    Lists all audio and transcription file paths for the authenticated user.
+    Endpoint to list all audio and transcription file paths for the authenticated user.
 
     Queries the database for the user's audio recordings and transcriptions, returning their full file paths in JSON format.
     """
@@ -180,17 +177,15 @@ def list_files():
     except Exception as e:
         return jsonify({'error': str(e), "message": "Error during loading of file lists."}), 500
 
-@transcription_bp.route('/static/<path:filename>')
-def serve_file(filename):
-    """
-    Serves static files from the 'static' folder.
-
-    This route is used to retrieve and serve raw audio or transcription files from the server.
-    """
-    return send_from_directory('static', filename)
-
 @transcription_bp.route('/get-analytics', methods=['POST'])
 def get_analytics():
+    """
+    Endpoint for getting the analytics data for the currently authenticated user.
+
+    Extract the information or path to all relevant analysis aspects from the database
+    and send it back to the frontend in JSON format.
+    """
+
     try:
         data = request.get_json()
         audio_filepath = data.get('recording')
@@ -201,6 +196,7 @@ def get_analytics():
         # Retrieve the relevant row in the database
         target_database_entry = db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first()
 
+        # Extract all information from the database
         if target_database_entry:
             created_at = target_database_entry.created_at
             transcribed_text_path = target_database_entry.transcription_path
@@ -228,7 +224,6 @@ def get_analytics():
                             }), 200
         else:
             return jsonify({'error': 'Requested audio file was not found in database'}), 404
-
 
     except Exception as e:
         return jsonify({'error': str(e), "message": "Error within execution of get analytics."}), 500

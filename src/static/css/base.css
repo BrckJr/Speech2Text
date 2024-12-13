@@ -54,6 +54,50 @@ body {
     z-index: 1001; /* Set it above the container to show the user info when hovered on */
 }
 
+/* User Info Container in header */
+.user-info-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between email and button */
+    position: relative; /* Ensures child elements are positioned relative to this container */
+}
+
+.user-icon {
+    display: flex;
+    align-items: center; /* Centers the SVG vertically */
+    justify-content: center; /* Centers the SVG horizontally */
+    cursor: pointer;
+    width: 32px;
+    height: 32px; /* Matches the visual height of the button */
+    border: 1px solid white;
+    border-radius: 50%; /* Makes the icon circular */
+    box-sizing: border-box; /* Ensures borders are included in width/height */
+    position: relative; /* Ensures child elements are positioned relative to this container */
+}
+
+.user-icon svg {
+    display: block; /* Removes any inline spacing issues */
+    width: 80%;
+    height: 80%; /* Scales the SVG to fit the icon container */
+}
+
+.info-panel {
+    display: none;
+    position: absolute; /* Positioned relative to .user-info-container */
+    top: 120%;
+    left: -400%;
+    background-color: #121212;
+    border: 1px solid white;
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+}
+
+.user-icon:hover .info-panel {
+    display: block;
+}
+
+
 /* Adjust the container to start below the header */
 .container {
     flex: 1; /* Allow the container to grow and fill available space */
@@ -89,7 +133,6 @@ body {
 .language-switcher button:not(:first-child) {
     padding-left: 15px;
 }
-
 
 .btn-logout {
     padding: 8px 16px;
@@ -137,7 +180,6 @@ h1 {
   overflow: hidden;
   animation: blink-caret 0.6s step-end infinite;
 }
-
 @keyframes blink-caret {
   from, to { border-color: transparent; }
   50% { border-color: white; }
@@ -180,28 +222,32 @@ h10 {
     font-weight: bold;
 }
 
+/* Styling for normal text */
 p {
     font-size: 16px;
     margin: 20px;
     text-align: justify;
 }
 
+/* Styling for normal text with centering */
 p_center {
     font-size: 16px;
     margin: 20px;
     text-align: center;
 }
 
+/* Styling for normal text in bold font */
 p_bf {
     font-size: 16px;
     font-weight: bold;
 }
 
-/* Styling for modal / prompts */
+/* Styling for modal prompts */
 p1 {
     font-size: 16px;
 }
 
+/* Styling for footer text */
 p_f {
     font-size: 10px;
     font-style: italic; /* Italicize the paragraph text */
@@ -234,46 +280,4 @@ footer {
     font-style: italic;
     border-radius: 5px 5px 0 0; /* Rounded top corners */
     z-index: 1000;
-}
-
-.user-info-container {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Space between email and button */
-    position: relative; /* Ensures child elements are positioned relative to this container */
-}
-
-.user-icon {
-    display: flex;
-    align-items: center; /* Centers the SVG vertically */
-    justify-content: center; /* Centers the SVG horizontally */
-    cursor: pointer;
-    width: 32px;
-    height: 32px; /* Matches the visual height of the button */
-    border: 1px solid white;
-    border-radius: 50%; /* Makes the icon circular */
-    box-sizing: border-box; /* Ensures borders are included in width/height */
-    position: relative; /* Ensures child elements are positioned relative to this container */
-}
-
-.user-icon svg {
-    display: block; /* Removes any inline spacing issues */
-    width: 80%;
-    height: 80%; /* Scales the SVG to fit the icon container */
-}
-
-.info-panel {
-    display: none;
-    position: absolute; /* Positioned relative to .user-info-container */
-    top: 120%;
-    left: -400%;
-    background-color: #121212;
-    border: 1px solid white;
-    padding: 10px;
-    border-radius: 5px;
-    width: max-content;
-}
-
-.user-icon:hover .info-panel {
-    display: block;
 }

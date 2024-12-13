@@ -1,8 +1,4 @@
 import whisper
-import sounddevice as sd
-import soundfile as sf
-import threading
-import numpy as np
 import src.utils.utils as utils
 
 class RecordingError(Exception):
@@ -11,10 +7,10 @@ class RecordingError(Exception):
 
 class Model:
     """
-    The AudioModel class handles real-time audio recording, processing, and transcription.
+    The AudioModel class handles transcription of an audio recording.
 
     This class integrates with the Whisper model for speech-to-text functionality, enabling
-    users to record audio, save it to files, and transcribe it using pre-trained models.
+    users to transcribe recordings using pre-trained models.
     """
 
     def __init__(self, whisper_model="base"):
@@ -26,28 +22,33 @@ class Model:
         """
         self.transcription_model = whisper.load_model(whisper_model)
 
-    def transcribe_raw_audio(self, audio_filepath, get_segments):
+    def transcribe_raw_audio(self, audio_filepath):
         """
-        Transcribes the raw audio file using the Whisper model.
+        Transcribes a raw audio file using the Whisper model and extracts detailed transcription metadata.
 
-        This method processes the audio file at the given file path through the Whisper
-        model to generate a transcription. The resulting text is saved to a file.
+        This method processes the given audio file to generate a transcription, extract segments with
+        timestamps, and determine language and word count. The transcription is saved to a file, and
+        metadata is returned for further analysis.
 
         Args:
-            audio_filepath (str): The path to the audio file to transcribe.
-            get_segments (bool): Indicates whether the segments are needed (for analysis) or not (for transcription only).
+            audio_filepath (str): The full file path of the audio file to transcribe.
 
         Returns:
             tuple:
-                str: The file path of the saved .txt file, or None if saving failed.
-                bool: True if the file was saved successfully, False otherwise.
-                list: List of dictionaries with each dictionary representing information about the transcription segment, e.g., the id, start/end time, text, etc.
-                int: Number of words in the transcription.
-                str: Language of the audio recording and transcription.
+                str: The file path where the transcription (.txt) was saved. None if saving failed.
+                bool: True if the transcription was saved successfully, False otherwise.
+                list[dict]: A list of dictionaries, each representing a transcription segment.
+                    Each dictionary includes:
+                        - "id" (int): Segment identifier.
+                        - "start" (float): Start time of the segment in seconds.
+                        - "end" (float): End time of the segment in seconds.
+                        - "text" (str): Transcribed text of the segment.
+                int: The total number of words in the transcription.
+                str: The detected language of the audio recording and transcription.
 
         Raises:
-            FileNotFoundError: If the specified audio file is not found.
-            RuntimeError: If the transcription process encounters an error.
+            FileNotFoundError: If the specified audio file does not exist.
+            RuntimeError: If an error occurs during the transcription process.
         """
 
         # Transcribe the audio including the timestamps to allow analysis in the analytics class
@@ -59,31 +60,38 @@ class Model:
 
         filepath, save_successful = self.save_transcription_to_file(transcription, audio_filepath)
 
-        segments = None
-        # If segments are needed for analytics, extract them from the transcription result
-        if get_segments:
-            segments = result.get("segments", [])
+        # Extract segments for analysis purpose
+        segments = result.get("segments", [])
 
         return filepath, save_successful, segments, word_count, language
 
     @staticmethod
     def save_transcription_to_file(transcription, audio_filepath):
         """
-        Save the transcribed text to a .txt file with a timestamped filename.
+        Saves the transcribed text to a .txt file and returns the file path and status.
 
-        This method generates a file path for the transcription and writes the transcribed text to it.
-        The filename includes a timestamp for uniqueness. If saving fails, an error message is printed.
+        This method generates a file path based on the audio file's name and saves the provided
+        transcription text to a .txt file. If the operation is unsuccessful, it handles the error
+        gracefully and returns `None` with a failure status.
 
         Args:
-            transcription (str): The transcribed text to save to the file.
-            audio_filepath (str): The path to the audio file to transcribe.
+            transcription (str): The transcribed text to be saved.
+            audio_filepath (str): The path to the source audio file, used to derive the transcription file name.
 
         Returns:
             tuple:
-                str: The file path of the saved .txt file, or None if saving failed.
-                bool: True if the file was saved successfully, False otherwise.
-        """
+                str: The file path of the saved .txt file, or `None` if the saving process failed.
+                bool: `True` if the file was saved successfully, `False` otherwise.
 
+        Notes:
+            - The transcription file path is generated using the `utils.generate_file_path` method.
+            - If an exception occurs during the file-saving process, the method will return `None`
+              and avoid raising the exception.
+            - The audio file name is extracted and used as the base for the transcription file name.
+
+        Raises:
+            None: This method does not raise exceptions but instead returns `None` on failure.
+        """
 
         # Extract only the filename of the audio recording including timestamp
         audio_filename = audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
