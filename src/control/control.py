@@ -203,6 +203,7 @@ def get_analytics():
 
         if target_database_entry:
             created_at = target_database_entry.created_at
+            transcribed_text_path = target_database_entry.transcription_path
             speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
             pitch_graphic_path = target_database_entry.pitch_graphic_path
             energy_graphic_path = target_database_entry.energy_graphic_path
@@ -214,6 +215,7 @@ def get_analytics():
             summary = target_database_entry.summary
             return jsonify({'success': True,
                             'created_at': created_at,
+                            'transcribed_text_path': transcribed_text_path,
                             'speech_speed_graphic_path': speech_speed_graphic_path,
                             'pitch_graphic_path': pitch_graphic_path,
                             'energy_graphic_path': energy_graphic_path,

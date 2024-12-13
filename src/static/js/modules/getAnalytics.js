@@ -35,15 +35,16 @@ export async function setAnalytics() {
             // Extract all information into a dictionary
             const params = {
                 created_at: result.created_at,
-                speechSpeedGraphicPath: result.speech_speed_graphic_path,
-                pitchGraphicPath: result.pitch_graphic_path,
-                energyGraphicPath: result.energy_graphic_path,
+                transcribed_text_path: result.transcribed_text_path,
+                speech_speed_graphic_path: result.speech_speed_graphic_path,
+                pitch_graphic_path: result.pitch_graphic_path,
+                energy_graphic_path: result.energy_graphic_path,
                 improved_text_path: result.improved_text_path,
-                title: result.recording_title,
-                language: result.recording_language,
+                recording_title: result.recording_title,
+                recording_language: result.recording_language,
                 audio_length: result.audio_length,
                 word_count: result.word_count,
-                summary: result.text_summary
+                text_summary: result.text_summary
             };
 
             // Update the analytics panels with new information
@@ -84,20 +85,23 @@ function showErrorModal(message) {
 async function updatePanels(params) {
     const {
         created_at,
-        speechSpeedGraphicPath,
-        pitchGraphicPath,
-        energyGraphicPath,
+        transcribed_text_path,
+        speech_speed_graphic_path,
+        pitch_graphic_path,
+        energy_graphic_path,
         improved_text_path,
-        title,
-        language,
+        recording_title,
+        recording_language,
         audio_length,
         word_count,
-        summary
+        text_summary
     } = params;
+
 
     // Get the improved text from local storage and display it in the panel
     console.log(improved_text_path);
-    loadImprovedText(improved_text_path);
+    loadTextPanel(transcribed_text_path, 'transcribed');
+    loadTextPanel(improved_text_path, 'improved');
 
     // Activate the text in the overview panel
     document.getElementById('panel-topic').style.display = 'block';
@@ -122,19 +126,19 @@ async function updatePanels(params) {
     }
 
     // Set the dynamic values in the overview panel
-    document.getElementById("topic").textContent = title;
-    document.getElementById("language").textContent = language;
+    document.getElementById("topic").textContent = recording_title;
+    document.getElementById("language").textContent = recording_language;
     document.getElementById("audio-length").textContent = formattedAudioLength;
     document.getElementById("word-count").textContent = word_count;
     document.getElementById("created-at").textContent = created_at;
 
     // Set the dynamic values in the summary panel
-    document.getElementById("transcription_summary").textContent = summary;
+    document.getElementById("transcription_summary").textContent = text_summary;
 
     // Update graphics dynamically
-    updateGraphic('speech-rate-panel', speechSpeedGraphicPath, 'Speech Speed Analysis');
-    updateGraphic('pitch-panel', pitchGraphicPath, 'Pitch Analysis');
-    updateGraphic('energy-panel', energyGraphicPath, 'Energy Analysis');
+    updateGraphic('speech-rate-panel', speech_speed_graphic_path, 'Speech Speed Analysis');
+    updateGraphic('pitch-panel', pitch_graphic_path, 'Pitch Analysis');
+    updateGraphic('energy-panel', energy_graphic_path, 'Energy Analysis');
 }
 
 function updateGraphic(panelId, graphicPath, altText) {
@@ -161,7 +165,16 @@ function updateGraphic(panelId, graphicPath, altText) {
     }
 }
 
-function loadImprovedText(textFilePath) {
+function loadTextPanel(textFilePath, category) {
+    let elementID = ''
+    if (category === 'improved') {
+        elementID = 'panel-improved-text'
+    } else if (category === 'transcribed') {
+        elementID = 'panel-transcribed-text'
+    } else {
+        console.error('No valid category provided.');
+    }
+
     if (textFilePath) {
         textFilePath = textFilePath.replace('src', '');
         fetch(textFilePath)
@@ -173,10 +186,10 @@ function loadImprovedText(textFilePath) {
             })
             .then(textContent => {
                 // Find the panel in the DOM
-                const textPanel = document.getElementById('panel-improved-text');
+                const textPanel = document.getElementById(elementID);
                 if (textPanel) {
                     // Activate the panel
-                    document.getElementById('panel-improved-text').style.display = 'block';
+                    document.getElementById(elementID).style.display = 'block';
 
                     // Clear out any existing content and add the new content
                     textPanel.innerText = textContent; // Render text content
