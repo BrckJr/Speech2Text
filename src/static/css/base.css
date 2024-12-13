@@ -123,31 +123,24 @@ body {
 
 /* Styling for main heading */
 h1 {
-    font-family: Lora, serif;
+    font-family: Times, serif;
     position: relative;
     font-weight: bold;
-    font-size: 85px; /* Large font size for headings */
-    margin: 30px;
+    font-size: 130px; /* Large font size for headings */
 }
 
-h1::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 1px; /* Adjust the thickness of the line */
-    background-color: white; /* Adjust the color of the line */
+/* Animation of Heading */
+.typing {
+  display: inline-block;
+  border-right: 2px solid white;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: blink-caret 0.6s step-end infinite;
 }
 
-h1::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 1px; /* Adjust the thickness of the line */
-    background-color: white; /* Adjust the color of the line */
+@keyframes blink-caret {
+  from, to { border-color: transparent; }
+  50% { border-color: white; }
 }
 
 
