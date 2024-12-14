@@ -23,6 +23,7 @@ def dashboard():
     return render_template('dashboard.html', page_name='dashboard')
 
 @transcription_bp.route('/store_and_analyze', methods=['POST'])
+@login_required
 def store_and_analyze():
     """
     Endpoint for storing and analyzing an audio file.
@@ -66,6 +67,7 @@ def store_and_analyze():
         return jsonify({"error": str(e)}), 500
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
+@login_required
 def delete_all_files():
     """
     Endpoint for deletion of ALL files.
@@ -87,6 +89,7 @@ def delete_all_files():
         return jsonify({"error": str(e)}), 500
 
 @transcription_bp.route('/delete-file', methods=['POST'])
+@login_required
 def delete_file():
     """
     Endpoint for deleting a single audio file and its associated data.
@@ -114,6 +117,7 @@ def delete_file():
         return jsonify({"error": str(e)}), 500
 
 @transcription_bp.route('/list-files', methods=['GET'])
+@login_required
 def list_files():
     """
     Endpoint to list all audio, transcription, and improved text file paths for the authenticated user.
@@ -141,6 +145,7 @@ def list_files():
         return jsonify({'error': str(e)}), 500
 
 @transcription_bp.route('/get-analytics', methods=['POST'])
+@login_required
 def get_analytics():
     """
     Endpoint for retrieving analytics data for a specific audio recording.
