@@ -217,11 +217,11 @@ class Analytics:
             filtered_f0 = np.array([])  # Convert to an empty NumPy array
 
         # Create summary statistics for the pitch only if valid data exists
-        mean_pitch = np.mean(filtered_f0) if filtered_f0.size > 0 else 0
-        std_pitch = np.std(filtered_f0) if filtered_f0.size > 0 else 0
-        min_pitch = np.min(filtered_f0) if filtered_f0.size > 0 else 0
-        max_pitch = np.max(filtered_f0) if filtered_f0.size > 0 else 0
-        pitch_range = max_pitch - min_pitch
+        # mean_pitch = np.mean(filtered_f0) if filtered_f0.size > 0 else 0
+        # std_pitch = np.std(filtered_f0) if filtered_f0.size > 0 else 0
+        # min_pitch = np.min(filtered_f0) if filtered_f0.size > 0 else 0
+        # max_pitch = np.max(filtered_f0) if filtered_f0.size > 0 else 0
+        # pitch_range = max_pitch - min_pitch
 
         # Plotting the pitch analysis graph only if there is data to plot
         if filtered_time.size > 0 and filtered_f0.size > 0 and not self.no_recording_content:
@@ -260,7 +260,7 @@ class Analytics:
         plt.savefig(pitch_graphics_filepath, format="png", dpi=300, transparent=True)
         plt.close()
 
-        return mean_pitch, std_pitch, pitch_range, pitch_graphics_filepath
+        return pitch_graphics_filepath
 
     def get_general_info(self):
         """
@@ -330,9 +330,7 @@ class Analytics:
             min_length = 50
 
         # Get summary from the transformer model
-        summary = transformer.generate_summary(self.transcription_filepath, min_length, max_length)
-
-        return summary
+        return transformer.generate_summary(self.transcription_filepath, min_length, max_length)
 
     def get_wav_length(self):
         """
@@ -373,8 +371,8 @@ class Analytics:
         normalized_rms_energy = rms_energy / np.max(rms_energy) if np.max(rms_energy) > 0 else rms_energy
 
         # Compute statistics
-        average_energy = np.mean(normalized_rms_energy)
-        std_energy = np.std(normalized_rms_energy)
+        # average_energy = np.mean(normalized_rms_energy)
+        # std_energy = np.std(normalized_rms_energy)
 
         if not self.no_recording_content:
             # Plot the energy graph
@@ -409,7 +407,7 @@ class Analytics:
         plt.savefig(energy_graphics_filepath, format="png", dpi=300, transparent=True)
         plt.close()
 
-        return average_energy, std_energy, energy_graphics_filepath
+        return energy_graphics_filepath
 
     def improve_text(self):
         """
@@ -422,7 +420,6 @@ class Analytics:
             str: Filepath to the improved text for the speech
             bool: True if save was successful, False otherwise
         """
-        save_successful = False
 
         # Extract only the filename of the audio recording including timestamp
         audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
@@ -435,13 +432,9 @@ class Analytics:
             improved_text = f"Model was not able to improved text because of following error: {str(e)}"
 
         # Save the improved text to the file
-        try:
-            with open(improved_text_filepath, 'w') as file:
-                file.write(improved_text)
-            save_successful = True
-        except Exception:
-            return None
+        with open(improved_text_filepath, 'w') as file:
+            file.write(improved_text)
 
-        return improved_text_filepath, save_successful
+        return improved_text_filepath
 
 

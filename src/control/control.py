@@ -1,14 +1,12 @@
 import os
-from flask import Blueprint, jsonify, send_from_directory, request, render_template
+from sqlite3 import IntegrityError
+from flask import Blueprint,render_template
 from flask_login import login_required, current_user
 from src.model.transcriber import Model
 from src.database import db
 from src.database.models import AudioTranscription
 from src.control import actions
-from pydub import AudioSegment
 from flask import jsonify, request
-import src.utils.utils as utils
-import time
 
 # Create a Blueprint for transcription routes
 transcription_bp = Blueprint('transcription', __name__)
@@ -31,159 +29,146 @@ def dashboard():
 @transcription_bp.route('/store_and_analyze', methods=['POST'])
 def store_and_analyze():
     """
-    Endpoint for storing and analyzing the audio files.
+    Endpoint for storing and analyzing an audio file.
 
-    Triggers the storage of the audio, analysis of the audio and storing of information in
-    from the action file.
+    This endpoint handles the uploading of an audio file, stores it in the file system,
+    triggers the transcription of the audio, performs an analysis on the transcription,
+    and stores the related information in the database.
+
+    Request Payload:
+        - An audio file (under the key 'audio') must be provided in the form-data of the POST request.
+
+    Returns:
+        JSON Response:
+            - Success: If the file is stored and analyzed successfully, returns a success message,
+              along with a new value for a dropdown in the frontend.
+            - Error (422): If the audio file is not provided or the file is invalid.
+            - Error (500): For any unexpected errors during transcription, analysis, or saving to the database.
     """
-    # start_time = time.time()  # Start the timer
 
     # Check if the request has the file part
     if 'audio' not in request.files:
         return jsonify({"error": "Invalid Audio File or Name"}), 422
 
     file = request.files['audio']
-    filename = file.filename
 
-    if filename == '':
-        filename = utils.get_default_audio_filename()  # generate default filename
-
-    # Base filename and extension
-    base_name, extension = filename.rsplit('.', 1) if '.' in filename else (filename, '')
-
-    # Generate a unique filename
-    unique_filename = filename
-    audio_filepath = f"{AUDIO_FOLDER}{filename}.wav"
-
-    counter = 1
-    while db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first():
-        unique_filename = f"{base_name}({counter}){'.' + extension if extension else ''}"
-        audio_filepath = f"{AUDIO_FOLDER}{unique_filename}.wav"
-        counter += 1
-
-    # Save the file temporarily before processing
-    temp_filepath = f"{AUDIO_FOLDER}temp_{unique_filename}.wav"
     try:
-        file.save(temp_filepath)
-
-        # Convert the file to .wav if it's not already a .wav
-        if extension.lower() not in ['wav']:
-            try:
-                audio = AudioSegment.from_file(temp_filepath)
-                audio.export(audio_filepath, format="wav")
-                os.remove(temp_filepath)  # Remove the temporary file
-            except Exception:
-                return jsonify({"error": "Unsupported audio format or conversion failed"}), 404
-        else:
-            # If already a .wav file, just move it
-            os.rename(temp_filepath, audio_filepath)
-
+        # Store the audio file
+        audio_filepath = actions.store_audio(file, db)
         # Trigger analysis of the audio file
-        response, status_code = actions.transcribe_and_analyse(transcriber, current_user, db, audio_filepath)
-
-        # End the timer and calculate elapsed time
-        # elapsed_time = time.time() - start_time
-        # print(f"Execution time for store_and_analyze: {elapsed_time:.2f} seconds")
-
-        # Return success response
-        return jsonify({"response": response, "dropdown_value": audio_filepath}), status_code
-
+        actions.transcribe_and_analyse(transcriber, current_user, db, audio_filepath)
+        return jsonify({"success": True,
+                        "message": "Transcription and Analysis successful",
+                        "dropdown_value": audio_filepath}), 201 # Return success response with new dropdown value
+    except IOError as e:
+        return jsonify({"error": str(e)}), 422 # Catch error for storage of the audio file
+    except RuntimeError as e:
+        return jsonify({"error": str(e)}), 500 # Catch error during transcription or unexpected errors
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 500 # Catch error during analysis creation
     except Exception as e:
-        print(f"Error saving file: {e}")
-        # elapsed_time = time.time() - start_time
-        # print(f"Execution time for store_and_analyze (failed): {elapsed_time:.2f} seconds")
-        return jsonify({"error": "Failed to save file"}), 500
+        return jsonify({"error": str(e)}), 500
 
 @transcription_bp.route('/delete-all-files', methods=['POST'])
-def delete_files():
+def delete_all_files():
     """
-    Endpoint for deletion of ALL files for the currently authenticated user.
+    Endpoint for deletion of ALL files.
+
+    This function triggers the deletion of all files from the current user from the file system and database.
+
+    Request Payload (JSON):
+        None
+
+    Returns:
+        Response (JSON):
+            - Success message with HTTP status 200 if the files are deleted successfully.
+            - Error message with HTTP status 500 if an exception occurs during the deletion process.
     """
     try:
-        # Query all records from the database of the current user
-        all_files = AudioTranscription.query.filter_by(user_id=current_user.id).all()
-
-        # Delete files from the local filesystem
-        actions.delete_files(all_files)
-
-        # Clear database records for the current user only
-        db.session.query(AudioTranscription).filter_by(user_id=current_user.id).delete()
-        db.session.commit()
-
-        return jsonify({"success": True, "message": "All files deleted"})
-    except Exception:
-        return jsonify({"success": False, "message": "Failed to delete all files"}), 500
+        actions.cleanup(current_user, db)
+        return jsonify({"success": True, "message": "All files deleted successfully"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @transcription_bp.route('/delete-file', methods=['POST'])
 def delete_file():
     """
-    Endpoint for deletion of a single recording and all connected files.
+    Endpoint for deleting a single audio file and its associated data.
 
-    The method receives the audio_filepath from the frontend, retrieves paths to all connected files from the
-    database and deletes them in the file system as well as the respective row in the database.
+    This endpoint triggers the deletion of a single audio file and all its related data (e.g., transcription,
+    analysis graphics) from both the file system and the database for the current authenticated user. The
+    audio file is identified by its 'audio_filepath', and all related records are removed accordingly.
+
+    Request Payload (JSON):
+        {
+            "filePath": "src/static/output/raw_audio/"
+        }
+
+    Returns:
+        Response (JSON):
+            - Success message with HTTP status 200 if the file is deleted successfully.
+            - Error message with HTTP status 500 if an exception occurs during the deletion process.
     """
     try:
         data = request.json
         audio_filepath = data.get('filePath')
-        if not audio_filepath:
-            return jsonify({'success': False, 'error': 'File path is required'}), 400
-
-        print(f"Inserted Filepath: {audio_filepath}")
-
-        if os.path.exists(audio_filepath):
-            # Query all records from the database connected to the selected audio recording
-            all_files = AudioTranscription.query.filter_by(audio_path=audio_filepath).all()
-            # Delete files from the local filesystem
-            actions.delete_files(all_files)
-            # Clear database records for the current file
-            db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).delete()
-            db.session.commit()
-            return jsonify({'success': True})
-        else:
-            return jsonify({'success': False, 'error': 'File not found'}), 404
+        actions.cleanup(current_user, db, audio_filepath)
+        return jsonify({"success": True, "message": "Single file deleted successfully"}), 200
     except Exception as e:
-        return jsonify({"success": False, "message": "Failed to delete file"}), 500
+        return jsonify({"error": str(e)}), 500
 
 @transcription_bp.route('/list-files', methods=['GET'])
 def list_files():
     """
-    Endpoint to list all audio and transcription file paths for the authenticated user.
+    Endpoint to list all audio, transcription, and improved text file paths for the authenticated user.
 
-    Queries the database for the user's audio recordings and transcriptions, returning their full file paths in JSON format.
+    This function retrieves all relevant file paths (audio, transcription, and improved text) and
+    their corresponding creation timestamps from the database for the currently authenticated user.
+    It returns this information in JSON format.
+
+    Returns:
+        Response: A JSON object containing:
+            - 'audio_files': List of paths to the audio files.
+            - 'transcription_files': List of paths to the transcription files.
+            - 'improved_text_files': List of paths to the improved text files.
+            - 'date_times': List of timestamps when the files were created.
+
+        If an error occurs, a JSON response with an 'error' message and a 500 HTTP status code is returned.
     """
     try:
-        # Query the database for all audio recordings of the current user
-        audio_recordings = AudioTranscription.query.filter_by(user_id=current_user.id).all()
+        # Call the function from actions.py to get the file paths
+        files_data = actions.get_user_files(current_user)
 
-        # Create a list of audio file paths
-        audio_files = [recording.audio_path for recording in audio_recordings]
-
-        # Create a list of transcription file paths
-        transcription_files = [recording.transcription_path for recording in audio_recordings]#
-
-        # Create a list of improved text file paths
-        improved_text_files = [recording.improved_text_path for recording in audio_recordings]
-
-        # Create a list of times when files where stored
-        date_times = [recording.created_at for recording in audio_recordings]
-
-        return jsonify({
-            'audio_files': audio_files,
-            'transcription_files': transcription_files,
-            'improved_text_files': improved_text_files,
-            'date_times': date_times
-        })
-
+        # Return the data as JSON
+        return jsonify({'data': files_data}), 200
     except Exception as e:
-        return jsonify({'error': str(e), "message": "Error during loading of file lists."}), 500
+        return jsonify({'error': str(e)}), 500
 
 @transcription_bp.route('/get-analytics', methods=['POST'])
 def get_analytics():
     """
-    Endpoint for getting the analytics data for the currently authenticated user.
+    Endpoint for retrieving analytics data for a specific audio recording.
 
-    Extract the information or path to all relevant analysis aspects from the database
-    and send it back to the frontend in JSON format.
+    This endpoint processes a POST request to extract and return various analytics
+    related to a specified audio recording. The data includes paths to transcription
+    files, graphical analysis (e.g., pitch, energy, speech speed), and other relevant
+    audio details stored in the database. The request must contain the file path of
+    the audio recording in the request body.
+
+    The audio file is identified by its `recording` file path, which must be provided
+    in the JSON payload. If the file path is not provided, or if there is an error
+    during the process, an appropriate error message will be returned.
+
+    Args:
+        None. The audio file path is provided in the JSON body of the POST request
+        under the key "recording".
+
+    Returns:
+        Response (JSON):
+            - On success: A JSON object containing the requested analytics data under
+              the 'data' key, along with an HTTP status code of 200.
+            - On error: A JSON object containing an error message, with an appropriate
+              HTTP status code (400 for missing recording, 500 for server errors).
     """
 
     try:
@@ -193,38 +178,11 @@ def get_analytics():
         if not audio_filepath:
             return jsonify({'error': 'Recording not specified'}), 400
 
-        # Retrieve the relevant row in the database
-        target_database_entry = db.session.query(AudioTranscription).filter_by(audio_path=audio_filepath).first()
+        # Call the function from actions.py to get the analytics
+        analytics = actions.get_analytics(audio_filepath, db)
 
-        # Extract all information from the database
-        if target_database_entry:
-            created_at = target_database_entry.created_at
-            transcribed_text_path = target_database_entry.transcription_path
-            speech_speed_graphic_path = target_database_entry.speech_speed_graphic_path
-            pitch_graphic_path = target_database_entry.pitch_graphic_path
-            energy_graphic_path = target_database_entry.energy_graphic_path
-            improved_text_path = target_database_entry.improved_text_path
-            title = target_database_entry.title
-            language = target_database_entry.language
-            audio_length = target_database_entry.audio_length
-            word_count = target_database_entry.word_count
-            summary = target_database_entry.summary
-            return jsonify({'success': True,
-                            'created_at': created_at,
-                            'transcribed_text_path': transcribed_text_path,
-                            'speech_speed_graphic_path': speech_speed_graphic_path,
-                            'pitch_graphic_path': pitch_graphic_path,
-                            'energy_graphic_path': energy_graphic_path,
-                            'improved_text_path': improved_text_path,
-                            'recording_title': title,
-                            'recording_language': language,
-                            'audio_length': audio_length,
-                            'word_count': word_count,
-                            'text_summary': summary
-                            }), 200
-        else:
-            return jsonify({'error': 'Requested audio file was not found in database'}), 404
-
+        # Return the data as JSON
+        return jsonify({'data': analytics}), 200
     except Exception as e:
-        return jsonify({'error': str(e), "message": "Error within execution of get analytics."}), 500
+        return jsonify({'error': str(e)}), 500
 

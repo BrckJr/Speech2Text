@@ -36,7 +36,6 @@ class Model:
         Returns:
             tuple:
                 str: The file path where the transcription (.txt) was saved. None if saving failed.
-                bool: True if the transcription was saved successfully, False otherwise.
                 list[dict]: A list of dictionaries, each representing a transcription segment.
                     Each dictionary includes:
                         - "id" (int): Segment identifier.
@@ -58,12 +57,12 @@ class Model:
         language = result["language"] # Get the language from the audio recording / transcription
         word_count = len(transcription.split()) # Count words in the transcription text
 
-        filepath, save_successful = self.save_transcription_to_file(transcription, audio_filepath)
+        filepath = self.save_transcription_to_file(transcription, audio_filepath)
 
         # Extract segments for analysis purpose
         segments = result.get("segments", [])
 
-        return filepath, save_successful, segments, word_count, language
+        return filepath, segments, word_count, language
 
     @staticmethod
     def save_transcription_to_file(transcription, audio_filepath):
@@ -81,7 +80,6 @@ class Model:
         Returns:
             tuple:
                 str: The file path of the saved .txt file, or `None` if the saving process failed.
-                bool: `True` if the file was saved successfully, `False` otherwise.
 
         Notes:
             - The transcription file path is generated using the `utils.generate_file_path` method.
@@ -99,11 +97,7 @@ class Model:
         recording_filepath = utils.generate_file_path("transcription", audio_filename)
 
         # Save the transcription text to the file
-        try:
-            with open(recording_filepath, 'w') as file:
-                file.write(transcription)
-            save_successful = True
-        except Exception:
-            return None
+        with open(recording_filepath, 'w') as file:
+            file.write(transcription)
 
-        return recording_filepath, save_successful
+        return recording_filepath

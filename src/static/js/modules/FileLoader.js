@@ -3,7 +3,7 @@ import { showDeleteConfirmationModal } from './deleteSingleFile.js';
 // Function to load and display audio, transcription, improved text, and date-time files
 export async function loadFileList() {
     try {
-        // Fetch the list of audio, transcription, improved text files, and date-time from the server
+        // Fetch the list of files from the server
         const response = await fetch('/list-files');
         const data = await response.json();
 
@@ -27,8 +27,8 @@ export async function loadFileList() {
         defaultOption.textContent = '-';
         dropdown.appendChild(defaultOption);
 
-        // Ensure all lists have the same length
-        const { audio_files, transcription_files, improved_text_files, date_times } = data;
+        // Ensure all lists have the same length (from the data object)
+        const { audio_files, transcription_files, improved_text_files, date_times } = data.data; // Updated to access 'data' object
         if (
             audio_files.length !== transcription_files.length ||
             audio_files.length !== improved_text_files.length ||

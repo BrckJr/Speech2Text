@@ -2,7 +2,6 @@ from src.database import db
 from datetime import datetime
 from flask_login import UserMixin
 
-
 class AudioTranscription(db.Model):
     """
     Represents an audio recording and its associated metadata, transcription, and analyses.
@@ -55,7 +54,6 @@ class AudioTranscription(db.Model):
             "<AudioTranscription id=1, audio_path='/path/to/audio.wav', user_id=42>"
         """
         return f"<AudioTranscription id={self.id}, audio_path={self.audio_path}, user_id={self.user_id}>"
-
 
 class User(db.Model, UserMixin):
     """
