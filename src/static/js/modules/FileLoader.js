@@ -9,7 +9,9 @@ export async function loadFileList() {
 
         // Handle potential errors from the server
         if (data.error) {
-            console.error(data.error);
+            console.error('Error:', error);
+            alert('An error occurred. Please try again later.' +
+             'If the error persists, please contact the developer of this website.');  // Alert the user if there's an error
             return;
         }
 

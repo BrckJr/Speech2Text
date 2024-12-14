@@ -4,7 +4,7 @@ from src.model.analytics import Analytics
 from src.database.models import AudioTranscription
 import src.utils.utils as utils
 from pydub import AudioSegment
-
+from src.database import db
 
 # Path to the stored raw audio files and transcriptions
 AUDIO_FOLDER = "src/static/output/raw_audio/"
@@ -16,7 +16,7 @@ class UnauthorizedUserException(Exception):
     """
     pass
 
-def store_audio(file, db):
+def store_audio(file):
     """
     Return a unique filename under which the audio file is stored.
 
@@ -26,7 +26,6 @@ def store_audio(file, db):
 
     Args:
         file (werkzeug.datastructures.FileStorage): audio file name inserted by the user
-        db (Database): The database instance to store analysis results.
 
     Returns:
         str: path to the stored audio file
@@ -77,7 +76,7 @@ def store_audio(file, db):
         if os.path.exists(temp_filepath):
             os.remove(temp_filepath)
 
-def transcribe_and_analyse(transcriber, current_user, db, audio_filepath):
+def transcribe_and_analyse(transcriber, current_user, audio_filepath):
     """
     Transcribe the audio file, perform analytics on the transcription, and save the results to the database.
 
@@ -87,7 +86,6 @@ def transcribe_and_analyse(transcriber, current_user, db, audio_filepath):
     Args:
         transcriber (Transcriber): An instance of the `Transcriber` class that is responsible for transcribing the audio file.
         current_user (User): The authenticated user who requested the transcription and analysis.
-        db (SQLAlchemy): The database instance used to store the analysis results.
         audio_filepath (str): The path to the audio file that needs to be transcribed and analyzed.
 
     Returns:
@@ -125,7 +123,6 @@ def transcribe_and_analyse(transcriber, current_user, db, audio_filepath):
     # Create a dictionary of audio data
     audio_data = {
         "current_user": current_user,
-        "db": db,
         "audio_filepath": audio_filepath,
         "transcription_filepath": transcription_filepath,
         "created_at": created_at,
@@ -163,7 +160,6 @@ def save_info_to_database(audio_data):
     Args:
         audio_data (dict): A dictionary containing the following keys:
             - current_user (User): The authenticated user who owns the recording.
-            - db (SQLAlchemy): The database instance to store the information.
             - audio_filepath (str): The path to the stored audio file.
             - transcription_filepath (str): The path to the transcription file.
             - created_at (datetime): The timestamp when the audio was created.
@@ -187,7 +183,6 @@ def save_info_to_database(audio_data):
 
     # Check if the current user is authenticated
     current_user = audio_data.get("current_user")
-    db = audio_data.get("db")
 
     if not current_user.is_authenticated:
         raise UnauthorizedUserException() # If the user is not authenticated, raise an error
@@ -220,13 +215,12 @@ def save_info_to_database(audio_data):
         db.session.rollback()
         raise IntegrityError(f"Failed to update database.")
 
-def cleanup(current_user, db, audio_filepath=None):
+def cleanup(current_user, audio_filepath=None):
     """
     Delete audio files either for a specific file (if `audio_filepath` is provided) or for all files of a user.
 
     Args:
         current_user (User): The user requesting to delete the files.
-        db (Database): The database instance.
         audio_filepath (str, optional): Path to a specific audio file to delete. If None, delete all files for the user.
 
     Raises:
@@ -319,13 +313,12 @@ def get_user_files(current_user):
     except Exception as e:
         raise RuntimeError(f"Error during loading of file lists: {str(e)}")
 
-def get_analytics(audio_filepath, db):
+def get_analytics(audio_filepath):
     """
     Extract relevant analytics data from the AudioTranscription object.
 
     Args:
         audio_filepath (str): The path to the audio file for which analytics are requested.
-        db (Database): The database instance.
 
     Returns:
         dict: A dictionary containing the extracted analytics data.

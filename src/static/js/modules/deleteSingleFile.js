@@ -31,17 +31,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ filePath: fileToDeletePath }),
-                });
+                })
 
                 const result = await response.json();
                 if (result.success) {
                     location.reload();
-                } else {
-                    alert('Failed to delete file');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred');
+                alert('An unexpected error occurred while deleting the file.' +
+                    'If the error persists, please contact the developer of this website.');
             }
 
             closeModal();

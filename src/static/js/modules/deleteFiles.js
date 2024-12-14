@@ -35,15 +35,10 @@ export function setupDeleteButton(deleteButton) {
                     throw new Error('Failed to delete files.');
                 }
             })
-            .then(data => {
-                if (!data.success) {
-                    alert('Failed to delete files. Please try again later.');
-                }
-                // If successful, no further action is needed, page reloads automatically
-            })
             .catch(error => {
                 console.error('Error:', error);  // Log any errors during the process
-                alert('An error occurred. Please try again later.');  // Alert the user if there's an error
+                alert('An error occurred. Please try again later.' +
+                    'If the error persists, please contact the developer of this website.');  // Alert the user if there's an error
             });
     }
 

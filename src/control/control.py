@@ -1,10 +1,6 @@
-import os
-from sqlite3 import IntegrityError
 from flask import Blueprint,render_template
 from flask_login import login_required, current_user
 from src.model.transcriber import Model
-from src.database import db
-from src.database.models import AudioTranscription
 from src.control import actions
 from flask import jsonify, request
 
@@ -54,9 +50,9 @@ def store_and_analyze():
 
     try:
         # Store the audio file
-        audio_filepath = actions.store_audio(file, db)
+        audio_filepath = actions.store_audio(file)
         # Trigger analysis of the audio file
-        actions.transcribe_and_analyse(transcriber, current_user, db, audio_filepath)
+        actions.transcribe_and_analyse(transcriber, current_user, audio_filepath)
         return jsonify({"success": True,
                         "message": "Transcription and Analysis successful",
                         "dropdown_value": audio_filepath}), 201 # Return success response with new dropdown value
@@ -85,7 +81,7 @@ def delete_all_files():
             - Error message with HTTP status 500 if an exception occurs during the deletion process.
     """
     try:
-        actions.cleanup(current_user, db)
+        actions.cleanup(current_user)
         return jsonify({"success": True, "message": "All files deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -112,7 +108,7 @@ def delete_file():
     try:
         data = request.json
         audio_filepath = data.get('filePath')
-        actions.cleanup(current_user, db, audio_filepath)
+        actions.cleanup(current_user, audio_filepath)
         return jsonify({"success": True, "message": "Single file deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -179,10 +175,10 @@ def get_analytics():
             return jsonify({'error': 'Recording not specified'}), 400
 
         # Call the function from actions.py to get the analytics
-        analytics = actions.get_analytics(audio_filepath, db)
+        analytics = actions.get_analytics(audio_filepath)
 
         # Return the data as JSON
-        return jsonify({'data': analytics}), 200
+        return jsonify({'success': True, 'data': analytics}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 

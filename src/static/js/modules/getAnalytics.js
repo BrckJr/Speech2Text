@@ -10,7 +10,9 @@ export async function setAnalytics() {
         if (!selectedAudioFile) {
             showErrorModal();
             // Reset the dropdown to the last valid value
-            if (lastValidSelectedAudioFile !== null) { audioFileDropdown.value = lastValidSelectedAudioFile; }
+            if (lastValidSelectedAudioFile !== null) {
+                audioFileDropdown.value = lastValidSelectedAudioFile;
+            }
             return;
         }
 
@@ -32,33 +34,19 @@ export async function setAnalytics() {
         const result = await response.json();
 
         if (result.success) {
-            // Extract all information into a dictionary
-            const params = {
-                created_at: result.created_at,
-                transcribed_text_path: result.transcribed_text_path,
-                speech_speed_graphic_path: result.speech_speed_graphic_path,
-                pitch_graphic_path: result.pitch_graphic_path,
-                energy_graphic_path: result.energy_graphic_path,
-                improved_text_path: result.improved_text_path,
-                recording_title: result.recording_title,
-                recording_language: result.recording_language,
-                audio_length: result.audio_length,
-                word_count: result.word_count,
-                text_summary: result.text_summary
-            };
+            // Extract the analytics data from result.data
+            const params = result.data; // Accessing the dictionary under "data"
 
             // Update the analytics panels with new information
             await updatePanels(params);
 
-        } else {
-            console.error('Error analyzing recording:', result.error);
-            showErrorModal();
         }
     } catch (err) {
         console.error('Error during fetch operation in setAnalytics:', err);
         showErrorModal();
     }
 }
+
 
 // Function to setup the event listener for the "Get Analysis" button
 export function setupAnalysisButton(analysisButton) {

@@ -110,10 +110,19 @@ class Analytics:
 
     def generate_plot_wpm(self):
         """
-        Plot the WPM over time and store the generated graphic in the output/speed_graphics directory.
+        Generate and save a plot of Words Per Minute (WPM) over time.
+
+        This method calculates the WPM over time from the audio transcription, generates a line plot
+        with visual indicators for optimal and non-optimal speaking speed ranges, and saves the
+        resulting graphic as a PNG file in the `output/speed_graphics` directory.
+
+        If no WPM data is available, a placeholder image with a "No WPM data to display" message is generated instead.
 
         Returns:
-            str: Path to the stored speech speed graphic
+            str: The file path to the saved speech speed graphic.
+
+        Raises:
+            Exception: If an error occurs during WPM calculation or while generating the plot.
         """
         # Extract only the filename of the audio recording including timestamp
         audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
@@ -138,9 +147,6 @@ class Analytics:
             # Add red shadow regions on the y-axis (y=50 to 100 and y=200 to 250)
             plt.axhspan(160, 250, color='red', alpha=0.1)
             plt.axhspan(50, 120, color='red', alpha=0.1)
-
-            # Adding dots at the actual data points
-            # plt.scatter(times, wpms, color='#f1f1f1', linewidth=2)
 
             # Connecting the points with lines and applying the color scheme
             plt.plot(times, wpms, color='#f1f1f1', linewidth=2)
@@ -175,7 +181,7 @@ class Analytics:
             plt.close()
 
         except Exception as e:
-            print(f"Exception: {e}")
+            raise RuntimeError(f"Error on WPM calculation: {e}")
 
         return speed_graphics_filepath
 
@@ -191,6 +197,9 @@ class Analytics:
             float: Standard deviation of the pitch
             float: Range of the pitch frequencies
             str: filepath to the plot of the pitch contour
+
+        Raises:
+            RuntimeError: If an error occurs during generation of the pitch contour plot.
         """
 
         # Extract only the filename of the audio recording including timestamp
@@ -198,69 +207,66 @@ class Analytics:
         # Generate the file path for the transcription file
         pitch_graphics_filepath = utils.generate_file_path("pitch_graphics", audio_filename)
 
-        # Load the audio signal
-        y, sr = librosa.load(self.audio_filepath)
-        # Estimate pitch using librosa's pyin
-        # f0: fundamental frequency over time
-        # voiced_flag: whether each time frame contains speech
-        f0, voiced_flag, voiced_time = librosa.pyin(y, fmin=50, fmax=600, sr=16000)
+        try:
+            # Load the audio signal
+            y, sr = librosa.load(self.audio_filepath)
+            # Estimate pitch using librosa's pyin
+            # f0: fundamental frequency over time
+            # voiced_flag: whether each time frame contains speech
+            f0, voiced_flag, voiced_time = librosa.pyin(y, fmin=50, fmax=600, sr=16000)
 
-        # Remove invalid pitch intervals (non-voiced or silence areas)
-        time = np.linspace(0, len(y) / sr, len(f0))  # Time values corresponding to each frame
-        valid_indices = voiced_flag & (f0 > 0)  # Only take voiced intervals with a valid pitch
-        filtered_time = time[valid_indices]
-        filtered_f0 = f0[valid_indices]
+            # Remove invalid pitch intervals (non-voiced or silence areas)
+            time = np.linspace(0, len(y) / sr, len(f0))  # Time values corresponding to each frame
+            valid_indices = voiced_flag & (f0 > 0)  # Only take voiced intervals with a valid pitch
+            filtered_time = time[valid_indices]
+            filtered_f0 = f0[valid_indices]
 
-        # If no valid pitch data is detected, replace filtered_f0 with an empty NumPy array
-        if filtered_f0.size == 0:
-            filtered_time = np.array([])  # Convert to an empty NumPy array
-            filtered_f0 = np.array([])  # Convert to an empty NumPy array
+            # If no valid pitch data is detected, replace filtered_f0 with an empty NumPy array
+            if filtered_f0.size == 0:
+                filtered_time = np.array([])  # Convert to an empty NumPy array
+                filtered_f0 = np.array([])  # Convert to an empty NumPy array
 
-        # Create summary statistics for the pitch only if valid data exists
-        # mean_pitch = np.mean(filtered_f0) if filtered_f0.size > 0 else 0
-        # std_pitch = np.std(filtered_f0) if filtered_f0.size > 0 else 0
-        # min_pitch = np.min(filtered_f0) if filtered_f0.size > 0 else 0
-        # max_pitch = np.max(filtered_f0) if filtered_f0.size > 0 else 0
-        # pitch_range = max_pitch - min_pitch
+            # Plotting the pitch analysis graph only if there is data to plot
+            if filtered_time.size > 0 and filtered_f0.size > 0 and not self.no_recording_content:
+                plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
 
-        # Plotting the pitch analysis graph only if there is data to plot
-        if filtered_time.size > 0 and filtered_f0.size > 0 and not self.no_recording_content:
-            plt.plot(filtered_time, filtered_f0, color='#f1f1f1', linewidth=2)
+                # Set x-axis and y-axis limits
+                plt.ylim(0, np.max(filtered_f0) * 1.1)
+                plt.xlim(40, self.get_wav_length()*1.1)
 
-            # Set x-axis and y-axis limits
-            plt.ylim(0, np.max(filtered_f0) * 1.1)
-            plt.xlim(40, self.get_wav_length()*1.1)
+                # Update labels and grid with consistent custom colors
+                plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
+                plt.ylabel("Pitch (Hz)", fontsize=12, fontweight='bold', color='#f1f1f1')
+                plt.grid(True, color='#f1f1f1')
 
-            # Update labels and grid with consistent custom colors
-            plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
-            plt.ylabel("Pitch (Hz)", fontsize=12, fontweight='bold', color='#f1f1f1')
-            plt.grid(True, color='#f1f1f1')
+                # Make the outer frame bolder and white
+                ax = plt.gca()  # Get current axes
+                for spine in ax.spines.values():
+                    spine.set_visible(True)
+                    spine.set_linewidth(2)  # Make the frame bolder
+                    spine.set_color('#f1f1f1')  # Set frame color to white
 
-            # Make the outer frame bolder and white
-            ax = plt.gca()  # Get current axes
-            for spine in ax.spines.values():
-                spine.set_visible(True)
-                spine.set_linewidth(2)  # Make the frame bolder
-                spine.set_color('#f1f1f1')  # Set frame color to white
+                # Adjust the size and weight of tick labels (numbers on the axes)
+                plt.tick_params(axis='both', which='major', labelsize=10, width=2,
+                                colors='#f1f1f1')  # Tick marks and labels in white
+                plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+                plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
-            # Adjust the size and weight of tick labels (numbers on the axes)
-            plt.tick_params(axis='both', which='major', labelsize=10, width=2,
-                            colors='#f1f1f1')  # Tick marks and labels in white
-            plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
-            plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+                plt.title("Pitch Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
+            else:
+                # No data to plot
+                plt.figure()
+                plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
+                plt.axis('off')  # Turn off the axes when no data is available
 
-            plt.title("Pitch Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
-        else:
-            # No data to plot
-            plt.figure()
-            plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
-            plt.axis('off')  # Turn off the axes when no data is available
+            # Save the plot
+            plt.savefig(pitch_graphics_filepath, format="png", dpi=300, transparent=True)
+            plt.close()
 
-        # Save the plot
-        plt.savefig(pitch_graphics_filepath, format="png", dpi=300, transparent=True)
-        plt.close()
+            return pitch_graphics_filepath
 
-        return pitch_graphics_filepath
+        except Exception as e:
+            raise RuntimeError(f"Error on pitch analysis: {e}")
 
     def get_general_info(self):
         """
@@ -277,27 +283,32 @@ class Analytics:
                 - float: length of the recording in format seconds
                 - datetime: Date and time when the audio was recorded.
                 - int: count of words in the recording
+
+            Raises:
+                RuntimeError: If an error occurs during generation of the general info.
         """
 
+        try:
+            def get_file_creation_time(filepath):
+                # Returns datetime object of the file creation time
+                creation_time = os.path.getctime(filepath)
+                return datetime.fromtimestamp(creation_time)  # Return complete datetime object
 
-        def get_file_creation_time(filepath):
-            # Returns datetime object of the file creation time
-            creation_time = os.path.getctime(filepath)
-            return datetime.fromtimestamp(creation_time)  # Return complete datetime object
+            audio_length = self.get_wav_length()
+            saving_date_and_time = get_file_creation_time(self.audio_filepath)
 
-        audio_length = self.get_wav_length()
-        saving_date_and_time = get_file_creation_time(self.audio_filepath)
+            # Check the length of transcription and return transcription itself if to few words
+            if self.word_count < 10:
+                # When the text only contains less than 10 words, return text itself
+                with open(self.transcription_filepath, 'r') as file:
+                    title = file.read()
+            else:
+                # Get title from the transformer model with a min length of 1 word and a max of 10 words
+                title = transformer.generate_summary(self.transcription_filepath, 1, 10)
 
-        # Check the length of transcription and return transcription itself if to few words
-        if self.word_count < 10:
-            # When the text only contains less than 10 words, return text itself
-            with open(self.transcription_filepath, 'r') as file:
-                title = file.read()
-        else:
-            # Get title from the transformer model with a min length of 1 word and a max of 10 words
-            title = transformer.generate_summary(self.transcription_filepath, 1, 10)
-
-        return title, self.language, audio_length, saving_date_and_time, self.word_count
+            return title, self.language, audio_length, saving_date_and_time, self.word_count
+        except Exception as e:
+            raise RuntimeError(f"Error on get general info: {e}")
 
     def get_summary(self):
         """
@@ -308,29 +319,35 @@ class Analytics:
 
         Returns:
             - str: an AI generated summary for the recording.
+
+        Raises:
+            RuntimeError: If an error occurs during generation of the summary.
         """
 
-        # Set the correct min and max length for the summary
-        if self.word_count < 50:
-            # When the text only contains less than 20 words, return text itself
-            with open(self.transcription_filepath, 'r') as file:
-                text = file.read()
-            return text
-        elif self.word_count < 100:
-            max_length = 50
-            min_length = 10
-        elif self.word_count < 300:
-            max_length = 80
-            min_length = 20
-        elif self.word_count < 500:
-            max_length = 100
-            min_length = 40
-        else:
-            max_length = 150
-            min_length = 50
+        try:
+            # Set the correct min and max length for the summary
+            if self.word_count < 50:
+                # When the text only contains less than 20 words, return text itself
+                with open(self.transcription_filepath, 'r') as file:
+                    text = file.read()
+                return text
+            elif self.word_count < 100:
+                max_length = 50
+                min_length = 10
+            elif self.word_count < 300:
+                max_length = 80
+                min_length = 20
+            elif self.word_count < 500:
+                max_length = 100
+                min_length = 40
+            else:
+                max_length = 150
+                min_length = 50
 
-        # Get summary from the transformer model
-        return transformer.generate_summary(self.transcription_filepath, min_length, max_length)
+            # Get summary from the transformer model
+            return transformer.generate_summary(self.transcription_filepath, min_length, max_length)
+        except Exception as e:
+            raise RuntimeError(f"Error on get summary info: {e}")
 
     def get_wav_length(self):
         """
@@ -349,76 +366,77 @@ class Analytics:
         The energy is normalized such that the maximum energy level is 1.
 
         Returns:
-            float: Average energy of the audio (normalized).
-            float: Standard deviation of the energy (normalized).
             str: Path to the energy plot.
+
+        Raises:
+            RuntimeError: If an error occurs during generation of the energy plot.
         """
+
         # Extract only the filename of the audio recording including timestamp
         audio_filename = self.audio_filepath.replace('src/static/output/raw_audio/', '')[:-4]
         # Generate the file path for the energy plot
         energy_graphics_filepath = utils.generate_file_path("energy_graphics", audio_filename)
 
-        # Load the audio signal
-        y, sr = librosa.load(self.audio_filepath)
+        try:
+            # Load the audio signal
+            y, sr = librosa.load(self.audio_filepath)
 
-        # Calculate the short-time energy (RMS)
-        frame_length = 2048
-        hop_length = 512
-        rms_energy = librosa.feature.rms(y=y, frame_length=frame_length, hop_length=hop_length)[0]
-        times = librosa.frames_to_time(np.arange(len(rms_energy)), sr=sr, hop_length=hop_length)
+            # Calculate the short-time energy (RMS)
+            frame_length = 2048
+            hop_length = 512
+            rms_energy = librosa.feature.rms(y=y, frame_length=frame_length, hop_length=hop_length)[0]
+            times = librosa.frames_to_time(np.arange(len(rms_energy)), sr=sr, hop_length=hop_length)
 
-        # Normalize the energy values to have a maximum of 1
-        normalized_rms_energy = rms_energy / np.max(rms_energy) if np.max(rms_energy) > 0 else rms_energy
+            # Normalize the energy values to have a maximum of 1
+            normalized_rms_energy = rms_energy / np.max(rms_energy) if np.max(rms_energy) > 0 else rms_energy
 
-        # Compute statistics
-        # average_energy = np.mean(normalized_rms_energy)
-        # std_energy = np.std(normalized_rms_energy)
+            if not self.no_recording_content:
+                # Plot the energy graph
+                plt.figure()
+                plt.plot(times, normalized_rms_energy, color='#f1f1f1', linewidth=2)
 
-        if not self.no_recording_content:
-            # Plot the energy graph
-            plt.figure()
-            plt.plot(times, normalized_rms_energy, color='#f1f1f1', linewidth=2)
+                # Update labels and grid with consistent custom colors
+                plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
+                plt.ylabel("Relative Energy", fontsize=12, fontweight='bold', color='#f1f1f1')
+                plt.grid(True, color='#f1f1f1')
 
-            # Update labels and grid with consistent custom colors
-            plt.xlabel("Time (seconds)", fontsize=12, fontweight='bold', color='#f1f1f1')
-            plt.ylabel("Relative Energy", fontsize=12, fontweight='bold', color='#f1f1f1')
-            plt.grid(True, color='#f1f1f1')
+                # Make the outer frame bolder and white
+                ax = plt.gca()  # Get current axes
+                for spine in ax.spines.values():
+                    spine.set_visible(True)
+                    spine.set_linewidth(2)  # Make the frame bolder
+                    spine.set_color('#f1f1f1')  # Set frame color to white
 
-            # Make the outer frame bolder and white
-            ax = plt.gca()  # Get current axes
-            for spine in ax.spines.values():
-                spine.set_visible(True)
-                spine.set_linewidth(2)  # Make the frame bolder
-                spine.set_color('#f1f1f1')  # Set frame color to white
+                # Adjust the size and weight of tick labels (numbers on the axes)
+                plt.tick_params(axis='both', which='major', labelsize=10, width=2, colors='#f1f1f1')
+                plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
+                plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
 
-            # Adjust the size and weight of tick labels (numbers on the axes)
-            plt.tick_params(axis='both', which='major', labelsize=10, width=2, colors='#f1f1f1')
-            plt.xticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for x-axis numbers
-            plt.yticks(fontsize=10, fontweight='bold', color='#f1f1f1')  # Specifically for y-axis numbers
+                plt.title("Normalized Energy Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
+            else:
+                # No data to plot
+                plt.figure()
+                plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
+                plt.axis('off')  # Turn off the axes when no data is available
 
-            plt.title("Normalized Energy Over Time", fontsize=14, fontweight='bold', color='#f1f1f1')
-        else:
-            # No data to plot
-            plt.figure()
-            plt.text(0.5, 0.5, 'No pitch data to display', ha='center', va='center', fontsize=12, color='#f1f1f1')
-            plt.axis('off')  # Turn off the axes when no data is available
+            # Save the plot
+            plt.savefig(energy_graphics_filepath, format="png", dpi=300, transparent=True)
+            plt.close()
 
-        # Save the plot
-        plt.savefig(energy_graphics_filepath, format="png", dpi=300, transparent=True)
-        plt.close()
-
-        return energy_graphics_filepath
+            return energy_graphics_filepath
+        except Exception as e:
+            raise RuntimeError(f"Error on analyze energy: {e}")
 
     def improve_text(self):
         """
-        Improves grammar, clarity, and readability of the transcription file.
+        Enhance the transcription's grammar, clarity, and readability.
 
-        This method returns a filepath to a textfile with a suggestion of an improved speech.
-        The suggestion is generated via an AI model and might contain errors.
+        This method processes a transcription file using an AI model to generate an improved version of the text.
+        It saves the improved text to a new file and returns the file path. Note that the AI-generated text may
+        contain errors or require further refinement.
 
         Returns:
-            str: Filepath to the improved text for the speech
-            bool: True if save was successful, False otherwise
+            str: The file path to the saved improved transcription text.
         """
 
         # Extract only the filename of the audio recording including timestamp

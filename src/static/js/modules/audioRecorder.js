@@ -108,15 +108,12 @@ export function setupAudioRecording(startButton, pauseButton, stopButton, audioF
                             await setAnalytics();
 
                         });
-                    } else if (response.status === 404) {
-                        alert('Audio format could not be converted appropriately. Please contact the developer of this website.');
                     } else if (response.status === 422) {
-                        alert('No audio was recorded. Is your microphone on and working? If the error persists, please contact the developer of this website.');
-                    } else if (response.status === 401) {
-                        alert('You are not authorized to perform this action.');
+                        alert('Audio recording failed. Is your microphone on and working? ' +
+                            'If the error persists, please contact the developer of this website.');
                     } else {
                         console.error('Error uploading audio file:', response.statusText);
-                        alert('An error occurred while uploading the audio file.');
+                        alert('An unexpected error occurred while uploading the audio file.');
                     }
                 })
                 .catch(error => {
