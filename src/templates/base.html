@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Transcriber Interface{% endblock %}</title>
+    <title data-i18n="page_title">{% block title %}Transcriber Interface{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/base.css">
     {% block styles %}
         {% if page_name == "dashboard" %}
@@ -26,9 +26,9 @@
         <!-- Language Switcher Buttons -->
         <div class="language-switcher">
             <p_h> &#127758; </p_h>
-            <button id="btn_en">en</button>
-            <button id="btn_de">de</button>
-            <button id="btn_es">es</button>
+            <button id="btn_en" data-i18n="language_english">en</button>
+            <button id="btn_de" data-i18n="language_german">de</button>
+            <button id="btn_es" data-i18n="language_spanish">es</button>
         </div>
 
         <!-- User Info and Logout Button for Dashboard-->
@@ -40,8 +40,8 @@
                         <path d="M4,20c0-4,4-6,8-6s8,2,8,6" stroke=#f4f4f4 stroke-width="1.5" fill=black></path>
                     </svg>
                     <div class="info-panel">
-                        <p><strong>Name:</strong> {{ current_user.username }}</p>
-                        <p><strong>Email:</strong> {{ current_user.email }}</p>
+                        <p><strong data-i18n="user_name_label">Name:</strong> {{ current_user.username }}</p>
+                        <p><strong data-i18n="user_email_label">Email:</strong> {{ current_user.email }}</p>
                     </div>
                 </div>
                 <form method="POST" action="{{ url_for('auth.logout') }}">
@@ -54,10 +54,10 @@
         {% if page_name == "landing" %}
             <div class="user-info-container">
                 <form method="POST" action="{{ url_for('auth.register') }}">
-                    <button type="submit" class="btn-login">Register</button>
+                    <button type="submit" class="btn-login" data-i18n="register_button">Register</button>
                 </form>
                 <form method="POST" action="{{ url_for('auth.login') }}">
-                    <button type="submit" class="btn-login">Login</button>
+                    <button type="submit" class="btn-login" data-i18n="login_button">Login</button>
                 </form>
             </div>
         {% endif %}

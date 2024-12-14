@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Entrypoint - Transcriber Interface{% endblock %}
+{% block title %}<span data-i18n="entrypoint_title">Entrypoint - Transcriber Interface</span>{% endblock %}
 
 {% block data_page %}landing{% endblock %}
 
@@ -9,7 +9,7 @@
 <div class="intro">
     <!-- Heading will be filled dynamically from headingAnimation.js-->
     <h1 id="headline" class="typing"></h1>
-    <p>
+    <p data-i18n="intro_paragraph">
         You always wanted to improve your presentation and speaking skills? Then you are at the perfect place!
         Every one of us has to hold a presentation or give a speech from time to time. It can be challenging to train
         that without having friends or family listening to the speech and giving you subjective feedback.
@@ -20,8 +20,8 @@
 
 <!-- Recording Audio -->
 <div class="get_started">
-    <h2>Get started now ...</h2>
-    <p>
+    <h2 data-i18n="get_started_title">Get started now ...</h2>
+    <p data-i18n="get_started_paragraph">
         Start now to improve your presentation skills. Click on the button below and log in
         or create a new account. No worries, you won't get any marketing mails, your e-mail address is only
         necessary to implement a password reset in the future. For now, if you forgot your credentials, please
@@ -29,41 +29,41 @@
     </p>
 
     <form method="POST" action="{{ url_for('auth.login') }}">
-        <button type="submit" class="btn" id="get-started-btn">Get Started</button>
+        <button type="submit" class="btn" id="get-started-btn" data-i18n="get_started_button">Get Started</button>
     </form>
 </div>
 
 <!-- Analytics Section -->
 <div class="analytics">
-    <h2>Here's what you will get ...</h2>
+    <h2 data-i18n="analytics_title">Here's what you will get ...</h2>
 
-    <p>
+    <p data-i18n="analytics_paragraph">
         When it comes to presentations, it is often the pure speech that decides whether
         the content is interesting and capturing for the audience or not. That's why your recording will be analysed
         in terms of the following objective features:
     </p>
     <ol class="analytics-list">
-        <li> <p_bf>General Information:</p_bf> This includes an AI generated headline for your speech, the language of your
-            recording as well as the length and word count in your recording.
+        <li> <p_bf data-i18n="general_info_title">General Information:</p_bf> <span data-i18n="general_info_paragraph">This includes an AI generated headline for your speech, the language of your
+            recording as well as the length and word count in your recording.</span>
         </li>
-        <li><p_bf>Summary of the Speech:</p_bf>  AI generated summary of your speech. If the AI model captures the essence
-            of your speech, it is also likely that your audience may capture it.
+        <li><p_bf data-i18n="summary_title">Summary of the Speech:</p_bf> <span data-i18n="summary_paragraph">AI generated summary of your speech. If the AI model captures the essence
+            of your speech, it is also likely that your audience may capture it.</span>
         </li>
-        <li><p_bf>Speech Rate:</p_bf>  The graph shows your speech rate over time for your whole recording. The speech rate
+        <li><p_bf data-i18n="speech_rate_title">Speech Rate:</p_bf> <span data-i18n="speech_rate_paragraph">The graph shows your speech rate over time for your whole recording. The speech rate
             is measured in words per minute. There are also upper and lower bounds marked in the graph,
-            giving you an orientation in which bounds your speech rate should be to avoid being too slow or too fast.
+            giving you an orientation in which bounds your speech rate should be to avoid being too slow or too fast.</span>
         </li>
-        <li><p_bf>Pitch Analysis:</p_bf>  The graph shows the pitch you have during your speech. Usually, it is a good sign to have
+        <li><p_bf data-i18n="pitch_analysis_title">Pitch Analysis:</p_bf> <span data-i18n="pitch_analysis_paragraph">The graph shows the pitch you have during your speech. Usually, it is a good sign to have
             high amplitude of your pitch throughout the speech as this means you are varying in your pitch.
-            In contrast, boring speeches usually have a small amplitude.
+            In contrast, boring speeches usually have a small amplitude.</span>
         </li>
-        <li><p_bf>Energy Analysis:</p_bf>  The graph shows the relative energy level over time. This resembles your speech energy
+        <li><p_bf data-i18n="energy_analysis_title">Energy Analysis:</p_bf> <span data-i18n="energy_analysis_paragraph">The graph shows the relative energy level over time. This resembles your speech energy
             during the recording, i.e., in parts where you speak louder, the energy level will be higher.
-            The relative level is measured in regard to the loudest section of your recording.
+            The relative level is measured in regard to the loudest section of your recording.</span>
         </li>
-        <li><p_bf>Suggestion for Speech Improvement:</p_bf>  This will provide an AI generated suggestion of how you can improve
+        <li><p_bf data-i18n="speech_improvement_title">Suggestion for Speech Improvement:</p_bf> <span data-i18n="speech_improvement_paragraph">This will provide an AI generated suggestion of how you can improve
             your speech to be more fluent and professional. Please check this suggestion before using it as the AI
-            model may make mistakes.
+            model may make mistakes.</span>
         </li>
     </ol>
 
@@ -72,46 +72,46 @@
 
         <!-- Panel for General Overview Information -->
         <div class="analytics-panel-landing" id="content-overview-panel-landing">
-            <h3 data-i18n="overview-landing">General Information</h3>
-            <p id="panel-topic-landing" >Topic: The Importance of Sustainable Living</p>
-            <p id="panel-language-landing" >Language: en</p>
-            <p id="panel-audio-length-landing" >Audio Length: 3 minutes 22 seconds</p>
-            <p id="panel-word-count-landing" >Word Count: 455</p>
-            <p id="panel-created-at-landing" >Created on: Wed, 01 Jan 2025 09:00:00 GMT</p>
+            <h3 data-i18n="overview_landing">General Information</h3>
+            <p id="panel-topic-landing" data-i18n="panel_topic">Topic: The Importance of Sustainable Living</p>
+            <p id="panel-language-landing" data-i18n="panel_language">Language: en</p>
+            <p id="panel-audio-length-landing" data-i18n="panel_audio_length">Audio Length: 3 minutes 22 seconds</p>
+            <p id="panel-word-count-landing" data-i18n="panel_word_count">Word Count: 455</p>
+            <p id="panel-created-at-landing" data-i18n="panel_created_at">Created on: Wed, 01 Jan 2025 09:00:00 GMT</p>
         </div>
 
         <!-- Panel for Summary of Content -->
-        <div class="analytics-panel-landing" id="content-summary-panel-landing" >
-            <h3 data-i18n="summary_of_speech-landing">Summary of Speech</h3>
-            <p id="panel-summary-landing">Sustainability is more than just a buzzword. It's about finding a balance between the environment, the economy and society. Sustainability isn't just about what we do as individuals, it's also about advocating for policies that support sustainable development.</p>
+        <div class="analytics-panel-landing" id="content-summary-panel-landing">
+            <h3 data-i18n="summary_of_speech_landing">Summary of Speech</h3>
+            <p id="panel-summary-landing" data-i18n="panel_summary">Sustainability is more than just a buzzword. It's about finding a balance between the environment, the economy and society. Sustainability isn't just about what we do as individuals, it's also about advocating for policies that support sustainable development.</p>
         </div>
     </div>
 
     <div class="analytics-panel-grid2">
         <!-- Panel for Analysis of Speech Rate -->
-        <div class="analytics-panel-landing" id="speech-rate-panel-landing" >
-            <h3 data-i18n="speech_rate-landing">Speech rate</h3>
+        <div class="analytics-panel-landing" id="speech-rate-panel-landing">
+            <h3 data-i18n="speech_rate_landing">Speech rate</h3>
             <img src="static/figures/speed_demo.png" alt="Speed Demo" width=100%>
         </div>
 
         <!-- Panel for Analysis of Pitch -->
-        <div class="analytics-panel-landing" id="pitch-panel-landing" >
-            <h3 data-i18n="pitch_analysis-landing">Pitch Analysis</h3>
+        <div class="analytics-panel-landing" id="pitch-panel-landing">
+            <h3 data-i18n="pitch_analysis_landing">Pitch Analysis</h3>
             <img src="static/figures/pitch_demo.png" alt="Pitch Demo" width=100%>
         </div>
 
         <!-- Panel for Analysis of Energy -->
-        <div class="analytics-panel-landing" id="energy-panel-landing" >
-            <h3 data-i18n="energy_analysis-landing">Energy Analysis</h3>
+        <div class="analytics-panel-landing" id="energy-panel-landing">
+            <h3 data-i18n="energy_analysis_landing">Energy Analysis</h3>
             <img src="static/figures/energy_demo.png" alt="Energy Demo" width=100%>
         </div>
     </div>
 
     <div class="analytics-panel-grid3">
         <!-- Panel for Improved Text -->
-        <div class="analytics-panel-landing" id="improved-text-panel-landing" >
-            <h3 data-i18n="improved_text-landing">Suggestion for Speech Improvement</h3>
-            <p id="panel-improved-text-landing">Sustainability is more than just a buzzword. It's about finding a balance between the environment, the economy and society. Sustainability isn't just about what we do as individuals, it's also about advocating for policies that support sustainable development. Governments play a key role in shaping our future by supporting renewable energy sources, investing, green infrastructure, and encouraging business to adopt sustainable practices. When we invest in sustainable practices, we create jobs, improve public health, and strengthen the fabric of society. Sustainable living is a win-win. We must ask ourselves, what kind of world do we want to live behind? A world filled with waste and pollution, or world where resources are used wisely, and the planet thrives? ...</p>
+        <div class="analytics-panel-landing" id="improved-text-panel-landing">
+            <h3 data-i18n="improved_text_landing">Suggestion for Speech Improvement</h3>
+            <p id="panel-improved-text-landing" data-i18n="panel_improved_text">Sustainability is more than just a buzzword. It's about finding a balance between the environment, the economy and society. Sustainability isn't just about what we do as individuals, it's also about advocating for policies that support sustainable development. Governments play a key role in shaping our future by supporting renewable energy sources, investing, green infrastructure, and encouraging business to adopt sustainable practices. When we invest in sustainable practices, we create jobs, improve public health, and strengthen the fabric of society. Sustainable living is a win-win. We must ask ourselves, what kind of world do we want to live behind? A world filled with waste and pollution, or world where resources are used wisely, and the planet thrives? ...</p>
         </div>
     </div>
 </div>

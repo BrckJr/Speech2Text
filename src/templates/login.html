@@ -13,7 +13,7 @@
             {% if messages %}
                 <div class="alert-container">
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
+                        <div class="alert alert-{{ category }}" role="alert" data-i18n="login_error_{{ category }}">
                             {{ message }}
                         </div>
                     {% endfor %}
