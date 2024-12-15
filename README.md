@@ -1,31 +1,19 @@
 # Speech Analysis
 
-This is a ongoing development project in which I experiment with transcription and analysis of spoken language.
-I am not entirely sure in which direction I will develop it next, therefore I list here what is currently included 
+This is an ongoing development project in which I experiment with transcription and analysis of spoken language.
+I am not entirely sure in which direction I will develop it next. Therefore, I list here what is currently included 
 and what are my ideas to develop further.
 
 Currently, the project includes following components:
-- Registration of new users and log in for already registered users
-- A main webpage for the interaction with the program which includes the recording of audio files, transcribing and 
-analyzing them.
-- Possibility to listen to recorded audios and read the transcriptions in a new tab in the browser. 
-The name of the files include the timestamp of when they were created.
-- Possibility to delete all audio files for the currently logged-in user. 
-At the moment it is not possible to delete single files.
-- All files are stored with respect to the currently logged-in user. This is tracked via a SQLite database in the backend.
-- The recordings and the transcriptions are saved locally in the 'src/static/output' directory. A link to the 
-stored files is contained in a SQLite database.
-- The analysis of the recording includes a speech rate analysis, a pitch analysis, an energy analysis and 
-a summation of the content as well as a suggestion of how to improve the content. 
+- User Management (registration, login, logout, ...)
+- Recording, transcribing and analyzing audio recordings
+- File Management for audio recording and analysis
+- Analysis includes speech rate analysis, pitch analysis, energy analysis, summation of the content and 
+suggestion of how to improve the speech. 
 
 Future developments might include but are certainly not limited to:
 - making the AI models faster and better and compare their performance
-- hosting the whole platform as a website by switching to PostgreSQL and storing the user files on a cloud.
-
-Here is a glimpse into the landing page of the project:
-![Alt text](src/static/figures/entry(1).png)
-![Alt text](src/static/figures/entry(2).png)
-![Alt text](src/static/figures/entry(3).png)
+- hosting the whole platform as a website by creating Docker containers, using a PostgreSQL and object storage.
 
 # Installation
 To get the program running, install the libraries mentioned in the requirements.txt with the python package manager 
@@ -46,16 +34,15 @@ You can run the program directly in your preferred IDE from the app.py file.
 Alternatively, you can run the program
 from the terminal. To do this, ensure that you are in the root directory and run 
 
-`python backend/app.py`
+`python src/app.py`
 
-It might happen that python cannot resolve some module paths. To overcome this issue, you can set the `PYTHONPATH 
+It might happen that python cannot resolve some module paths. To overcome this issue, you can set the `PYTHONPATH` 
 environment variable to tell Python where to look for the backend module with 
 
 ```bash
 export PYTHONPATH=$(pwd)  # on macOS/Linux
 set PYTHONPATH=%cd%       # on Windows
 ```
-
 
 A third option is to run the program directly via Flask CLI with
 
@@ -65,7 +52,7 @@ export FLASK_ENV=development          # Optional: User for debugging
 flask run
 ```
 
-
+Setting the path to the `FLASK_APP` might also be necessary when running the program from the IDE or terminal.
 Please be aware that the program was currently tested only on a MacOS system. There might be unexpected behavior
 on other operating systems. If you encounter such behavior, please report it to me.
 
