@@ -2,8 +2,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <!--suppress XmlInvalidId -->
-<div class="center">
+    <div class="center">
         <h_r data-i18n="register_header">Register</h_r>
 
         <!-- Display Flash Messages for unsuccessful registration -->
@@ -11,7 +10,7 @@
             {% if messages %}
                 <div class="alert-container">
                     {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
+                        <div class="alert alert-{{ category }}" role="alert" data-i18n="register_error_{{ category }}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -23,19 +22,19 @@
             {{ form.hidden_tag() }}
             <div class="form-group">
                 <label for="username" data-i18n="username_label" class="form-label">{{ form.username.label.text }}</label>
-                {{ form.username(class="form-control") }}
+                {{ form.username(class="form-control", placeholder="Enter your username", data_i18n="username_placeholder") }}
             </div>
             <div class="form-group">
                 <label for="email" data-i18n="email_label" class="form-label">{{ form.email.label.text }}</label>
-                {{ form.email(class="form-control") }}
+                {{ form.email(class="form-control", placeholder="Enter your email", data_i18n="email_placeholder") }}
             </div>
             <div class="form-group">
                 <label for="password" data-i18n="password_label" class="form-label">{{ form.password.label.text }}</label>
-                {{ form.password(class="form-control") }}
+                {{ form.password(class="form-control", placeholder="Enter your password", data_i18n="password_placeholder") }}
             </div>
             <div class="form-group">
                 <label for="confirm_password" data-i18n="confirm_password_label" class="form-label">{{ form.confirm_password.label.text }}</label>
-                {{ form.confirm_password(class="form-control") }}
+                {{ form.confirm_password(class="form-control", placeholder="Confirm your password", data_i18n="confirm_password_placeholder") }}
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary" data-i18n="register_button">Register</button>
@@ -43,8 +42,7 @@
         </form>
 
         <!-- Button to navigate to the login page -->
-        <p data-i18n="already_account"> Already have an account?</p>
+        <p data-i18n="already_account">Already have an account?</p>
         <a href="{{ url_for('auth.login') }}" data-i18n="login_link">Login here</a>
-
     </div>
 {% endblock %}
