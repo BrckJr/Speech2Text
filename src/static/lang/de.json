@@ -77,5 +77,20 @@
   "get_analysis_button": "Aufnahme auswählen",
   "file_management_section": "Dateiverwaltung",
   "file_management_instructions": "Verwalte deine Aufnahmen, lade sie herunter oder lösche Dateien.",
-  "delete_all_files": "Alle Dateien löschen 🗑️"
+  "delete_all_files": "Alle Dateien löschen 🗑️",
+  "file_saving": "Dateispeicherung",
+  "enter_filename": "Geben Sie den Dateinamen zum Speichern der Audioaufnahme ein:",
+  "save_audio_analyze": "Audio speichern und analysieren",
+  "discard_audio": "Audio verwerfen",
+  "delete_single_files_modal": "Diese Datei löschen",
+  "delete_single_confirmation_message": "Möchten Sie diese Aufnahme und alle zugehörigen Dateien wirklich löschen? <br> Diese Aktion kann nicht rückgängig gemacht werden.",
+  "yes_delete_single": "Ja, löschen",
+  "cancel": "Abbrechen",
+  "delete_all_files_modal": "Alle Dateien löschen",
+  "delete_confirmation_message": "Möchten Sie wirklich alle Dateien löschen? <br> Diese Aktion kann nicht rückgängig gemacht werden.",
+  "yes_delete_all": "Ja, alles löschen",
+  "analysis-selection_modal": "Fehler",
+  "analysis-selection_modal_text": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut. Vielleicht haben Sie keine Aufnahme ausgewählt?",
+  "filename_placeholder": "Dateinamen eingeben",
+  "loading_overlay_text": "Speichern und Analysieren Ihrer Aufnahme, bitte warten..."
 }

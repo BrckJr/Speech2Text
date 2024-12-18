@@ -1,7 +1,7 @@
 <!-- Dashboard HTML with Translations -->
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Transcriber Interface{% endblock %}
+{% block title %}Dashboard - Presentable{% endblock %}
 
 {% block data_page %}dashboard{% endblock %}
 
@@ -110,4 +110,53 @@
     </div>
     <button class="delete-btn" id="delete_all" data-i18n="delete_all_files">Delete all Files 🗑️</button>
 </div>
+
+<!-- Modal for Stop Options -->
+<div id="stop-options-modal" class="modal">
+    <div class="modal-content">
+        <h10 data-i18n="file_saving">File Saving</h10>
+        <div class="form-group">
+            <label for="filename" data-i18n="enter_filename" class="form-label">Enter Filename to store Audio Recording:</label>
+            <input type="text" id="filename" class="form-control" placeholder="Enter file name" />
+        </div>
+        <button id="save-audio-analyze" data-i18n="save_audio_analyze">Save Audio and Analyse</button>
+        <button id="delete-audio" data-i18n="discard_audio">Discard Audio</button>
+    </div>
+</div>
+<!-- Delete Single Confirmation Modal -->
+<div id="delete-single-confirmation-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="delete_single_files_modal">Delete this File</h10>
+        <p1 data-i18n="delete_single_confirmation_message">Are you sure you want to delete this recording and all related files? <br>
+            This action cannot be undone.</p1>
+        <button id="confirm-delete-single" data-i18n="yes_delete_single">Yes, Delete</button>
+        <button id="cancel-delete-single" data-i18n="cancel">Cancel</button>
+    </div>
+</div>
+<!-- Delete All Confirmation Modal -->
+<div id="delete-confirmation-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="delete_all_files_modal">Delete all Files</h10>
+        <p1 data-i18n="delete_confirmation_message">Are you sure you want to delete all files? <br>
+            This action cannot be undone.</p1>
+        <button id="confirm-delete" data-i18n="yes_delete_all">Yes, Delete All</button>
+        <button id="cancel-delete" data-i18n="cancel">Cancel</button>
+    </div>
+</div>
+<!-- Delete Confirmation Modal -->
+<div id="analysis-selection-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h10 data-i18n="analysis-selection_modal">Error</h10>
+        <p1 data-i18n="analysis-selection_modal_text">An error occurred, please try again. Maybe you did not choose a recording?</p1>
+        <button id="close-error-modal">OK</button>
+    </div>
+</div>
+<!-- Overlay for loading screen -->
+<div id="loadingOverlay" class="overlay">
+    <div class="loader-container">
+        <div class="pulsating-ring"></div>
+        <p>Saving and analyzing your recording, please wait...</p>
+    </div>
+</div>
+
 {% endblock %}

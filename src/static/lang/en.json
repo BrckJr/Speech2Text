@@ -77,5 +77,20 @@
   "get_analysis_button": "Select Recording",
   "file_management_section": "File Management",
   "file_management_instructions": "Manage your recordings, download them, or delete files.",
-  "delete_all_files": "Delete all Files 🗑️"
+  "delete_all_files": "Delete all Files 🗑️",
+  "file_saving": "File Saving",
+  "enter_filename": "Enter Filename to store Audio Recording:",
+  "save_audio_analyze": "Save Audio and Analyse",
+  "discard_audio": "Discard Audio",
+  "delete_single_files_modal": "Delete this File",
+  "delete_single_confirmation_message": "Are you sure you want to delete this recording and all related files? <br> This action cannot be undone.",
+  "yes_delete_single": "Yes, Delete",
+  "cancel": "Cancel",
+  "delete_all_files_modal": "Delete all Files",
+  "delete_confirmation_message": "Are you sure you want to delete all files? <br> This action cannot be undone.",
+  "yes_delete_all": "Yes, Delete All",
+  "analysis-selection_modal": "Error",
+  "analysis-selection_modal_text": "An error occurred, please try again. Maybe you did not choose a recording?",
+  "filename_placeholder": "Enter file name",
+  "loading_overlay_text": "Saving and analyzing your recording, please wait..."
 }

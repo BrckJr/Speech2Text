@@ -77,5 +77,20 @@
   "get_analysis_button": "Seleccionar grabación",
   "file_management_section": "Gestión de archivos",
   "file_management_instructions": "Gestiona tus grabaciones, descárgalas o elimina archivos.",
-  "delete_all_files": "Eliminar todos los archivos 🗑️"
+  "delete_all_files": "Eliminar todos los archivos 🗑️",
+  "file_saving": "Guardado de archivo",
+  "enter_filename": "Introduzca el nombre del archivo para guardar la grabación de audio:",
+  "save_audio_analyze": "Guardar audio y analizar",
+  "discard_audio": "Descartar audio",
+  "delete_single_files_modal": "Eliminar este archivo",
+  "delete_single_confirmation_message": "¿Está seguro de que desea eliminar esta grabación y todos los archivos relacionados? <br> Esta acción no se puede deshacer.",
+  "yes_delete_single": "Sí, eliminar",
+  "cancel": "Cancelar",
+  "delete_all_files_modal": "Eliminar todos los archivos",
+  "delete_confirmation_message": "¿Está seguro de que desea eliminar todos los archivos? <br> Esta acción no se puede deshacer.",
+  "yes_delete_all": "Sí, eliminar todo",
+  "analysis-selection_modal": "Error",
+  "analysis-selection_modal_text": "Se produjo un error, inténtelo de nuevo. ¿Quizás no eligió una grabación?",
+  "filename_placeholder": "Introduzca el nombre del archivo",
+  "loading_overlay_text": "Guardando y analizando su grabación, por favor espere..."
 }
