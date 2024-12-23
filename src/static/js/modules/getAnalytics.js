@@ -88,7 +88,7 @@ async function updatePanels(params) {
 
     // Get the improved text from local storage and display it in the panel
     console.log(improved_text_path);
-    loadTextPanel(transcribed_text_path, 'transcribed');
+    // loadTextPanel(transcribed_text_path, 'transcribed');
     loadTextPanel(improved_text_path, 'improved');
 
     // Activate the text in the overview panel
@@ -154,13 +154,19 @@ function updateGraphic(panelId, graphicPath, altText) {
 }
 
 function loadTextPanel(textFilePath, category) {
-    let elementID = ''
+    let elementID = '';
+    let spanID = '';
+
+    // Determine the panel and span IDs based on the category
     if (category === 'improved') {
-        elementID = 'panel-improved-text'
+        elementID = 'improved-text-panel';
+        spanID = 'improved_text';
     } else if (category === 'transcribed') {
-        elementID = 'panel-transcribed-text'
+        elementID = 'transcribed-text-panel';
+        spanID = 'transcribed_text';
     } else {
         console.error('No valid category provided.');
+        return;
     }
 
     if (textFilePath) {
@@ -173,17 +179,19 @@ function loadTextPanel(textFilePath, category) {
                 return response.text();
             })
             .then(textContent => {
-                // Find the panel in the DOM
+                // Find the panel and span in the DOM
                 const textPanel = document.getElementById(elementID);
-                if (textPanel) {
-                    // Activate the panel
-                    document.getElementById(elementID).style.display = 'block';
+                const textSpan = document.getElementById(spanID);
 
-                    // Clear out any existing content and add the new content
-                    textPanel.innerText = textContent; // Render text content
+                if (textPanel && textSpan) {
+                    // Activate the panel
+                    textPanel.style.display = 'block';
+
+                    // Update the span content with the fetched text
+                    textSpan.textContent = textContent;
                     console.log(textContent);
                 } else {
-                    console.error('Text panel not found.');
+                    console.error('Text panel or span not found.');
                 }
             })
             .catch(error => {
