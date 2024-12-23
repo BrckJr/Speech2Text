@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import librosa
 from librosa import feature
 import numpy as np
-from src.utils import utils
-from src.model import transformer
+from utils import utils
+import transformer
 
 matplotlib.use('Agg') # use this to avoid crashes of the program when matplotlib outside the main thread
 

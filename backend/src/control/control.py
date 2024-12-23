@@ -1,7 +1,7 @@
 from flask import Blueprint,render_template
 from flask_login import login_required, current_user
-from src.model.transcriber import Model
-from src.control import actions
+from transcriber import Model
+import actions
 from flask import jsonify, request
 
 # Create a Blueprint for transcription routes

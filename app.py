@@ -3,14 +3,14 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, current_user
 
-from src.control.control import transcription_bp
-from src.config import Config
-from src.database import db
-from src.auth.routes import auth_blueprint
+from control import transcription_bp
+from config import Config
+from backend.src.database import db
+from routes import auth_blueprint
 
 # Factory function to create the Flask app
 def create_app():
-    app = Flask(__name__, template_folder='templates', static_folder='static')
+    app = Flask(__name__, template_folder='frontend/src/templates', static_folder='frontend/src/static')
     app.config.from_object(Config)
 
     # Initialize extensions
@@ -25,7 +25,7 @@ def create_app():
 
     @login_manager.user_loader
     def load_user(user_id):
-        from src.database.models import User  # Import within function to avoid circular imports
+        from models import User  # Import within function to avoid circular imports
         return db.session.get(User, int(user_id))  # Ensure `User` model has a `get` method that works with `db.session`
 
     # Register blueprints

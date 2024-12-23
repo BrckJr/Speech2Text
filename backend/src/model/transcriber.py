@@ -1,5 +1,5 @@
 import whisper
-import src.utils.utils as utils
+import utils.utils as utils
 
 class RecordingError(Exception):
     """Custom exception for recording errors."""

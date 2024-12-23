@@ -1,10 +1,10 @@
 import os
 from sqlite3 import IntegrityError
-from src.model.analytics import Analytics
-from src.database.models import AudioTranscription
-import src.utils.utils as utils
+from analytics import Analytics
+from models import AudioTranscription
+import utils.utils as utils
 from pydub import AudioSegment
-from src.database import db
+from backend.src.database import db
 
 # Path to the stored raw audio files and transcriptions
 AUDIO_FOLDER = "src/static/output/raw_audio/"

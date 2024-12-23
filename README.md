@@ -16,9 +16,9 @@ Future developments might include but are certainly not limited to:
 - hosting the whole platform as a website by creating Docker containers, using a PostgreSQL and object storage.
 
 Here is a glimpse into the landing page of the project:
-![Alt text](src/static/figures/entry(1).png)
-![Alt text](src/static/figures/entry(2).png)
-![Alt text](src/static/figures/entry(3).png)
+![Alt text](frontend/src/static/figures/entry(1).png)
+![Alt text](frontend/src/static/figures/entry(2).png)
+![Alt text](frontend/src/static/figures/entry(3).png)
 
 # Installation
 To get the program running, install the libraries mentioned in the requirements.txt with the python package manager 

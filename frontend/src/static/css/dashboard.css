@@ -382,20 +382,7 @@
     margin-bottom: 20px; /* Margin at bottom to next analytics panel */
     max-width: 100%; /* Set max-width to 100% of the parent's width */
     box-sizing: border-box; /* Ensure padding is included in the element's width */
-    max-height: 400px; /* Set the maximum height of the panel */
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
-}
-
-/* Grid Layout for Panels Improved Text */
-.analytics-panel-grid4 {
-    display: grid;
-    gap: 20px; /* Spacing between panels */
-    justify-items: stretch; /* Make sure all panels stretch to fill the available space */
-    padding: 0 20px; /* Pad left and right boundary */
-    margin-bottom: 20px; /* Margin at bottom to next analytics panel */
-    max-width: 100%; /* Set max-width to 100% of the parent's width */
-    box-sizing: border-box; /* Ensure padding is included in the element's width */
-    max-height: 400px; /* Set the maximum height of the panel */
+    max-height: 600px; /* Set the maximum height of the panel */
     overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
 }
 
